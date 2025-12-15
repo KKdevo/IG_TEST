@@ -1,0 +1,36 @@
+flowchart TD
+    A[Social Media Manager Creates Plan] --> B[Plan Submitted to Executive Review]
+    
+    B --> C{Executive Approval?}
+    
+    C -->|Approved| D[Media/Edit Team Request Forms Submitted]
+    C -->|Needs Edits| E[Edits Made by Social Media Manager]
+    
+    E --> B
+    
+    D --> F[Media/Edit Team Reviews Content]
+    F --> G[Media Team Submits Back for Edits]
+    G --> H[Social Media Manager Makes Revisions]
+    H --> F
+    
+    F --> I[Media Team Creates Timeline]
+    I --> J[Timeline Submitted to Social Media Manager & Executives]
+    
+    J --> K{Timeline Approved?}
+    
+    K -->|Approved| L[Posting Manager Receives Form]
+    K -->|Needs Changes| M[Timeline Adjustments Made]
+    
+    M --> J
+    
+    L --> N[Form Contains:]
+    N --> O[• Content to Use<br/>• Where to Post<br/>• Posting Schedule<br/>• Platform Specifications]
+    
+    O --> P[Content Posted Across Platforms]
+    
+    style A fill:#e1f5fe,color:#000000
+    style B fill:#fff3e0,color:#000000
+    style D fill:#f3e5f5,color:#000000
+    style I fill:#e8f5e8,color:#000000
+    style L fill:#fff8e1,color:#000000
+    style P fill:#e8f5e8,color:#000000

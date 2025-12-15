@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Cannabis Brand Strategy - Executive Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #27ae60;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: #e9ecef;
+        }
+
+        .section-header h2 {
+            color: #27ae60;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .toggle-icon {
+            font-size: 1.2rem;
+            color: #27ae60;
+            transition: transform 0.3s ease;
+        }
+
+        .section-content {
+            display: none;
+            padding: 0 15px;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .section.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 20px 0 15px 0;
+            font-size: 1.2rem;
+        }
+
+        h4 {
+            color: #27ae60;
+            margin: 15px 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        h5 {
+            color: #34495e;
+            margin: 10px 0 8px 0;
+            font-size: 1rem;
+        }
+
+        .pillar-overview {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .pillar-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .pillar-card h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 15px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #27ae60;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .example-caption {
+            background-color: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #27ae60;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .metric-item h4 {
+            margin-bottom: 10px;
+            color: #27ae60;
+        }
+
+        .next-steps {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .brand-voice {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+        }
+
+        .highlight-box {
+            background-color: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #27ae60;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .question-category {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .question-category h5 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .question-category ul {
+            font-size: 0.9rem;
+            margin: 0;
+            padding-left: 15px;
+        }
+
+        .question-category li {
+            margin-bottom: 3px;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #666;
+            background: #f8f9fa;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+
+            .header {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header .subtitle {
+                font-size: 0.9rem;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .section-header {
+                padding: 12px;
+            }
+
+            .section-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .pillar-overview {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .pillar-card {
+                padding: 12px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .question-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            th, td {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+
+            .example-caption {
+                padding: 12px;
+                font-size: 0.85rem;
+            }
+
+            h3 {
+                font-size: 1.1rem;
+            }
+
+            h4 {
+                font-size: 1rem;
+            }
+
+            table {
+                min-width: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .section-header h2 {
+                font-size: 1rem;
+            }
+
+            th, td {
+                padding: 6px;
+                font-size: 0.75rem;
+            }
+
+            table {
+                min-width: 450px;
+            }
+
+            .example-caption {
+                font-size: 0.8rem;
+                padding: 10px;
+            }
+        }
+
+        @media print {
+            body { 
+                background-color: white;
+                padding: 0;
+            }
+            .container { 
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .section-content {
+                display: block !important;
+            }
+            .toggle-icon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Instagram Cannabis Brand Strategy<br><small style="color: #666; font-size: 0.6em;">Executive Summary & Implementation Guide</small></h1>
+
+        <h2>Strategic Overview</h2>
+        <p><strong>Mission:</strong> Build an authentic LA cannabis brand presence through educational content, lifestyle documentation, and community engagement that positions the brand as the curator of authentic LA cannabis culture.</p>
+        
+        <p><strong>Target Audience:</strong> Cannabis-positive LA residents aged 21-35, including emerging creatives, industry professionals, and lifestyle enthusiasts who value authenticity over mainstream cannabis marketing.</p>
+
+        <p><strong>Unique Value Proposition:</strong> The only cannabis brand authentically documenting real LA cannabis culture through individual stories, street-level perspectives, and educational content that builds trust through expertise rather than hype.</p>
+
+        <div class="brand-voice">
+            <h3>Brand Voice & Positioning</h3>
+            <ul>
+                <li><strong>Educational but approachable</strong> - Expert knowledge without being condescending</li>
+                <li><strong>Professional without being corporate</strong> - Polished content that maintains authenticity</li>
+                <li><strong>Authentic LA culture representation</strong> - Real neighborhoods, real people, real experiences</li>
+                <li><strong>Expertise-driven rather than hype-driven</strong> - Substance over sensationalism</li>
+                <li><strong>Community-focused engagement</strong> - Building relationships, not just followers</li>
+            </ul>
+        </div>
+
+        <h2>Content Pillar Framework</h2>
+        <div class="pillar-overview">
+            <div class="pillar-card">
+                <h4>1. Flavor Insights & History</h4>
+                <p><strong>Purpose:</strong> Educational content about strain combinations and cannabis culture</p>
+                <p><strong>Format:</strong> Structured posts with strain backstory, flavor profiles, curation process, and cultural context</p>
+                <p><strong>Frequency:</strong> 2-3 times per week</p>
+            </div>
+            
+            <div class="pillar-card">
+                <h4>2. Consumer Education</h4>
+                <p><strong>Purpose:</strong> Build trust through expertise, address misconceptions, empower informed decisions</p>
+                <p><strong>Format:</strong> Educational deep-dives with practical application (lab results, temperatures, terpenes)</p>
+                <p><strong>Frequency:</strong> 2 times per week</p>
+            </div>
+            
+            <div class="pillar-card">
+                <h4>3. Lifestyle Interviews</h4>
+                <p><strong>Purpose:</strong> Authentic LA cannabis culture documentation through individual stories</p>
+                <p><strong>Format:</strong> 4-part series (Dawn, Day, Dusk, Night) following talented LA creatives</p>
+                <p><strong>Frequency:</strong> 1 series per month (4 posts)</p>
+            </div>
+            
+            <div class="pillar-card">
+                <h4>4. Street Interviews & Sampling</h4>
+                <p><strong>Purpose:</strong> Raw, authentic street-level content showcasing diverse LA cannabis consumers</p>
+                <p><strong>Format:</strong> Short-form interviews and real-time product reactions</p>
+                <p><strong>Frequency:</strong> 3 times per week</p>
+            </div>
+            
+            <div class="pillar-card">
+                <h4>5. Community Engagement</h4>
+                <p><strong>Purpose:</strong> Build loyalty through giveaways, polls, quizzes, and brand updates</p>
+                <p><strong>Format:</strong> Interactive content, contests, company updates, educational quizzes</p>
+                <p><strong>Frequency:</strong> 4 times per week</p>
+            </div>
+        </div>
+
+        <h2>Detailed Content Framework & Implementation</h2>
+
+        <h3>1. Flavor Insights, Pairings, and History</h3>
+        <p><strong>Strategic Purpose:</strong> Position brand as cannabis curator and educator while showcasing dual-tank vape products through strain combination expertise.</p>
+        
+        <h4>Content Structure Template</h4>
+        <table>
+            <tr>
+                <th>Section</th>
+                <th>Purpose</th>
+                <th>Word Count</th>
+                <th>Example</th>
+            </tr>
+            <tr>
+                <td>Hook Intro</td>
+                <td>Address strain selection process</td>
+                <td>20-30 words</td>
+                <td>"Ever wonder how we decide which strains deserve to share the same device?"</td>
+            </tr>
+            <tr>
+                <td>The Backstory</td>
+                <td>Cultural/historical context</td>
+                <td>60-80 words</td>
+                <td>Strain origins, cultural significance, timeline, regional popularity</td>
+            </tr>
+            <tr>
+                <td>Flavor Profile</td>
+                <td>Sensory descriptions</td>
+                <td>80-100 words</td>
+                <td>Detailed terpene breakdown, flavor notes, aromatic experience</td>
+            </tr>
+            <tr>
+                <td>Will it Blend?</td>
+                <td>Curation process explanation</td>
+                <td>60-80 words</td>
+                <td>Scientific reasoning for strain pairing, complementary profiles</td>
+            </tr>
+            <tr>
+                <td>Perfect Pairings</td>
+                <td>Lifestyle integration</td>
+                <td>40-60 words</td>
+                <td>Food, music, activities that enhance the experience</td>
+            </tr>
+            <tr>
+                <td>Culture Check</td>
+                <td>Community engagement</td>
+                <td>15-25 words</td>
+                <td>Thought-provoking question for comments</td>
+            </tr>
+        </table>
+
+        <div class="example-caption">
+            <strong>Complete Flavor Insights Example:</strong><br>
+            "Ever wonder how we decide which strains deserve to share the same device? Purple Punch x Wedding Cake has more to this combo than meets the eye.<br><br>
+            
+            First, let's talk about what makes each of these strains special on their own.<br><br>
+            
+            THE BACKSTORY<br>
+            Purple Punch emerged from the Bay Area around 2017, quickly becoming a dispensary favorite for its dessert-like profile. Wedding Cake became Instagram famous in the social media era, beloved for its photogenic appearance and vanilla undertones. Together, they represent the evolution of cannabis from underground culture to mainstream acceptance.<br><br>
+            
+            FLAVOR PROFILE<br>
+            Purple Punch leads with grape candy sweetness and vanilla cream notes, dominated by caryophyllene and myrcene terpenes. Wedding Cake brings vanilla frosting and sweet berry flavors with limonene and linalool prominence. When combined, you get a dessert shop experience - grape candy on the inhale, vanilla cream on the exhale.<br><br>
+            
+            WILL IT BLEND?<br>
+            The magic happens when Purple Punch's heavy myrcene content balances Wedding Cake's uplifting limonene. This creates a complex profile that's relaxing without being sedating, perfect for evening creativity or social gatherings.<br><br>
+            
+            PERFECT PAIRINGS<br>
+            → Dark chocolate truffles or berry desserts<br>
+            → Lo-fi hip hop or jazz playlists<br>
+            → Sunset sessions on LA rooftops<br><br>
+            
+            CULTURE CHECK<br>
+            Both strains represent different eras of cannabis culture. What's your dream strain combination that tells a story?<br><br>
+            
+            #FlavorInsights #CannabisEducation #LAcannabis #DualTank #YourBrandTag"
+        </div>
+
+        <h3>2. Consumer Education Framework</h3>
+        <p><strong>Strategic Purpose:</strong> Build trust through expertise, address misconceptions, and empower informed cannabis decisions while maintaining legal compliance.</p>
+
+        <h4>Educational Content Structure</h4>
+        <table>
+            <tr>
+                <th>Section</th>
+                <th>Content Focus</th>
+                <th>Word Count</th>
+                <th>Approach</th>
+            </tr>
+            <tr>
+                <td>Education Spotlight</td>
+                <td>Hook question addressing confusion</td>
+                <td>25-35 words</td>
+                <td>Identify common misconception or knowledge gap</td>
+            </tr>
+            <tr>
+                <td>The Basics</td>
+                <td>Clear explanation with analogies</td>
+                <td>80-100 words</td>
+                <td>Use relatable comparisons, avoid jargon</td>
+            </tr>
+            <tr>
+                <td>Why It Matters</td>
+                <td>Practical impact on decisions</td>
+                <td>60-80 words</td>
+                <td>Connect to real-world experience and purchasing</td>
+            </tr>
+            <tr>
+                <td>The Real Story</td>
+                <td>Context and nuanced truths</td>
+                <td>80-100 words</td>
+                <td>Provide industry context, debunk myths</td>
+            </tr>
+            <tr>
+                <td>Pro Tips</td>
+                <td>Actionable advice</td>
+                <td>60-80 words</td>
+                <td>Specific recommendations and red flags</td>
+            </tr>
+            <tr>
+                <td>Knowledge Check</td>
+                <td>Discussion question</td>
+                <td>15-25 words</td>
+                <td>Encourage community knowledge sharing</td>
+            </tr>
+        </table>
+
+        <h4>Key Educational Topics</h4>
+        <ul>
+            <li><strong>Lab Results Interpretation:</strong> Understanding COAs, testing dates, cannabinoid profiles</li>
+            <li><strong>Vape Temperature Optimization:</strong> Temperature ranges, terpene preservation, extraction efficiency</li>
+            <li><strong>Terpene Education:</strong> Profiles, effects, strain selection based on terpenes</li>
+            <li><strong>Quality Indicators:</strong> Visual inspection, aroma assessment, packaging evaluation</li>
+            <li><strong>Consumption Methods:</strong> Comparing delivery methods, onset times, duration</li>
+        </ul>
+
+        <div class="example-caption">
+            <strong>Complete Consumer Education Example:</strong><br>
+            "EDUCATION SPOTLIGHT: Lab Results<br><br>
+            
+            Ever wonder what all those numbers on lab results actually mean? Today we're breaking down lab results - and there's more to those numbers than most people realize.<br><br>
+            
+            First, let's talk about what you actually need to know.<br><br>
+            
+            THE BASICS<br>
+            Lab results are your product's report card, showing three critical areas: cannabinoid content (THC, CBD percentages that determine potency), terpene profiles (the compounds creating flavor and aroma), and safety testing (screening for pesticides, heavy metals, and solvents). Think of it as getting the full nutritional label plus safety inspection for everything you're about to consume.<br><br>
+            
+            WHY IT MATTERS<br>
+            Without understanding these numbers, you're shopping blind and potentially wasting money on products that don't match your needs. A 25% THC product with degraded terpenes will hit differently than a 20% THC product with a robust terpene profile. The lab results tell you which is which, but only if you know how to read them.<br><br>
+            
+            THE REAL STORY<br>
+            Here's what most people don't realize: lab results can vary significantly based on when and how samples are tested. Some producers cherry-pick the best buds for testing while selling you the average stuff, and testing dates matter more than people think - cannabinoids and terpenes degrade over time, so a 6-month-old test might not reflect what's actually in your jar today.<br><br>
+            
+            PRO TIPS<br>
+            → Look for recent testing dates (within 3 months) and batch-specific results<br>
+            → Red flag: vague testing dates or results that seem too perfect<br>
+            → Best practice: ask to see the full Certificate of Analysis (COA), not just a summary sheet - reputable brands will provide it gladly<br><br>
+            
+            KNOWLEDGE CHECK<br>
+            Most people think higher THC percentage automatically means better quality. But have you ever had a lower-THC product that hit better than a high-THC one? What do you think made the difference?<br><br>
+            
+            Your Turn: Next time you shop, ask to see the full lab report, not just the THC number. Take a photo and share what surprised you most about the terpene profile or safety testing. Knowledge is power!<br><br>
+            
+            #CannabisEducation #LabResults #CannabisKnowledge #YourBrandTag"
+        </div>
+
+        <h3>3. Lifestyle Interviews - Comprehensive Framework</h3>
+        <p><strong>Strategic Purpose:</strong> Document authentic LA cannabis culture through individual stories, creating talent incubation ecosystem and brand ambassadors.</p>
+
+        <h4>4-Part Interview Structure</h4>
+        <table>
+            <tr>
+                <th>Part</th>
+                <th>Focus</th>
+                <th>Duration</th>
+                <th>Key Questions</th>
+                <th>B-Roll Opportunities</th>
+            </tr>
+            <tr>
+                <td>Dawn</td>
+                <td>Introduction - who they are</td>
+                <td>8-12 min</td>
+                <td>"Who are you and what do you do?" "How did you get into [craft]?" "Where are you from originally?"</td>
+                <td>Morning routine, workspace setup, LA scenery</td>
+            </tr>
+            <tr>
+                <td>Day</td>
+                <td>Skill showcase - what they do</td>
+                <td>10-15 min</td>
+                <td>"Show me your process" "How does cannabis influence your work?" "What separates good from great?"</td>
+                <td>Hands-on work, studio details, process shots</td>
+            </tr>
+            <tr>
+                <td>Dusk</td>
+                <td>Personal - cannabis relationship</td>
+                <td>8-12 min</td>
+                <td>"Walk me through your preferences" "How has your relationship changed?" "What rituals do you have?"</td>
+                <td>Consumption rituals, personal space, golden hour</td>
+            </tr>
+            <tr>
+                <td>Night</td>
+                <td>Reflection - advice and future</td>
+                <td>8-12 min</td>
+                <td>"What advice would you give?" "Where do you see yourself?" "Any final thoughts?"</td>
+                <td>Evening activities, reflection moments, LA nightlife</td>
+            </tr>
+        </table>
+
+        <h4>Candidate Selection Criteria</h4>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Requirements</th>
+                <th>Ideal Profile</th>
+            </tr>
+            <tr>
+                <td>Demographics</td>
+                <td>21-35 years old, LA-based</td>
+                <td>1K-50K social media following</td>
+            </tr>
+            <tr>
+                <td>Skills/Industries</td>
+                <td>Demonstrable expertise</td>
+                <td>Visual artists, musicians, athletes, entrepreneurs</td>
+            </tr>
+            <tr>
+                <td>Cannabis Relationship</td>
+                <td>Comfortable on camera</td>
+                <td>Open about integration in daily life</td>
+            </tr>
+            <tr>
+                <td>Brand Alignment</td>
+                <td>Professional demeanor</td>
+                <td>Represents positive LA culture</td>
+            </tr>
+        </table>
+
+        <div class="example-caption">
+            <strong>Complete Lifestyle Interview Example - Part 1: DAWN:</strong><br>
+            "PART 1: DAWN - Maya Rodriguez<br><br>
+            
+            Meet Maya, a 26-year-old muralist who's been transforming LA walls into stories for the past four years. What started as tagging abandoned buildings in Echo Park has evolved into commissioned pieces that capture the soul of different neighborhoods.<br><br>
+            
+            This morning, we're following Maya through her daily routine to see how cannabis integrates naturally into the creative LA lifestyle. From her Silver Lake apartment to her current mural project in Arts District, Maya represents the authentic creative hustle that makes LA special.<br><br>
+            
+            'I wake up every morning thinking about color - like, what does today feel like in terms of palette? Sometimes it's warm oranges and reds, sometimes it's cool blues. Cannabis helps me tap into that intuitive side before I even pick up a brush.'<br><br>
+            
+            Maya's morning routine includes meditation, coffee, and often a small vape session to 'get in tune with the day's energy.' But it's her approach to art that really sets her apart - turning passion into purpose, one wall at a time.<br><br>
+            
+            What does your creative morning routine look like? Drop it in the comments.<br><br>
+            
+            #LACreatives #CannabisLifestyle #MuralArt #AuthenticLA #YourBrandTag"
+        </div>
+
+        <div class="example-caption">
+            <strong>Complete Lifestyle Interview Example - Part 2: DAY:</strong><br>
+            "PART 2: DAY - Maya Rodriguez<br><br>
+            
+            Watching Maya work is like seeing meditation in motion. She's been working on this 40-foot mural in Arts District for three weeks, and today she's adding the final details that bring the whole piece to life.<br><br>
+            
+            What strikes you immediately is her process - every stroke is intentional, every color choice deliberate. This isn't just painting; it's storytelling on a massive scale, capturing the energy and diversity of LA in permanent form.<br><br>
+            
+            'People think murals just happen, but there's so much planning. I sketch for weeks, then I have to think about how the light hits the wall at different times of day. Cannabis doesn't make me more creative - it helps me slow down enough to notice the details that matter.'<br><br>
+            
+            This is what authentic LA creativity looks like - not the Instagram version, but the real process of turning vision into reality on the streets that raised you.<br><br>
+            
+            What's your creative process when you're really in the zone?<br><br>
+            
+            #LACreatives #CannabisLifestyle #MuralArt #AuthenticLA #YourBrandTag"
+        </div>
+
+        <h3>4. Street Interviews & Sampling - Execution Framework</h3>
+        <p><strong>Strategic Purpose:</strong> Capture authentic consumer perspectives and product reactions to build community trust and social proof.</p>
+
+        <h4>Content Types & Approach</h4>
+        <table>
+            <tr>
+                <th>Content Type</th>
+                <th>Duration</th>
+                <th>Location Strategy</th>
+                <th>Question Approach</th>
+            </tr>
+            <tr>
+                <td>Street Interviews</td>
+                <td>30-90 seconds</td>
+                <td>High-traffic LA areas</td>
+                <td>3-5 questions maximum</td>
+            </tr>
+            <tr>
+                <td>Product Sampling</td>
+                <td>15-60 seconds</td>
+                <td>Cannabis-friendly spaces</td>
+                <td>Real-time reaction capture</td>
+            </tr>
+            <tr>
+                <td>Quick Polls</td>
+                <td>15-30 seconds</td>
+                <td>Various neighborhoods</td>
+                <td>This or that format</td>
+            </tr>
+        </table>
+
+        <h4>Question Bank Categories</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px;">
+                <h5>Fun & Playful (14 questions)</h5>
+                <ul style="font-size: 0.9em;">
+                    <li>"If your high had a theme song, what would it be?"</li>
+                    <li>"If cannabis strains were dating apps, which would you swipe right on?"</li>
+                    <li>"What's the most LA moment you've had while high?"</li>
+                    <li>"If you could hotbox any LA location, where?"</li>
+                </ul>
+            </div>
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px;">
+                <h5>Rapid Fire This or That (15 questions)</h5>
+                <ul style="font-size: 0.9em;">
+                    <li>"Indica or Sativa for Netflix binge?"</li>
+                    <li>"Joint or bong for beach day?"</li>
+                    <li>"Morning toke or evening smoke?"</li>
+                    <li>"Solo session or passing the joint?"</li>
+                </ul>
+            </div>
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px;">
+                <h5>Would You Rather (10 questions)</h5>
+                <ul style="font-size: 0.9em;">
+                    <li>"Unlimited mid-grade or one perfect joint weekly?"</li>
+                    <li>"Never get cottonmouth or red eyes?"</li>
+                    <li>"Smoke with celebrity or discover new strain?"</li>
+                </ul>
+            </div>
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px;">
+                <h5>LA-Specific (15 questions)</h5>
+                <ul style="font-size: 0.9em;">
+                    <li>"What makes LA cannabis culture different?"</li>
+                    <li>"Which neighborhood matches your cannabis personality?"</li>
+                    <li>"Most bougie cannabis thing you've seen in LA?"</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="example-caption">
+            <strong>Complete Street Interview Example:</strong><br>
+            "LA VOICES: 'What makes LA cannabis culture special?'<br><br>
+            
+            We hit the streets of Venice to ask locals what sets LA apart from everywhere else when it comes to cannabis culture. The answers were as diverse as the city itself.<br><br>
+            
+            'It's the diversity, man. You've got surfers, artists, tech people, everyone just living their life and cannabis is just part of it. It's not a big deal here, it's just normal life. Plus, the weather means you can smoke outside year-round - try doing that in New York in January!' - Marcus, Venice Beach<br><br>
+            
+            This is what we love about LA - cannabis isn't separate from culture, it IS the culture. From the beaches to the mountains, from Hollywood to East LA, cannabis weaves through every community in its own unique way.<br><br>
+            
+            What makes your city's cannabis scene unique? Tell us below.<br><br>
+            
+            #LAVoices #StreetInterviews #CannabisLA #VeniceBeach #AuthenticLA #YourBrandTag"
+        </div>
+
+        <div class="example-caption">
+            <strong>Complete Product Sampling Example:</strong><br>
+            "REAL REACTIONS: First time trying dual-tank vaping<br><br>
+            
+            Meet Sarah, a budtender from West Hollywood who's been in the industry for 3 years but never tried a dual-tank system. We wanted to get her honest, unfiltered reaction.<br><br>
+            
+            Her first response? Pure curiosity. 'Wait, I can control each strain separately? This is actually genius.' Then came the real test - trying each strain individually before combining them.<br><br>
+            
+            'I'm getting the citrus from one side and the earthiness from the other, but when I hit both... wow, that's a completely different experience. It's like having a DJ mix but for cannabis flavors.'<br><br>
+            
+            When industry professionals get excited about innovation, you know you're onto something. Sarah's reaction represents what we're hearing from cannabis enthusiasts across LA - the dual-tank system isn't just a gimmick, it's a game-changer.<br><br>
+            
+            Have you tried dual-tank vaping? What was your experience?<br><br>
+            
+            #RealReactions #ProductSampling #DualTank #IndustryProfessional #YourBrandTag"
+        </div>
+
+        <h3>5. Community Engagement & Giveaways Framework</h3>
+        <p><strong>Strategic Purpose:</strong> Build loyal community through interactive content, gather market insights, and maintain consistent brand presence.</p>
+
+        <h4>Content Types & Strategy</h4>
+        <table>
+            <tr>
+                <th>Content Type</th>
+                <th>Frequency</th>
+                <th>Purpose</th>
+                <th>Engagement Mechanism</th>
+            </tr>
+            <tr>
+                <td>Product Giveaways</td>
+                <td>Bi-weekly</td>
+                <td>Community rewards</td>
+                <td>Follow, tag, share, comment</td>
+            </tr>
+            <tr>
+                <td>Educational Quizzes</td>
+                <td>Weekly</td>
+                <td>Knowledge building</td>
+                <td>Comment answers, discussion</td>
+            </tr>
+            <tr>
+                <td>Community Polls</td>
+                <td>2-3x weekly</td>
+                <td>Feedback collection</td>
+                <td>Stories voting, comment discussion</td>
+            </tr>
+            <tr>
+                <td>Brand Updates</td>
+                <td>As needed</td>
+                <td>Transparency</td>
+                <td>Comments, shares, saves</td>
+            </tr>
+        </table>
+
+        <h4>Giveaway Strategy Framework</h4>
+        <table>
+            <tr>
+                <th>Prize Tier</th>
+                <th>Frequency</th>
+                <th>Entry Requirements</th>
+                <th>Value Range</th>
+            </tr>
+            <tr>
+                <td>Micro-giveaways</td>
+                <td>Weekly</td>
+                <td>Follow + comment</td>
+                <td>Accessories, merch</td>
+            </tr>
+            <tr>
+                <td>Standard giveaways</td>
+                <td>Bi-weekly</td>
+                <td>Follow + tag + share</td>
+                <td>Single vape units</td>
+            </tr>
+            <tr>
+                <td>Major giveaways</td>
+                <td>Monthly</td>
+                <td>UGC creation</td>
+                <td>Product bundles</td>
+            </tr>
+            <tr>
+                <td>Milestone giveaways</td>
+                <td>Quarterly</td>
+                <td>Multiple requirements</td>
+                <td>Premium packages</td>
+            </tr>
+        </table>
+
+        <div class="example-caption">
+            <strong>Complete Giveaway Example:</strong><br>
+            "GIVEAWAY: Dual-Tank Starter Pack<br><br>
+            
+            We just hit 10K followers and want to celebrate with our amazing community! One lucky winner will receive our complete dual-tank starter pack plus a selection of premium cartridges.<br><br>
+            
+            PRIZE INCLUDES:<br>
+            - Dual-tank vaporizer device<br>
+            - 4 premium strain cartridges<br>
+            - Branded accessories kit<br>
+            - Exclusive merch package<br><br>
+            
+            HOW TO ENTER:<br>
+            1. Follow our account<br>
+            2. Tag 3 friends who love cannabis culture<br>
+            3. Share this post to your Stories<br>
+            4. Comment: What's your dream strain combination?<br><br>
+            
+            Contest ends Friday at midnight. Winner announced Saturday. Must be 21+ and CA resident.<br><br>
+            
+            This community has been incredible - from sharing your stories to engaging with our content, you've made this journey amazing. Here's to the next 10K and beyond!<br><br>
+            
+            #Giveaway #Contest #DualTank #10KCelebration #CommunityLove #YourBrandTag"
+        </div>
+
+        <div class="example-caption">
+            <strong>Complete Brand Update Example:</strong><br>
+            "BRAND UPDATE: New Lab Partnership<br><br>
+            
+            Big news! We've partnered with one of California's most respected testing laboratories to ensure every product meets the highest quality standards.<br><br>
+            
+            This partnership means even more detailed lab reports, faster testing turnaround, and complete transparency about what's in every cartridge. Because you deserve to know exactly what you're consuming, and we believe transparency builds trust.<br><br>
+            
+            Starting next month, you'll see enhanced COAs (Certificate of Analysis) with our products, including detailed terpene breakdowns and comprehensive safety testing. We're also implementing batch tracking so you can trace your product from cultivation to your device.<br><br>
+            
+            This is part of our commitment to setting new standards in the cannabis industry. Quality isn't just a buzzword for us - it's our foundation.<br><br>
+            
+            What questions do you have about cannabis testing? Drop them below and we'll address them in our next educational post!<br><br>
+            
+            #BrandUpdate #QualityFirst #LabTesting #Transparency #CannabisStandards #YourBrandTag"
+        </div>
+
+        <div class="example-caption">
+            <strong>Complete Educational Quiz Example:</strong><br>
+            "CANNABIS QUIZ: Terpene Knowledge<br><br>
+            
+            Let's test your terpene knowledge! This aromatic compound is found in both cannabis and citrus fruits, known for its uplifting properties and lemony scent.<br><br>
+            
+            A) Myrcene<br>
+            B) Limonene<br>
+            C) Pinene<br>
+            D) Linalool<br><br>
+            
+            BONUS: Can you name another plant (besides cannabis) that contains this terpene?<br><br>
+            
+            This terpene is one of the most common in cannabis and is responsible for that citrusy aroma you smell in strains like Super Lemon Haze, Sour Diesel, and many others. It's also what gives lemons, oranges, and other citrus fruits their distinctive smell.<br><br>
+            
+            Drop your answers below! We'll reveal the correct answer and some fascinating facts about this terpene tomorrow. Plus, everyone who participates gets entered into our weekly micro-giveaway!<br><br>
+            
+            #CannabisQuiz #TerpeneEducation #Education #CannabisKnowledge #YourBrandTag"
+        </div>
+
+        
+
+        <h2>Production Guidelines</h2>
+
+        <h3>Visual Standards</h3>
+        <ul>
+            <li><strong>Documentary feel:</strong> Authentic, not overly polished</li>
+            <li><strong>Natural lighting:</strong> When possible, avoid harsh artificial lighting</li>
+            <li><strong>LA authenticity:</strong> Real neighborhoods, not tourist spots</li>
+            <li><strong>Cannabis integration:</strong> Organic, not forced</li>
+            <li><strong>Mobile-first:</strong> Vertical format for Stories/Reels</li>
+        </ul>
+
+        <h3>Legal Compliance</h3>
+        <ul>
+            <li>Always obtain signed releases</li>
+            <li>Follow local cannabis consumption laws</li>
+            <li>Avoid medical claims or health benefits</li>
+            <li>Include appropriate age restrictions</li>
+            <li>Maintain professional brand standards</li>
+        </ul>
+
+        <h2>Success Metrics</h2>
+        <div class="metrics-grid">
+            <div class="metric-item">
+                <h4>Engagement</h4>
+                <p>Comments quality<br>Share/save rates<br>Story completion</p>
+            </div>
+            <div class="metric-item">
+                <h4>Community Growth</h4>
+                <p>Follower growth<br>Brand mentions<br>UGC creation</p>
+            </div>
+            <div class="metric-item">
+                <h4>Brand Building</h4>
+                <p>Website traffic<br>Product inquiries<br>Partnership opportunities</p>
+            </div>
+            <div class="metric-item">
+                <h4>Cultural Impact</h4>
+                <p>LA culture association<br>Industry recognition<br>Community influence</p>
+            </div>
+        </div>
+
+        <h2>Flexible Content Calendar Framework</h2>
+        <p><strong>Philosophy:</strong> Content driven by opportunity, not rigid schedule. Maintain strategic balance while allowing creative freedom and real-time adaptation.</p>
+        
+        <h3>Weekly Content Balance Targets (Flexible)</h3>
+        <table>
+            <tr>
+                <th>Content Pillar</th>
+                <th>Target Percentage</th>
+                <th>Approach</th>
+            </tr>
+            <tr>
+                <td>Street Interviews/Sampling</td>
+                <td>30-40%</td>
+                <td>Post when you capture great content</td>
+            </tr>
+            <tr>
+                <td>Educational Content</td>
+                <td>20-30%</td>
+                <td>When you have insights to share</td>
+            </tr>
+            <tr>
+                <td>Community Engagement</td>
+                <td>20-25%</td>
+                <td>Natural response to what's happening</td>
+            </tr>
+            <tr>
+                <td>Lifestyle Interviews</td>
+                <td>10-15%</td>
+                <td>When you find the right people</td>
+            </tr>
+            <tr>
+                <td>Flavor Insights</td>
+                <td>10-15%</td>
+                <td>When you have new combinations</td>
+            </tr>
+        </table>
+
+        <h3>Key Cultural Moments & Opportunities</h3>
+        <table>
+            <tr>
+                <th>Date/Period</th>
+                <th>Opportunity</th>
+                <th>Content Focus</th>
+            </tr>
+            <tr>
+                <td>4/20 (April 20th)</td>
+                <td>International Cannabis Day</td>
+                <td>Major campaign, community celebration</td>
+            </tr>
+            <tr>
+                <td>7/10 (July 10th)</td>
+                <td>Oil Day (Concentrate Day)</td>
+                <td>Vape products, extraction education</td>
+            </tr>
+            <tr>
+                <td>June (Pride Month)</td>
+                <td>LGBTQ+ Community</td>
+                <td>West Hollywood focus, community support</td>
+            </tr>
+            <tr>
+                <td>Sept-Nov (Harvest Season)</td>
+                <td>New Strain Education</td>
+                <td>Quality, testing, strain spotlights</td>
+            </tr>
+            <tr>
+                <td>Awards Season (Jan-Mar)</td>
+                <td>LA Entertainment Industry</td>
+                <td>Industry events, creative community</td>
+            </tr>
+        </table>
+
+        <div style="background-color: #e8f5e8; padding: 15px; border-radius: 5px; margin: 15px 0;">
+            <strong>Real-Time Pivot Guidelines:</strong><br>
+            • If street interview goes viral → create follow-up content<br>
+            • If educational post gets high engagement → dive deeper<br>
+            • If community asks questions → create educational response<br>
+            • If cultural moment emerges → adapt content to participate<br>
+            • If business deadline approaches → prioritize related content
+        </div>
+
+        <h2>Team Roles & Responsibilities</h2>
+        <table>
+            <tr>
+                <th>Role</th>
+                <th>Responsibilities</th>
+                <th>Key Skills</th>
+            </tr>
+            <tr>
+                <td>Content Creator</td>
+                <td>Filming, interviewing, content production</td>
+                <td>Video production, interviewing, LA knowledge</td>
+            </tr>
+            <tr>
+                <td>Social Media Manager</td>
+                <td>Posting, engagement, community management</td>
+                <td>Instagram expertise, community building, scheduling</td>
+            </tr>
+            <tr>
+                <td>Brand Manager</td>
+                <td>Strategy oversight, brand consistency, partnerships</td>
+                <td>Brand strategy, cannabis industry knowledge, networking</td>
+            </tr>
+            <tr>
+                <td>Legal/Compliance</td>
+                <td>Content review, legal compliance, risk management</td>
+                <td>Cannabis law, content compliance, risk assessment</td>
+            </tr>
+        </table>
+
+        <div class="next-steps">
+            <h2>Immediate Next Steps (First 30 Days)</h2>
+            <ol>
+                <li><strong>Week 1:</strong> Finalize legal documentation and release forms</li>
+                <li><strong>Week 1:</strong> Set up content creation equipment and tools</li>
+                <li><strong>Week 2:</strong> Begin candidate outreach for lifestyle interviews</li>
+                <li><strong>Week 2:</strong> Scout and secure filming locations</li>
+                <li><strong>Week 3:</strong> Create first batch of educational content</li>
+                <li><strong>Week 3:</strong> Launch street interview series</li>
+                <li><strong>Week 4:</strong> Analyze initial performance and adjust strategy</li>
+                <li><strong>Week 4:</strong> Plan first lifestyle interview series</li>
+            </ol>
+        </div>
+
+        <h2>Budget Considerations</h2>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Items</th>
+                <th>Priority</th>
+            </tr>
+            <tr>
+                <td>Equipment</td>
+                <td>Camera, microphones, lighting, editing software</td>
+                <td>High</td>
+            </tr>
+            <tr>
+                <td>Personnel</td>
+                <td>Content creator, social media manager, editor</td>
+                <td>High</td>
+            </tr>
+            <tr>
+                <td>Legal</td>
+                <td>Compliance review, release forms, permits</td>
+                <td>High</td>
+            </tr>
+            <tr>
+                <td>Marketing</td>
+                <td>Giveaway prizes, promotional materials</td>
+                <td>Medium</td>
+            </tr>
+            <tr>
+                <td>Partnerships</td>
+                <td>Collaborations, event access, location fees</td>
+                <td>Medium</td>
+            </tr>
+        </table>
+
+        <h2>Risk Management</h2>
+        <ul>
+            <li><strong>Platform Policy Changes:</strong> Stay updated on Instagram's cannabis content policies</li>
+            <li><strong>Legal Compliance:</strong> Regular review of local and state cannabis regulations</li>
+            <li><strong>Brand Safety:</strong> Careful vetting of all featured individuals and content</li>
+            <li><strong>Content Consistency:</strong> Maintain quality standards across all pillars</li>
+            <li><strong>Community Management:</strong> Proactive approach to negative feedback or controversy</li>
+        </ul>
+
+        <h2>Long-Term Vision (6-12 Months)</h2>
+        <ul>
+            <li>Establish brand as the definitive voice of authentic LA cannabis culture</li>
+            <li>Build network of featured creatives as ongoing brand ambassadors</li>
+            <li>Expand to other California markets using LA model</li>
+            <li>Develop partnerships with dispensaries, events, and other cannabis brands</li>
+            <li>Create educational content that becomes industry reference material</li>
+            <li>Build community large enough to influence LA cannabis culture trends</li>
+        </ul>
+
+        <footer style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666;">
+            <p>Instagram Cannabis Brand Strategy - Executive Summary<br>
+            <small>Document created: January 2025 | For internal use only</small></p>
+        </footer>
+    </div>
+</body>
+</html>

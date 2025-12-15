@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Content Schedule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #FAF9F7;
+            --bg-secondary: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #6B6B6B;
+            --text-muted: #9A9A9A;
+            --accent: #2D2D2D;
+            --accent-warm: #C4A484;
+            --border: #E8E6E3;
+            --border-light: #F0EFED;
+            --shadow: rgba(0,0,0,0.04);
+            --shadow-md: rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 40px 24px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-family: 'Instrument Serif', serif;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .nav-subtitle {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+        }
+
+        .nav-section {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin: 32px 0 12px;
+        }
+
+        .nav a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 10px 0;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .nav a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav a.active {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .nav .sub-link {
+            padding-left: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+
+        section {
+            scroll-margin-top: 20px;
+        }
+
+        /* ================================
+           TITLE PAGE - Premium Design
+           ================================ */
+        .title-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(165deg, #1A1A1A 0%, #2D2D2D 40%, #3D3D3D 100%);
+        }
+
+        .title-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .title-header {
+            padding: 48px 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 100px;
+            backdrop-filter: blur(10px);
+        }
+
+        .title-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: #7FE5A2;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+
+        .title-badge span {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+        }
+
+        .title-date {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            font-weight: 400;
+        }
+
+        .title-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 64px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-eyebrow {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-warm);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .title-main {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(48px, 8vw, 86px);
+            font-weight: 400;
+            color: #FFFFFF;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            max-width: 800px;
+        }
+
+        .title-main em {
+            font-style: italic;
+            color: var(--accent-warm);
+        }
+
+        .title-description {
+            font-size: 17px;
+            color: rgba(255,255,255,0.5);
+            max-width: 500px;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        .title-footer {
+            padding: 48px 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-meta {
+            display: flex;
+            gap: 64px;
+        }
+
+        .title-meta-item {
+            position: relative;
+        }
+
+        .title-meta-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .title-meta-value {
+            font-size: 18px;
+            color: #FFFFFF;
+            font-weight: 500;
+        }
+
+        .title-decoration {
+            position: absolute;
+            right: 64px;
+            bottom: 50%;
+            transform: translateY(50%);
+            width: 320px;
+            height: 320px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .title-decoration::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            right: 40px;
+            bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .title-scroll-hint {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .title-scroll-hint span {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .title-scroll-hint svg {
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        /* ================================
+           CONTENT SECTIONS
+           ================================ */
+        .content-section {
+            padding: 80px 64px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header {
+            margin-bottom: 48px;
+            max-width: 600px;
+        }
+
+        .section-number {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 38px;
+            font-weight: 400;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Tables */
+        .table-wrapper {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px var(--shadow), 0 4px 20px var(--shadow);
+            margin-bottom: 48px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--bg-primary);
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: var(--bg-primary);
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-draft { background: #FEF9E7; color: #9A7B2A; }
+        .status-draft::before { background: #F4C430; }
+        .status-approved { background: #E8F5E9; color: #2E7D32; }
+        .status-approved::before { background: #4CAF50; }
+        .status-posted { background: #E3F2FD; color: #1565C0; }
+        .status-posted::before { background: #2196F3; }
+        .status-needsrevision { background: #FFEBEE; color: #C62828; }
+        .status-needsrevision::before { background: #EF5350; }
+
+        .type-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .type-post { background: #F3F4F6; color: #374151; }
+        .type-reel { background: #FDF2F8; color: #BE185D; }
+        .type-highlight { background: #FEF3C7; color: #B45309; }
+
+        .link-btn {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: gap 0.2s ease;
+        }
+
+        .link-btn:hover {
+            gap: 8px;
+        }
+
+        .link-btn::after {
+            content: '↓';
+        }
+
+        /* Post Cards */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        .post-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px var(--shadow), 0 8px 32px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px var(--shadow-md), 0 16px 48px var(--shadow-md);
+        }
+
+        .post-card-media {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background: var(--border-light);
+        }
+
+        .post-card-media.video-container {
+            position: relative;
+            background: #000;
+        }
+
+        .post-card-media iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .post-card-body {
+            padding: 24px;
+        }
+
+        .post-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .post-card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .post-card-caption {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.6;
+        }
+
+        .post-card-hashtags {
+            font-size: 13px;
+            color: var(--accent-warm);
+            font-weight: 500;
+        }
+
+        .no-media {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--border-light) 0%, var(--border) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Type Sections */
+        .type-section {
+            margin-bottom: 64px;
+        }
+
+        .type-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .type-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .type-section-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        .type-section-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .type-section-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+
+        /* Stories Strip */
+        .stories-strip {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 24px 0;
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .stories-strip::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .stories-strip::-webkit-scrollbar-track {
+            background: var(--border-light);
+            border-radius: 3px;
+        }
+
+        .stories-strip::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .story-item {
+            flex-shrink: 0;
+            width: 140px;
+            text-align: center;
+        }
+
+        .story-thumb-wrapper {
+            position: relative;
+            width: 120px;
+            height: 213px;
+            margin: 0 auto 12px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #E1306C 0%, #F77737 50%, #FCAF45 100%);
+            padding: 3px;
+        }
+
+        .story-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
+            background: var(--bg-secondary);
+        }
+
+        .story-title {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .story-date {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Interactions */
+        .interactions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+        }
+
+        .interaction-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+
+        .interaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .interaction-account {
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+
+        .interaction-platform {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .interaction-goal-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: var(--bg-primary);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .week-checklist {
+            display: flex;
+            gap: 8px;
+        }
+
+        .day-check {
+            flex: 1;
+            text-align: center;
+        }
+
+        .day-check label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .day-check input[type="checkbox"] {
+            appearance: none;
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .day-check input[type="checkbox"]:hover {
+            border-color: var(--accent-warm);
+        }
+
+        .day-check input[type="checkbox"]:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .day-check input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 48px;
+            color: var(--text-muted);
+            background: var(--bg-primary);
+            border-radius: 16px;
+        }
+
+        /* Print */
+        @media print {
+            .nav { display: none; }
+            .main { margin-left: 0; }
+            .title-page { min-height: auto; padding: 60px; }
+            .post-card { break-inside: avoid; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .nav { display: none; }
+            .main { margin-left: 0; }
+            .content-section { padding: 48px 32px; }
+            .title-header, .title-content, .title-footer { padding-left: 32px; padding-right: 32px; }
+            .title-decoration { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">Content Schedule</div>
+        <div class="nav-subtitle">Social Media Report</div>
+        
+        <div class="nav-section">Overview</div>
+        <a href="#title">Cover</a>
+        <a href="#schedule">Posting Schedule</a>
+        
+        <div class="nav-section">Content</div>
+        <a href="#posts">Draft Posts</a>
+        <a href="#posts-posts" class="sub-link">Posts</a>
+        <a href="#posts-reels" class="sub-link">Reels</a>
+        <a href="#posts-highlights" class="sub-link">Highlights</a>
+        
+        <div class="nav-section">Engagement</div>
+        <a href="#stories">Stories</a>
+        <a href="#interactions">Interactions</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Title Page -->
+        <section id="title" class="title-page">
+            <div class="title-decoration"></div>
+            
+            <header class="title-header">
+                <div class="title-badge">
+                    <span class="title-badge-dot"></span>
+                    <span>Content Calendar</span>
+                </div>
+                <div class="title-date" id="displayDate">Loading...</div>
+            </header>
+            
+            <div class="title-content">
+                <div class="title-eyebrow">Social Media Strategy</div>
+                <h1 class="title-main">
+                    Content <em>Schedule</em> & Asset Review
+                </h1>
+                <p class="title-description">
+                    A comprehensive overview of planned content, posting schedule, and engagement strategy for the upcoming period.
+                </p>
+            </div>
+            
+            <footer class="title-footer">
+                <div class="title-meta">
+                    <div class="title-meta-item">
+                        <div class="title-meta-label">Account</div>
+                        <div class="title-meta-value" id="accountName">Loading...</div>
+                    </div>
+                    <div class="title-meta-item">
+                        <div class="title-meta-label">Created</div>
+                        <div class="title-meta-value" id="dateCreated">Loading...</div>
+                    </div>
+                    <div class="title-meta-item">
+                        <div class="title-meta-label">Total Posts</div>
+                        <div class="title-meta-value" id="totalPosts">—</div>
+                    </div>
+                </div>
+                <div class="title-scroll-hint">
+                    <span>Scroll</span>
+                    <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
+                        <rect x="1" y="1" width="14" height="22" rx="7" stroke="currentColor" stroke-width="1.5"/>
+                        <circle cx="8" cy="8" r="2" fill="currentColor"/>
+                    </svg>
+                </div>
+            </footer>
+        </section>
+
+        <!-- Posting Schedule -->
+        <section id="schedule" class="content-section">
+            <div class="section-header">
+                <div class="section-number">01</div>
+                <h2 class="section-title">Posting Schedule</h2>
+                <p class="section-desc">Complete overview of all planned content with dates, times, and current status.</p>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Hashtags</th>
+                            <th>Notes</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleTable">
+                        <tr><td colspan="8" class="loading"><div class="loading-spinner"></div>Loading schedule...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Draft Posts -->
+        <section id="posts" class="content-section">
+            <div class="section-header">
+                <div class="section-number">02</div>
+                <h2 class="section-title">Draft Posts</h2>
+                <p class="section-desc">Content previews organized by format. Click any card to view full details.</p>
+            </div>
+
+            <!-- Posts -->
+            <div id="posts-posts" class="type-section">
+                <div class="type-section-header">
+                    <div class="type-section-icon">📷</div>
+                    <div class="type-section-title">Feed Posts</div>
+                    <div class="type-section-count" id="postsCount">0 posts</div>
+                </div>
+                <div class="posts-grid" id="postsGrid">
+                    <div class="loading"><div class="loading-spinner"></div>Loading posts...</div>
+                </div>
+            </div>
+
+            <!-- Reels -->
+            <div id="posts-reels" class="type-section">
+                <div class="type-section-header">
+                    <div class="type-section-icon">🎬</div>
+                    <div class="type-section-title">Reels</div>
+                    <div class="type-section-count" id="reelsCount">0 reels</div>
+                </div>
+                <div class="posts-grid" id="reelsGrid">
+                    <div class="loading"><div class="loading-spinner"></div>Loading reels...</div>
+                </div>
+            </div>
+
+            <!-- Highlights -->
+            <div id="posts-highlights" class="type-section">
+                <div class="type-section-header">
+                    <div class="type-section-icon">⭐</div>
+                    <div class="type-section-title">Highlights</div>
+                    <div class="type-section-count" id="highlightsCount">0 highlights</div>
+                </div>
+                <div class="posts-grid" id="highlightsGrid">
+                    <div class="loading"><div class="loading-spinner"></div>Loading highlights...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stories Schedule -->
+        <section id="stories" class="content-section">
+            <div class="section-header">
+                <div class="section-number">03</div>
+                <h2 class="section-title">Stories Schedule</h2>
+                <p class="section-desc">Ephemeral content planned for the period, including interactive elements.</p>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Interactive Elements</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="storiesTable">
+                        <tr><td colspan="5" class="loading"><div class="loading-spinner"></div>Loading stories...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="type-section-header" style="margin-top: 48px;">
+                <div class="type-section-icon">📱</div>
+                <div class="type-section-title">Story Assets</div>
+            </div>
+            <div class="stories-strip" id="storiesStrip">
+                <div class="loading"><div class="loading-spinner"></div>Loading...</div>
+            </div>
+        </section>
+
+        <!-- Account Interactions -->
+        <section id="interactions" class="content-section">
+            <div class="section-header">
+                <div class="section-number">04</div>
+                <h2 class="section-title">Account Interactions</h2>
+                <p class="section-desc">Daily engagement targets and tracking. Check off completed interactions.</p>
+            </div>
+            <div class="interactions-grid" id="interactionsList">
+                <div class="loading"><div class="loading-spinner"></div>Loading interactions...</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - UPDATE WITH YOUR SHEET ID
+        // ============================================
+        
+        const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID_HERE';
+        
+        const SHEETS = {
+            config: 'Config',
+            posts: 'Posts',
+            stories: 'Stories',
+            interactions: 'Interactions'
+        };
+
+        // ============================================
+        // GOOGLE SHEETS FETCH
+        // ============================================
+
+        async function fetchSheet(sheetName) {
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                const json = JSON.parse(text.substring(47, text.length - 2));
+                return parseGoogleSheet(json);
+            } catch (error) {
+                console.error(`Error fetching ${sheetName}:`, error);
+                return [];
+            }
+        }
+
+        function parseGoogleSheet(json) {
+            const headers = json.table.cols.map(col => col.label || '');
+            const rows = [];
+            
+            if (json.table.rows) {
+                json.table.rows.forEach(row => {
+                    const rowData = {};
+                    row.c.forEach((cell, index) => {
+                        const header = headers[index];
+                        if (header) {
+                            rowData[header] = cell ? (cell.v || '') : '';
+                        }
+                    });
+                    rows.push(rowData);
+                });
+            }
+            return rows;
+        }
+
+        // ============================================
+        // RENDER FUNCTIONS
+        // ============================================
+
+        function renderConfig(data, posts) {
+            const config = {};
+            data.forEach(row => {
+                if (row.Field && row.Value) {
+                    config[row.Field] = row.Value;
+                }
+            });
+            
+            document.getElementById('accountName').textContent = config.AccountName || 'Not Set';
+            document.getElementById('dateCreated').textContent = config.DateCreated || 'Not Set';
+            document.getElementById('totalPosts').textContent = posts.length || '0';
+            document.getElementById('displayDate').textContent = new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+            });
+        }
+
+        function renderScheduleTable(posts) {
+            const tbody = document.getElementById('scheduleTable');
+            
+            if (!posts.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No posts scheduled yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = posts.map((post, index) => `
+                <tr>
+                    <td><strong>${post.Title || ''}</strong></td>
+                    <td>${post.PostDate || ''}</td>
+                    <td>${post.Time || ''}</td>
+                    <td><span class="type-badge type-${(post.Type || '').toLowerCase()}">${post.Type || ''}</span></td>
+                    <td><span class="status status-${(post.Status || 'draft').toLowerCase().replace(/\s/g, '')}">${post.Status || 'Draft'}</span></td>
+                    <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">${post.Hashtags || ''}</td>
+                    <td style="max-width: 180px; font-size: 13px;">${post.Notes || ''}</td>
+                    <td><a href="#post-${index}" class="link-btn">View</a></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPostCards(posts, type, containerId, countId) {
+            const container = document.getElementById(containerId);
+            const filtered = posts.filter(p => (p.Type || '').toLowerCase() === type.toLowerCase());
+            
+            document.getElementById(countId).textContent = `${filtered.length} ${type}${filtered.length !== 1 ? 's' : ''}`;
+            
+            if (!filtered.length) {
+                container.innerHTML = `<div class="empty-state">No ${type}s scheduled</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map((post, index) => `
+                <div class="post-card" id="post-${posts.indexOf(post)}">
+                    ${post.MediaURL ? 
+                        (isVideo(post.MediaURL) ? 
+                            `<div class="post-card-media video-container">
+                                <iframe src="${getEmbedUrl(post.MediaURL)}" allowfullscreen></iframe>
+                            </div>` :
+                            `<img class="post-card-media" src="${post.MediaURL}" alt="${post.Title}" onerror="this.outerHTML='<div class=\\'no-media\\'>Image not available</div>'">`) 
+                        : '<div class="no-media">No media uploaded</div>'}
+                    <div class="post-card-body">
+                        <div class="post-card-header">
+                            <span class="post-card-title">${post.Title || 'Untitled'}</span>
+                            <span class="type-badge type-${(post.Type || '').toLowerCase()}">${post.Type || ''}</span>
+                        </div>
+                        <p class="post-card-caption">${post.Caption || 'No caption provided'}</p>
+                        <div class="post-card-hashtags">${post.Hashtags || ''}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderStoriesTable(stories) {
+            const tbody = document.getElementById('storiesTable');
+            
+            if (!stories.length) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No stories scheduled</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = stories.map(story => `
+                <tr>
+                    <td><strong>${story.Title || ''}</strong></td>
+                    <td>${story.PostDate || ''}</td>
+                    <td>${story.Time || ''}</td>
+                    <td>${story.InteractiveElements || ''}</td>
+                    <td>${story.Notes || ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderStoriesStrip(stories) {
+            const container = document.getElementById('storiesStrip');
+            const withMedia = stories.filter(s => s.MediaURL);
+            
+            if (!withMedia.length) {
+                container.innerHTML = '<div class="empty-state" style="width: 100%;">No story assets uploaded</div>';
+                return;
+            }
+
+            container.innerHTML = withMedia.map(story => `
+                <div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="${story.MediaURL}" alt="${story.Title}" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">${story.Title || ''}</div>
+                    <div class="story-date">${story.PostDate || ''}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderInteractions(interactions) {
+            const container = document.getElementById('interactionsList');
+            
+            if (!interactions.length) {
+                container.innerHTML = '<div class="empty-state">No interaction targets configured</div>';
+                return;
+            }
+
+            container.innerHTML = interactions.map((item, index) => `
+                <div class="interaction-card">
+                    <div class="interaction-header">
+                        <div>
+                            <div class="interaction-account">@${item.AccountName || ''}</div>
+                            <div class="interaction-platform">${item.Platform || ''} · ${item.InteractionType || ''}</div>
+                        </div>
+                        <div class="interaction-goal-badge">${item.DailyGoal || '0'}/day</div>
+                    </div>
+                    <div class="week-checklist">
+                        ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => `
+                            <div class="day-check">
+                                <label>${day}</label>
+                                <input type="checkbox" ${item[day] === 'TRUE' || item[day] === true ? 'checked' : ''}>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================
+        // UTILITIES
+        // ============================================
+
+        function isVideo(url) {
+            return url.includes('youtube.com') || 
+                   url.includes('youtu.be') || 
+                   url.includes('vimeo.com') ||
+                   url.includes('.mp4');
+        }
+
+        function getEmbedUrl(url) {
+            if (url.includes('youtube.com/watch')) {
+                const videoId = url.split('v=')[1]?.split('&')[0];
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+            if (url.includes('youtu.be/')) {
+                const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+            if (url.includes('vimeo.com/')) {
+                const videoId = url.split('vimeo.com/')[1]?.split('?')[0];
+                return `https://player.vimeo.com/video/${videoId}`;
+            }
+            return url;
+        }
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+
+        async function init() {
+            const [config, posts, stories, interactions] = await Promise.all([
+                fetchSheet(SHEETS.config),
+                fetchSheet(SHEETS.posts),
+                fetchSheet(SHEETS.stories),
+                fetchSheet(SHEETS.interactions)
+            ]);
+
+            renderConfig(config, posts);
+            renderScheduleTable(posts);
+            renderPostCards(posts, 'post', 'postsGrid', 'postsCount');
+            renderPostCards(posts, 'reel', 'reelsGrid', 'reelsCount');
+            renderPostCards(posts, 'highlight', 'highlightsGrid', 'highlightsCount');
+            renderStoriesTable(stories);
+            renderStoriesStrip(stories);
+            renderInteractions(interactions);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

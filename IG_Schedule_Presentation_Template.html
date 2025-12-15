@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Content Planning Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Title Page Styles */
+        .title-page {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .title-page h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .account-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-box label {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .info-box .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-top: 5px;
+        }
+        
+        /* Section Styles */
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .section h2 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+        
+        /* Table Styles */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .schedule-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .schedule-table th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+        
+        .schedule-table th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+        
+        .schedule-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+        }
+        
+        .schedule-table tr:hover {
+            background: #f8f9ff;
+        }
+        
+        .schedule-table tr:last-child td:first-child {
+            border-radius: 0 0 0 10px;
+        }
+        
+        .schedule-table tr:last-child td:last-child {
+            border-radius: 0 0 10px 0;
+        }
+        
+        /* Type Badges */
+        .type-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .type-post { background: #e3f2fd; color: #1565c0; }
+        .type-reel { background: #fce4ec; color: #c2185b; }
+        .type-story { background: #fff3e0; color: #ef6c00; }
+        .type-highlight { background: #e8f5e9; color: #2e7d32; }
+        
+        /* Hashtag Styles */
+        .hashtags {
+            font-size: 0.85rem;
+            color: #667eea;
+            max-width: 300px;
+            line-height: 1.5;
+        }
+        
+        /* Draft Post Cards */
+        .draft-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .draft-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .draft-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .draft-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .draft-card .caption {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .draft-card .draft-hashtags {
+            color: #667eea;
+            font-size: 0.85rem;
+        }
+        
+        .media-placeholder {
+            background: linear-gradient(135deg, #ddd 0%, #eee 100%);
+            height: 200px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            margin-top: 15px;
+        }
+        
+        /* Interaction Tracker */
+        .interaction-table td input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .interaction-table td input[type="text"],
+        .interaction-table td input[type="number"],
+        .interaction-table td input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .interaction-table td input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        /* Add Row Button */
+        .add-row-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .add-row-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+            .add-row-btn {
+                display: none;
+            }
+        }
+        
+        /* Editable fields */
+        .editable {
+            min-width: 80px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .editable:hover {
+            background: #f0f0f0;
+        }
+        
+        .editable:focus {
+            outline: 2px solid #667eea;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- TITLE PAGE -->
+        <div class="title-page">
+            <h1>📱 Instagram Content Planning Document</h1>
+            <div class="account-info">
+                <div class="info-box">
+                    <label>Account Name</label>
+                    <div class="value" contenteditable="true">@smoothiebarinfusions</div>
+                </div>
+                <div class="info-box">
+                    <label>Date Created</label>
+                    <div class="value" contenteditable="true">12/09/2025</div>
+                </div>
+                <div class="info-box">
+                    <label>Planning Period</label>
+                    <div class="value" contenteditable="true">December 2025</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT CALENDAR -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">📅</div>
+                <h2>Content Calendar</h2>
+            </div>
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Notes</th>
+                        <th>Hashtags</th>
+                    </tr>
+                </thead>
+                <tbody id="content-calendar-body">
+                    <tr>
+                        <td contenteditable="true">WIB - SL x PJ</td>
+                        <td contenteditable="true">12/13</td>
+                        <td contenteditable="true">11:00am</td>
+                        <td><span class="type-badge type-post">Post</span></td>
+                        <td contenteditable="true">Sour Lemon x Pineapple Jack</td>
+                        <td class="hashtags" contenteditable="true">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">The Student</td>
+                        <td contenteditable="true">12/14</td>
+                        <td contenteditable="true">9:00am</td>
+                        <td><span class="type-badge type-reel">Reel</span></td>
+                        <td contenteditable="true">Media exists</td>
+                        <td class="hashtags" contenteditable="true">#smoothiebar #blend2 #whatsyourblend</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Pier #2</td>
+                        <td contenteditable="true">12/15</td>
+                        <td contenteditable="true">10:00am</td>
+                        <td><span class="type-badge type-post">Post</span></td>
+                        <td contenteditable="true">Lifestyle - Santa Monica</td>
+                        <td class="hashtags" contenteditable="true">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">SmoothiEdu</td>
+                        <td contenteditable="true">12/16</td>
+                        <td contenteditable="true">1:00pm</td>
+                        <td><span class="type-badge type-post">Post</span></td>
+                        <td contenteditable="true">Genetics Education</td>
+                        <td class="hashtags" contenteditable="true">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">WIB - CL x ZU</td>
+                        <td contenteditable="true">12/17</td>
+                        <td contenteditable="true">12:00pm</td>
+                        <td><span class="type-badge type-post">Post</span></td>
+                        <td contenteditable="true">Cherry Limeade x Zeven Up</td>
+                        <td class="hashtags" contenteditable="true">#WillItBlend</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="add-row-btn" onclick="addCalendarRow()">+ Add New Post</button>
+        </div>
+
+        <!-- STORIES SCHEDULE -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">⏰</div>
+                <h2>Stories Schedule</h2>
+            </div>
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Notes</th>
+                        <th>Interaction Goal</th>
+                    </tr>
+                </thead>
+                <tbody id="stories-body">
+                    <tr>
+                        <td contenteditable="true">Educational</td>
+                        <td contenteditable="true">12/13</td>
+                        <td contenteditable="true">8:00am</td>
+                        <td><span class="type-badge type-story">Story</span></td>
+                        <td contenteditable="true">Safety/tutorial</td>
+                        <td contenteditable="true">Users will know their safety is considered</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Behind Scenes</td>
+                        <td contenteditable="true">12/14</td>
+                        <td contenteditable="true">8:00am</td>
+                        <td><span class="type-badge type-story">Story</span></td>
+                        <td contenteditable="true">How it's made</td>
+                        <td contenteditable="true">User is interested in process</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Shoutout</td>
+                        <td contenteditable="true">12/15</td>
+                        <td contenteditable="true">8:00am</td>
+                        <td><span class="type-badge type-story">Story</span></td>
+                        <td contenteditable="true">Partners/workers</td>
+                        <td contenteditable="true">Exposed to product</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Poll</td>
+                        <td contenteditable="true">12/17</td>
+                        <td contenteditable="true">8:00am</td>
+                        <td><span class="type-badge type-story">Story</span></td>
+                        <td contenteditable="true">Product or variant pref</td>
+                        <td contenteditable="true">User votes</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Q&amp;A</td>
+                        <td contenteditable="true">12/19</td>
+                        <td contenteditable="true">8:00am</td>
+                        <td><span class="type-badge type-story">Story</span></td>
+                        <td contenteditable="true">Answer questions live</td>
+                        <td contenteditable="true">User asks and shows knowledge</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="add-row-btn" onclick="addStoryRow()">+ Add New Story</button>
+        </div>
+
+        <!-- DRAFT POSTS -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">✏️</div>
+                <h2>Draft Posts</h2>
+            </div>
+            <div class="draft-grid">
+                <div class="draft-card">
+                    <h3 contenteditable="true">Santa Monica Pier Batch 1</h3>
+                    <div class="caption" contenteditable="true">Wherever life may take you, Smoothie Bar will be there to make every experience just a bit brighter. Nothing but good vibes and sunshine at the Santa Monica Pier!😎</div>
+                    <div class="draft-hashtags" contenteditable="true">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
+                    <div class="media-placeholder">📷 Drop media here</div>
+                </div>
+                <div class="draft-card">
+                    <h3 contenteditable="true">Santa Monica Pier Batch 2</h3>
+                    <div class="caption" contenteditable="true">We don't pass judgement, just the vape. 💯</div>
+                    <div class="draft-hashtags" contenteditable="true">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
+                    <div class="media-placeholder">📷 Drop media here</div>
+                </div>
+                <div class="draft-card">
+                    <h3 contenteditable="true">Santa Monica Pier Batch 3</h3>
+                    <div class="caption" contenteditable="true">The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊</div>
+                    <div class="draft-hashtags" contenteditable="true">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
+                    <div class="media-placeholder">📷 Drop media here</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCOUNT INTERACTION TRACKER -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">🤝</div>
+                <h2>Account Interaction Tracker</h2>
+            </div>
+            <table class="schedule-table interaction-table">
+                <thead>
+                    <tr>
+                        <th>Account Name</th>
+                        <th>Interaction Type</th>
+                        <th>Planned/Day</th>
+                        <th>Last Interaction</th>
+                        <th>Done</th>
+                    </tr>
+                </thead>
+                <tbody id="interaction-body">
+                    <tr>
+                        <td><input type="text" placeholder="@account_name"></td>
+                        <td><input type="text" placeholder="Comment, Like, Share"></td>
+                        <td><input type="number" placeholder="5" min="1"></td>
+                        <td><input type="date"></td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="@account_name"></td>
+                        <td><input type="text" placeholder="Comment, Like, Share"></td>
+                        <td><input type="number" placeholder="5" min="1"></td>
+                        <td><input type="date"></td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="@account_name"></td>
+                        <td><input type="text" placeholder="Comment, Like, Share"></td>
+                        <td><input type="number" placeholder="5" min="1"></td>
+                        <td><input type="date"></td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="add-row-btn" onclick="addInteractionRow()">+ Add Account</button>
+        </div>
+    </div>
+
+    <script>
+        function addCalendarRow() {
+            const tbody = document.getElementById('content-calendar-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td contenteditable="true">New Post</td>
+                <td contenteditable="true">MM/DD</td>
+                <td contenteditable="true">12:00pm</td>
+                <td><span class="type-badge type-post">Post</span></td>
+                <td contenteditable="true">Notes...</td>
+                <td class="hashtags" contenteditable="true">#hashtags</td>
+            `;
+            tbody.appendChild(newRow);
+        }
+
+        function addStoryRow() {
+            const tbody = document.getElementById('stories-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td contenteditable="true">New Story</td>
+                <td contenteditable="true">MM/DD</td>
+                <td contenteditable="true">8:00am</td>
+                <td><span class="type-badge type-story">Story</span></td>
+                <td contenteditable="true">Notes...</td>
+                <td contenteditable="true">Interaction goal...</td>
+            `;
+            tbody.appendChild(newRow);
+        }
+
+        function addInteractionRow() {
+            const tbody = document.getElementById('interaction-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="@account_name"></td>
+                <td><input type="text" placeholder="Comment, Like, Share"></td>
+                <td><input type="number" placeholder="5" min="1"></td>
+                <td><input type="date"></td>
+                <td><input type="checkbox"></td>
+            `;
+            tbody.appendChild(newRow);
+        }
+    </script>
+</body>
+</html>

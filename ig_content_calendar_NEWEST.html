@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IG Content Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .calendar {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .calendar-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .weekday {
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #495057;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .weekday:last-child {
+            border-right: none;
+        }
+
+        .calendar-grid {
+            position: relative;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #dee2e6;
+        }
+
+        .day {
+            background: white;
+            min-height: 140px;
+            padding: 10px;
+            position: relative;
+        }
+
+        .day.empty {
+            background: #f8f9fa;
+        }
+
+        .day-number {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 2;
+        }
+
+        .day.sunday .day-number {
+            color: #dc3545;
+        }
+
+        .post {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 3;
+        }
+
+        .post-number {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .post-title {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        /* Multi-day post spanning */
+        .post-span {
+            position: absolute;
+            top: 45px;
+            left: 10px;
+            right: -1px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .post-span:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 3;
+        }
+
+        .post-span.span-2 {
+            width: calc(200% + 11px);
+        }
+
+        .post.lifestyle, .post-span.lifestyle {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .post.blend, .post-span.blend {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .post.interview, .post-span.interview {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .post.dispensary, .post-span.dispensary {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .post.edu, .post-span.edu {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .post.highrise, .post-span.highrise {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .day {
+                min-height: 100px;
+                padding: 5px;
+            }
+            
+            .post, .post-span {
+                font-size: 0.75em;
+                padding: 5px;
+            }
+            
+            .post-span {
+                top: 35px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Instagram Content Calendar</h1>
+        
+        <!-- September 2025 -->
+        <div class="calendar">
+            <div class="calendar-header">September 2025</div>
+            <div class="weekdays">
+                <div class="weekday">Sun</div>
+                <div class="weekday">Mon</div>
+                <div class="weekday">Tue</div>
+                <div class="weekday">Wed</div>
+                <div class="weekday">Thu</div>
+                <div class="weekday">Fri</div>
+                <div class="weekday">Sat</div>
+            </div>
+            <div class="calendar-grid">
+                <div class="days">
+                    <div class="day empty"></div>
+                    <div class="day">
+                        <div class="day-number">1</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">2</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">3</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">4</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">5</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">6</div>
+                    </div>
+                    <div class="day sunday">
+                        <div class="day-number">7</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">8</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">9</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">10</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">11</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">12</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">13</div>
+                    </div>
+                    <div class="day sunday">
+                        <div class="day-number">14</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">15</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">16</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">17</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">18</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">19</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">20</div>
+                    </div>
+                    <div class="day sunday">
+                        <div class="day-number">21</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">22</div>
+                        <div class="post lifestyle">
+                            <span class="post-number">POST 1</span>
+                            <span class="post-title">Lifestyle (Device Heavy)</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">23</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">24</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">25</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">26</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">27</div>
+                    </div>
+                    <div class="day sunday">
+                        <div class="day-number">28</div>
+                        <div class="post lifestyle">
+                            <span class="post-number">POST 2</span>
+                            <span class="post-title">Lifestyle (Device Info)</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">29</div>
+                    </div>
+                    <div class="day" style="position: relative;">
+                        <div class="day-number">30</div>
+                        <div class="post-span blend span-2">
+                            <div>
+                                <span class="post-number">POST 3</span>
+                                <span class="post-title">Will it Blend? Intro (Flavor Spotlight)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- October 2025 -->
+        <div class="calendar">
+            <div class="calendar-header">October 2025</div>
+            <div class="weekdays">
+                <div class="weekday">Sun</div>
+                <div class="weekday">Mon</div>
+                <div class="weekday">Tue</div>
+                <div class="weekday">Wed</div>
+                <div class="weekday">Thu</div>
+                <div class="weekday">Fri</div>
+                <div class="weekday">Sat</div>
+            </div>
+            <div class="calendar-grid">
+                <div class="days">
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                    <div class="day">
+                        <div class="day-number">1</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">2</div>
+                    </div>
+                    <div class="day" style="position: relative;">
+                        <div class="day-number">3</div>
+                        <div class="post-span interview span-2">
+                            <div>
+                                <span class="post-number">POST 4</span>
+                                <span class="post-title">Street Interview Feedback Edit 1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">4</div>
+                    </div>
+                    <div class="day sunday">
+                        <div class="day-number">5</div>
+                        <div class="post blend">
+                            <span class="post-number">POST 5</span>
+                            <span class="post-title">Will it Blend?: Truffle Butter</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">6</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">7</div>
+                        <div class="post dispensary">
+                            <span class="post-number">POST 6</span>
+                            <span class="post-title">Dispensary Drop: Elevate</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">8</div>
+                    </div>
+                    <div class="day" style="position: relative;">
+                        <div class="day-number">9</div>
+                        <div class="post-span lifestyle span-2">
+                            <div>
+                                <span class="post-number">POST 7</span>
+                                <span class="post-title">Full Lifestyle Edit 1: The Boxer</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">10</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">11</div>
+                    </div>
+                    <div class="day sunday">
+                        <div class="day-number">12</div>
+                        <div class="post interview">
+                            <span class="post-number">POST 8</span>
+                            <span class="post-title">Street Interview Feedback Edit 2</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">13</div>
+                    </div>
+                    <div class="day" style="position: relative;">
+                        <div class="day-number">14</div>
+                        <div class="post-span blend span-2">
+                            <div>
+                                <span class="post-number">POST 9</span>
+                                <span class="post-title">Will it Blend?: Lava Pop</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">15</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">16</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">17</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">18</div>
+                    </div>
+                    <div class="day sunday">
+                        <div class="day-number">19</div>
+                        <div class="post lifestyle">
+                            <span class="post-number">POST 10</span>
+                            <span class="post-title">Full Lifestyle Edit 2: The Artist</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">20</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">21</div>
+                        <div class="post highrise">
+                            <span class="post-number">POST 11</span>
+                            <span class="post-title">Highrise Video: Part 1 - CA</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">22</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">23</div>
+                        <div class="post edu">
+                            <span class="post-number">POST 12</span>
+                            <span class="post-title">EDU: Live Resin/Cannabis Concentrates</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">24</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">25</div>
+                    </div>
+                    <div class="day sunday">
+                        <div class="day-number">26</div>
+                        <div class="post blend">
+                            <span class="post-number">POST 13</span>
+                            <span class="post-title">Will it Blend: Vol 3</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">27</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">28</div>
+                        <div class="post lifestyle">
+                            <span class="post-number">POST 14</span>
+                            <span class="post-title">Full Lifestyle Edit 3: The Producer</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">29</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">30</div>
+                        <div class="post highrise">
+                            <span class="post-number">POST 15</span>
+                            <span class="post-title">Highrise Video Part 2 - NY or OKC</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">31</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- November 2025 -->
+        <div class="calendar">
+            <div class="calendar-header">November 2025</div>
+            <div class="weekdays">
+                <div class="weekday">Sun</div>
+                <div class="weekday">Mon</div>
+                <div class="weekday">Tue</div>
+                <div class="weekday">Wed</div>
+                <div class="weekday">Thu</div>
+                <div class="weekday">Fri</div>
+                <div class="weekday">Sat</div>
+            </div>
+            <div class="calendar-grid">
+                <div class="days">
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                    <div class="day">
+                        <div class="day-number">1</div>
+                    </div>
+                    <div class="day sunday">
+                        <div class="day-number">2</div>
+                        <div class="post blend">
+                            <span class="post-number">POST 16</span>
+                            <span class="post-title">Will it Blend Vol: 4</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">3</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">4</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">5</div>
+                        <div class="post highrise">
+                            <span class="post-number">POST 17</span>
+                            <span class="post-title">Highrise Video Part 3 - NY or OKC</span>
+                        </div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">6</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">7</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-number">8</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                <span>Lifestyle</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                <span>Will it Blend?</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                <span>Street Interview</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                <span>Dispensary</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);"></div>
+                <span>Educational</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
+                <span>Highrise</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

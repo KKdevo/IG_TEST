@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>August 2025 Content Calendar - Cannabis Brand Social Media</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b35, #ff7f50);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .month-year {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #ff6b35;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ff6b35;
+            padding-bottom: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b35;
+        }
+
+        .info-card h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .info-card li:before {
+            content: "•";
+            color: #ff6b35;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .tracking-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .input-group input {
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .week {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b35;
+        }
+
+        .week h3 {
+            color: #ff6b35;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .content-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #ff7f50;
+        }
+
+        .content-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .content-date {
+            font-weight: 600;
+            color: #ff6b35;
+        }
+
+        .content-type {
+            background-color: #ff6b35;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .content-description {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .platform-distribution {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .platform {
+            background-color: #fff4f0;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .crew-needed {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .checklist-section {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .checklist-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b35;
+        }
+
+        .checklist-card h4 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .content-codes {
+            background-color: #fff4f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .codes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .code-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .code {
+            background-color: #ff6b35;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-right: 10px;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .approval-hierarchy {
+            background-color: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .approval-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        .step-number {
+            background-color: #ffc107;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .emergency-protocols {
+            background-color: #f8d7da;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .protocol-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .protocol-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .protocol-title {
+            font-weight: 600;
+            color: #dc3545;
+            margin-bottom: 5px;
+        }
+
+        .notes-section {
+            background-color: #fff9c4;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+            margin-bottom: 30px;
+        }
+
+        .notes-section h3 {
+            color: #d68910;
+            margin-bottom: 15px;
+        }
+
+        .notes-section textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        .notes-section textarea:focus {
+            outline: none;
+            border-color: #f39c12;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .platform-distribution {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .checklist-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .checklist-item input[type="checkbox"] {
+                -webkit-appearance: checkbox;
+                appearance: checkbox;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>August 2025 Content Calendar</h1>
+            <div class="month-year">AUGUST 2025</div>
+            <p>Smoothie Bar Infusions Social Media Strategy</p>
+        </div>
+
+        <div class="content">
+            <!-- Planning Sections -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>Key Opportunities This Month</h3>
+                    <ul>
+                        <li><strong>Aug 1:</strong> National Girlfriend Day (community/relationship content)</li>
+                        <li><strong>Aug 8:</strong> International Cat Day (fun, lighthearted content)</li>
+                        <li><strong>Aug 15:</strong> National Relaxation Day (perfect cannabis tie-in)</li>
+                        <li><strong>Aug 19:</strong> World Photography Day (visual content celebration)</li>
+                        <li><strong>Aug 26:</strong> National Dog Day (community pet content)</li>
+                        <li><strong>Aug 31:</strong> End of summer (seasonal transition content)</li>
+                        <li><strong>Summer vibes:</strong> Beach culture, outdoor sessions, festival season</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>Brand Updates This Month</h3>
+                    <ul>
+                        <li><strong>Aug 1:</strong> V2rd1 Summer Collection Launch - 20 new strains + V2 device (MAJOR LAUNCH)</li>
+                        <li><strong>Aug 5:</strong> Ice Cream Mintz x Creamsicle strain spotlight (V2rd1 collection follow-up)</li>
+                        <li><strong>Aug 8:</strong> International Cat Day UGC campaign - community content generation</li>
+                        <li><strong>Aug 12:</strong> Summer device care education - storage tips for hot weather</li>
+                        <li><strong>Aug 19:</strong> Behind-the-scenes: Cultivation process (transparency)</li>
+                        <li><strong>Aug 26:</strong> Q3 partnership announcements (dispensary collaborations)</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>Media Team Scheduling</h3>
+                    <ul>
+                        <li><strong>Aug 1:</strong> FULL PRODUCTION TEAM - V2rd1 Collection + V2 Device Launch (MAJOR SHOOT)</li>
+                        <li><strong>Aug 2-3:</strong> Field crew needed for beach street interviews (Santa Monica/Venice)</li>
+                        <li><strong>Aug 9:</strong> Full production team for lifestyle interview (Downtown LA studio)</li>
+                        <li><strong>Aug 16:</strong> Follow-up lifestyle shoot (outdoor location - Griffith Observatory)</li>
+                        <li><strong>Aug 23:</strong> Street interview crew (Melrose Avenue, afternoon preferred)</li>
+                        <li><strong>Aug 30:</strong> End-of-summer content shoot (multiple LA locations)</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>Follower Growth Tracking</h3>
+                    <div class="tracking-inputs">
+                        <div class="input-group">
+                            <label>Starting Count (Aug 1):</label>
+                            <input type="number" placeholder="Enter starting followers">
+                        </div>
+                        <div class="input-group">
+                            <label>Expected by Month End:</label>
+                            <input type="number" placeholder="Enter target">
+                        </div>
+                        <div class="input-group">
+                            <label>Actual by Month End:</label>
+                            <input type="number" placeholder="Enter actual">
+                        </div>
+                        <div class="input-group">
+                            <label>Net Growth Target:</label>
+                            <input type="number" placeholder="Enter growth target">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Section -->
+            <div class="notes-section">
+                <h3>Monthly Planning Notes</h3>
+                <textarea placeholder="Add your planning notes, ideas, and observations for August 2025...
+
+Examples:
+- Special events or collaborations planned
+- Seasonal content themes to emphasize
+- Community feedback to address
+- New content experiments to try
+- Budget considerations
+- Team availability notes"></textarea>
+            </div>
+
+            <!-- Weekly Calendar -->
+            <div class="section">
+                <h2>Weekly Content Calendar</h2>
+                <div class="calendar-grid">
+                    <!-- Week 1 -->
+                    <div class="week">
+                        <h3>WEEK 1 (Aug 1-7)</h3>
+                        
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Fri 1</span>
+                                <span class="content-type">[B] Brand Update</span>
+                            </div>
+                            <div class="content-description">
+                                V2rd1 Summer Collection Launch - 20 new strains + V2 device showcase
+                                <span class="crew-needed">CREW NEEDED</span>
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Carousel showcase + Stories BTS + Product collection highlights</div>
+                                <div class="platform"><strong>FB:</strong> Detailed product line post + V2 device features</div>
+                                <div class="platform"><strong>YT:</strong> Product line launch video (5-8 min) + Device demo</div>
+                                <div class="platform"><strong>TikTok:</strong> Collection highlights + V2 device showcase (60 sec)</div>
+                            </div>
+                        </div>
+
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Fri 1</span>
+                                <span class="content-type">[W] Website Update</span>
+                            </div>
+                            <div class="content-description">
+                                V2rd1 strain collection + V2 device launch - full product lineup live
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>Website:</strong> V2rd1 collection pages + V2 device page + Purchase options</div>
+                                <div class="platform"><strong>Backend:</strong> 20-strain inventory + V2 device stock + Payment processing + Order fulfillment</div>
+                            </div>
+                        </div>
+
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Mon 5</span>
+                                <span class="content-type">[F] Flavor Insights</span>
+                            </div>
+                            <div class="content-description">
+                                Ice Cream Mintz x Creamsicle - V2rd1 collection spotlight (~350 words)
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Carousel post + Stories BTS + V2rd1 strain highlights</div>
+                                <div class="platform"><strong>FB:</strong> Detailed strain breakdown with V2rd1 collection context</div>
+                                <div class="platform"><strong>YT:</strong> Strain spotlight video (3-5 min)</div>
+                                <div class="platform"><strong>TikTok:</strong> Quick flavor profile highlights (30 sec)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Week 2 -->
+                    <div class="week">
+                        <h3>WEEK 2 (Aug 8-14)</h3>
+                        
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Fri 8</span>
+                                <span class="content-type">[C] Community Engagement</span>
+                            </div>
+                            <div class="content-description">
+                                International Cat Day - "Tag us with your cat chilling" UGC campaign
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Campaign post + Stories call-to-action + Repost user content + Cat highlights</div>
+                                <div class="platform"><strong>FB:</strong> Community challenge post + User content sharing</div>
+                                <div class="platform"><strong>YT:</strong> Community compilation video from submissions</div>
+                                <div class="platform"><strong>TikTok:</strong> UGC repost + Challenge participation (30 sec)</div>
+                            </div>
+                        </div>
+
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Mon 12</span>
+                                <span class="content-type">[E] Consumer Education</span>
+                            </div>
+                            <div class="content-description">
+                                "Best ways to store your vape device in summer heat" - device care education (~320 words)
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Educational carousel + Stories tips + Summer care highlights</div>
+                                <div class="platform"><strong>FB:</strong> Detailed device care post with summer focus</div>
+                                <div class="platform"><strong>YT:</strong> Device care tutorial video (5-8 min) + Shorts version</div>
+                                <div class="platform"><strong>TikTok:</strong> Quick summer storage tips (30 sec)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Week 3 -->
+                    <div class="week">
+                        <h3>WEEK 3 (Aug 15-21)</h3>
+                        
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Fri 15</span>
+                                <span class="content-type">[E] Consumer Education</span>
+                            </div>
+                            <div class="content-description">
+                                National Relaxation Day - "Perfect indica strains for summer relaxation" featuring Watermelon Gelato x Crunch Berries, Hippie Crasher x Motorbreath, Purple Octane x Black Roses (~320 words)
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Educational carousel + Strain showcase + Stories tips + Relaxation highlights</div>
+                                <div class="platform"><strong>FB:</strong> Detailed strain education post with relaxation benefits</div>
+                                <div class="platform"><strong>YT:</strong> Strain spotlight educational video (5-8 min) + Shorts version</div>
+                                <div class="platform"><strong>TikTok:</strong> Quick strain relaxation tips (30 sec)</div>
+                            </div>
+                        </div>
+
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Tue 19</span>
+                                <span class="content-type">[L] Lifestyle Interview</span>
+                            </div>
+                            <div class="content-description">
+                                Part 1: Dawn (photographer/visual artist) - World Photography Day tie-in
+                                <span class="crew-needed">FULL PRODUCTION TEAM</span>
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Main post + Reel highlights + Stories BTS + Photography highlights</div>
+                                <div class="platform"><strong>FB:</strong> Video post with artist background</div>
+                                <div class="platform"><strong>YT:</strong> Full interview segment (8-12 min) + Shorts clips</div>
+                                <div class="platform"><strong>TikTok:</strong> Best quotes/visual moments (15-30 sec)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Week 4 -->
+                    <div class="week">
+                        <h3>WEEK 4 (Aug 22-28)</h3>
+                        
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Sat 23</span>
+                                <span class="content-type">[S] Street Interview</span>
+                            </div>
+                            <div class="content-description">
+                                "What's your favorite summer cannabis memory?" (Melrose Avenue)
+                                <span class="crew-needed">CREW NEEDED - AFTERNOON</span>
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Reel + Stories + Summer memories highlights</div>
+                                <div class="platform"><strong>FB:</strong> Video post with summer community focus</div>
+                                <div class="platform"><strong>YT:</strong> Shorts compilation</div>
+                                <div class="platform"><strong>TikTok:</strong> Best summer stories (15-30 sec)</div>
+                            </div>
+                        </div>
+
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Mon 26</span>
+                                <span class="content-type">[B] Partnership Announcement</span>
+                            </div>
+                            <div class="content-description">
+                                Q3 dispensary collaborations + National Dog Day community tie-in
+                                <span class="crew-needed">CREW NEEDED</span>
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Announcement post + Stories + Partnership highlights</div>
+                                <div class="platform"><strong>FB:</strong> Detailed partnership post with locations</div>
+                                <div class="platform"><strong>YT:</strong> Partnership announcement video (3-5 min)</div>
+                                <div class="platform"><strong>TikTok:</strong> Quick partnership highlights (30 sec)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Week 5 -->
+                    <div class="week">
+                        <h3>WEEK 5 (Aug 29-31)</h3>
+                        
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Sat 30</span>
+                                <span class="content-type">[L] Lifestyle Interview</span>
+                            </div>
+                            <div class="content-description">
+                                Part 2: Day (same photographer) - outdoor shoot at Griffith Observatory
+                                <span class="crew-needed">FULL PRODUCTION TEAM</span>
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Main post + Reel (creative process) + Stories + Observatory highlights</div>
+                                <div class="platform"><strong>FB:</strong> Behind-the-scenes video post</div>
+                                <div class="platform"><strong>YT:</strong> Full segment + Shorts of creative work</div>
+                                <div class="platform"><strong>TikTok:</strong> Creative process clips (30 sec)</div>
+                            </div>
+                        </div>
+
+                        <div class="content-item">
+                            <div class="content-header">
+                                <span class="content-date">Sun 31</span>
+                                <span class="content-type">[C] Seasonal Transition</span>
+                            </div>
+                            <div class="content-description">
+                                End of summer reflection - "Summer highlights and fall preview"
+                            </div>
+                            <div class="platform-distribution">
+                                <div class="platform"><strong>IG:</strong> Carousel recap + Stories highlights + Summer archive</div>
+                                <div class="platform"><strong>FB:</strong> Summer recap with community appreciation</div>
+                                <div class="platform"><strong>YT:</strong> Summer highlights compilation</div>
+                                <div class="platform"><strong>TikTok:</strong> Summer moments montage (60 sec)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Codes -->
+            <div class="section">
+                <h2>Content Codes Reference</h2>
+                <div class="content-codes">
+                    <div class="codes-grid">
+                        <div class="code-item">
+                            <span class="code">[F]</span>
+                            <span>Flavor Insights (~350 words)</span>
+                        </div>
+                        <div class="code-item">
+                            <span class="code">[E]</span>
+                            <span>Consumer Education (~320 words)</span>
+                        </div>
+                        <div class="code-item">
+                            <span class="code">[L]</span>
+                            <span>Lifestyle Interview (4-part series)</span>
+                        </div>
+                        <div class="code-item">
+                            <span class="code">[S]</span>
+                            <span>Street Interview (30-90 seconds)</span>
+                        </div>
+                        <div class="code-item">
+                            <span class="code">[C]</span>
+                            <span>Community Engagement (polls, giveaways, updates)</span>
+                        </div>
+                        <div class="code-item">
+                            <span class="code">[B]</span>
+                            <span>Brand Updates (transparency, milestones, announcements)</span>
+                        </div>
+                        <div class="code-item">
+                            <span class="code">[W]</span>
+                            <span>Website Updates (product releases, promotions, launches)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Implementation Checklist -->
+            <div class="section">
+                <h2>Implementation Checklist</h2>
+                <div class="checklist-section">
+                    <div class="checklist-grid">
+                        <div class="checklist-card">
+                            <h4>Pre-Month Approval (Complete by Jul 25)</h4>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="approval1">
+                                <label for="approval1">Content calendar reviewed by social media manager</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="approval2">
+                                <label for="approval2">Legal compliance review completed</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="approval3">
+                                <label for="approval3">Brand voice consistency check</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="approval4">
+                                <label for="approval4">Budget approval for production costs</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="approval5">
+                                <label for="approval5">Media team availability confirmed</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="approval6">
+                                <label for="approval6">Equipment and location bookings secured</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="approval7">
+                                <label for="approval7">Lifestyle interview subjects confirmed and contracts signed</label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-card">
+                            <h4>Week 1 Execution (Aug 1-7)</h4>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week1-1">
+                                <label for="week1-1">Aug 1 V2rd1 Launch: Full production team confirmed ✓ | 20 strains ready ✓ | V2 device ready ✓ | Content shot ✓ | Edited ✓ | Posted ✓</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week1-1b">
+                                <label for="week1-1b">Aug 1 Website Launch: V2rd1 collection pages live ✓ | V2 device page live ✓ | 20-strain inventory loaded ✓ | Payment processing ✓</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week1-2">
+                                <label for="week1-2">Aug 5 Flavor Insights: Ice Cream Mintz x Creamsicle content created ✓ | Legal review ✓ | Posted ✓ | V2rd1 context included ✓</label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-card">
+                            <h4>Week 2 Execution (Aug 8-14)</h4>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week2-1">
+                                <label for="week2-1">Aug 8 UGC Campaign: Campaign post created ✓ | Call-to-action posted ✓ | User submissions monitored ✓ | Content reposted ✓</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week2-2">
+                                <label for="week2-2">Aug 12 Device Care Education: Content created ✓ | Summer storage tips reviewed ✓ | Posted ✓ | Educational value tracked ✓</label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-card">
+                            <h4>Week 3 Execution (Aug 15-21)</h4>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week3-1">
+                                <label for="week3-1">Aug 15 Education: Content reviewed ✓ | Graphics created ✓ | Posted ✓ | Engagement monitored ✓</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week3-2">
+                                <label for="week3-2">Aug 19 Lifestyle Interview: Full team confirmed ✓ | Studio booked ✓ | Subject confirmed ✓ | Shot ✓ | Edited ✓ | Posted ✓</label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-card">
+                            <h4>Week 4 Execution (Aug 22-28)</h4>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week4-1">
+                                <label for="week4-1">Aug 23 Street Interview: Afternoon crew confirmed ✓ | Melrose permits ✓ | Shot ✓ | Edited ✓ | Posted ✓</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week4-2">
+                                <label for="week4-2">Aug 26 Partnership Announcement: Content approved ✓ | Graphics created ✓ | Posted ✓ | Partner coordination ✓</label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-card">
+                            <h4>Week 5 Execution (Aug 29-31)</h4>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week5-1">
+                                <label for="week5-1">Aug 30 Lifestyle Interview: Full team confirmed ✓ | Observatory permits ✓ | Shot ✓ | Edited ✓ | Posted ✓</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="week5-2">
+                                <label for="week5-2">Aug 31 Seasonal Transition: Content created ✓ | Summer recap compiled ✓ | Posted ✓ | Fall preview prepared ✓</label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-card">
+                            <h4>Post-Production Requirements</h4>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="post1">
+                                <label for="post1">All content edited within 24 hours of shooting</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="post2">
+                                <label for="post2">Legal review for cannabis compliance before posting</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="post3">
+                                <label for="post3">Brand voice check by content manager</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="post4">
+                                <label for="post4">Cross-platform formatting completed</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="post5">
+                                <label for="post5">Scheduling in content management system</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="post6">
+                                <label for="post6">Performance tracking setup</label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-card">
+                            <h4>Month-End Review (Complete by Sep 5)</h4>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="review1">
+                                <label for="review1">Follower growth analysis completed</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="review2">
+                                <label for="review2">Content performance review</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="review3">
+                                <label for="review3">Team feedback collected</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="review4">
+                                <label for="review4">Budget vs actual costs analyzed</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="review5">
+                                <label for="review5">Next month planning initiated</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="review6">
+                                <label for="review6">Successful content archived for future reference</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approval Hierarchy -->
+            <div class="section">
+                <h2>Approval Hierarchy</h2>
+                <div class="approval-hierarchy">
+                    <div class="approval-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <strong>Content Creation</strong> → Social Media Manager approval
+                        </div>
+                    </div>
+                    <div class="approval-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <strong>Legal Review</strong> → Legal team sign-off (cannabis compliance)
+                        </div>
+                    </div>
+                    <div class="approval-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <strong>Final Approval</strong> → Brand Manager approval
+                        </div>
+                    </div>
+                    <div class="approval-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <strong>Scheduling</strong> → Content Manager execution
+                        </div>
+                    </div>
+                    <div class="approval-step">
+                        <div class="step-number">5</div>
+                        <div>
+                            <strong>Performance Review</strong> → Social Media Manager analysis
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Protocols -->
+            <div class="section">
+                <h2>Emergency Protocols</h2>
+                <div class="emergency-protocols">
+                    <div class="protocol-item">
+                        <div class="protocol-title">Content fails legal review:</div>
+                        <div>Use backup educational content from template library</div>
+                    </div>
+                    <div class="protocol-item">
+                        <div class="protocol-title">Crew unavailable:</div>
+                        <div>Reschedule or use solo content creation with mobile setup</div>
+                    </div>
+                    <div class="protocol-item">
+                        <div class="protocol-title">Subject cancels:</div>
+                        <div>Have backup lifestyle interview candidates on standby</div>
+                    </div>
+                    <div class="protocol-item">
+                        <div class="protocol-title">Platform policy changes:</div>
+                        <div>Immediate content audit and adjustment to comply with new rules</div>
+                    </div>
+                    <div class="protocol-item">
+                        <div class="protocol-title">Weather disrupts outdoor shoots:</div>
+                        <div>Indoor backup locations secured or reschedule within 48 hours</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-save functionality for form inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const textareas = document.querySelectorAll('textarea');
+            
+            // Load saved data
+            inputs.forEach(input => {
+                const savedValue = localStorage.getItem('august2025_' + (input.id || input.placeholder));
+                if (savedValue && input.type !== 'checkbox') {
+                    input.value = savedValue;
+                }
+            });
+            
+            checkboxes.forEach(checkbox => {
+                const savedValue = localStorage.getItem('august2025_' + checkbox.id);
+                if (savedValue === 'true') {
+                    checkbox.checked = true;
+                }
+            });
+
+            textareas.forEach(textarea => {
+                const savedValue = localStorage.getItem('august2025_notes');
+                if (savedValue) {
+                    textarea.value = savedValue;
+                }
+            });
+            
+            // Save data on change
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.type === 'checkbox') {
+                        localStorage.setItem('august2025_' + this.id, this.checked);
+                    } else {
+                        localStorage.setItem('august2025_' + (this.id || this.placeholder), this.value);
+                    }
+                });
+            });
+
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    localStorage.setItem('august2025_notes', this.value);
+                });
+            });
+            
+            // Print functionality
+            const printButton = document.createElement('button');
+            printButton.textContent = 'Print Calendar';
+            printButton.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #ff6b35;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            `;
+            printButton.addEventListener('click', () => window.print());
+            document.body.appendChild(printButton);
+
+            // Clear data button (for testing/reset)
+            const clearButton = document.createElement('button');
+            clearButton.textContent = 'Clear Data';
+            clearButton.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 150px;
+                background: #dc3545;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            `;
+            clearButton.addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear all saved data?')) {
+                    Object.keys(localStorage).forEach(key => {
+                        if (key.startsWith('august2025_')) {
+                            localStorage.removeItem(key);
+                        }
+                    });
+                    location.reload();
+                }
+            });
+            document.body.appendChild(clearButton);
+        });
+    </script>
+</body>
+</html>
