@@ -33,13 +33,14 @@ def parse_config(tables):
     for table in tables:
         for row in table:
             if len(row) >= 2:
-                key = row[0].strip().replace(" ", "")
-                if key == "AccountName":
-                    config["AccountName"] = row[1].strip()
-                elif key == "DateCreated":
-                    config["DateCreated"] = row[1].strip()
-                elif key == "Month":
-                    config["Month"] = row[1].strip()
+                key = row[0].strip().lower().replace(" ", "")
+                value = row[1].strip()
+                if "accountname" in key:
+                    config["AccountName"] = value
+                elif "datecreated" in key:
+                    config["DateCreated"] = value
+                elif "month" in key or "reviewmonth" in key:
+                    config["Month"] = value
     # Clean placeholder text
     for k, v in config.items():
         if v.startswith("[") and v.endswith("]"):
@@ -847,10 +848,29 @@ def generate_html(config, posts, stories, interactions):
             <div class="section-header">
                 <div class="section-number">05</div>
                 <h2 class="section-title">Account Interactions</h2>
-                <p class="section-desc">Daily engagement targets and tracking.</p>
+                <p class="section-desc">Daily engagement targets and tracking ({len(interactions)} accounts).</p>
             </div>
-            <div class="interactions-grid">
-                {"".join(render_interaction_card(i) for i in interactions) if interactions else '<div class="empty-state">No interaction targets configured</div>'}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>Platform</th>
+                            <th>Type</th>
+                            <th>Goal</th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                            <th>Sun</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {"".join(render_interaction_row(i) for i in interactions) if interactions else '<tr><td colspan="11" class="empty-state">No interaction targets configured</td></tr>'}
+                    </tbody>
+                </table>
             </div>
         </section>
     </main>
@@ -902,6 +922,22 @@ def render_interaction_card(interaction):
         </div>
         <div class="week-checklist">{checkboxes}</div>
     </div>'''
+
+
+def render_interaction_row(interaction):
+    """Render a single interaction as a table row (compact view for large lists)."""
+    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    day_cells = "".join(f'''<td style="text-align: center;">
+        <input type="checkbox" style="width: 18px; height: 18px; cursor: pointer;" {"checked" if interaction.get(day) == "TRUE" else ""}>
+    </td>''' for day in days)
+    
+    return f'''<tr>
+        <td><strong>@{interaction.get("AccountName", "")}</strong></td>
+        <td style="font-size: 13px; color: var(--text-muted);">{interaction.get("Platform", "").replace("[", "").replace("]", "")}</td>
+        <td style="font-size: 13px;">{interaction.get("InteractionType", "").replace("[", "").replace("]", "")}</td>
+        <td style="font-weight: 600;">{interaction.get("DailyGoal", "0").replace("[", "").replace("]", "")}/day</td>
+        {day_cells}
+    </tr>'''
 
 def render_monthly_calendar(posts, month, year):
     """Render the monthly calendar grid HTML."""
