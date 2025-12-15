@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Content Schedule - smoothiebarinfusions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #FAF9F7;
+            --bg-secondary: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #6B6B6B;
+            --text-muted: #9A9A9A;
+            --accent: #2D2D2D;
+            --accent-warm: #C4A484;
+            --border: #E8E6E3;
+            --border-light: #F0EFED;
+            --shadow: rgba(0,0,0,0.04);
+            --shadow-md: rgba(0,0,0,0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Manrope', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
+        
+        .nav { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; }
+        .nav-logo { font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .nav-subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 48px; }
+        .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 32px 0 12px; }
+        .nav a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 0; font-size: 14px; transition: all 0.2s ease; }
+        .nav a:hover { color: var(--text-primary); }
+        .nav .sub-link { padding-left: 16px; font-size: 13px; color: var(--text-muted); }
+        
+        .main { margin-left: 240px; min-height: 100vh; }
+        section { scroll-margin-top: 20px; }
+        
+        .title-page { min-height: 100vh; display: flex; flex-direction: column; position: relative; overflow: hidden; background: linear-gradient(165deg, #1A1A1A 0%, #2D2D2D 40%, #3D3D3D 100%); }
+        .title-page::before { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); opacity: 0.03; pointer-events: none; }
+        .title-header { padding: 48px 64px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
+        .title-badge { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 100px; backdrop-filter: blur(10px); }
+        .title-badge-dot { width: 6px; height: 6px; background: #7FE5A2; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.9); } }
+        .title-badge span { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.7); font-weight: 500; }
+        .title-date { font-size: 13px; color: rgba(255,255,255,0.5); }
+        .title-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 64px; position: relative; z-index: 1; }
+        .title-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-warm); margin-bottom: 24px; font-weight: 600; }
+        .title-main { font-family: 'Instrument Serif', serif; font-size: clamp(48px, 8vw, 86px); font-weight: 400; color: #FFFFFF; line-height: 1.05; letter-spacing: -2px; margin-bottom: 24px; max-width: 800px; }
+        .title-main em { font-style: italic; color: var(--accent-warm); }
+        .title-description { font-size: 17px; color: rgba(255,255,255,0.5); max-width: 500px; line-height: 1.7; font-weight: 300; }
+        .title-footer { padding: 48px 64px; display: flex; justify-content: space-between; align-items: flex-end; position: relative; z-index: 1; }
+        .title-meta { display: flex; gap: 64px; }
+        .title-meta-item { position: relative; }
+        .title-meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.35); margin-bottom: 8px; font-weight: 500; }
+        .title-meta-value { font-size: 18px; color: #FFFFFF; font-weight: 500; }
+        .title-decoration { position: absolute; right: 64px; bottom: 50%; transform: translateY(50%); width: 320px; height: 320px; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; }
+        .title-decoration::before { content: ''; position: absolute; top: 40px; left: 40px; right: 40px; bottom: 40px; border: 1px solid rgba(255,255,255,0.05); border-radius: 50%; }
+        
+        .content-section { padding: 80px 64px; border-bottom: 1px solid var(--border); }
+        .section-header { margin-bottom: 48px; max-width: 600px; }
+        .section-number { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 16px; font-weight: 500; }
+        .section-title { font-family: 'Instrument Serif', serif; font-size: 38px; font-weight: 400; letter-spacing: -1px; margin-bottom: 12px; line-height: 1.2; }
+        .section-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.7; }
+        
+        .table-wrapper { background: var(--bg-secondary); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 4px 20px var(--shadow); margin-bottom: 48px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--bg-primary); padding: 16px 20px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+        td { padding: 20px; border-bottom: 1px solid var(--border-light); font-size: 14px; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: var(--bg-primary); }
+        
+        .status { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 100px; font-size: 12px; font-weight: 600; }
+        .status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+        .status-draft { background: #FEF9E7; color: #9A7B2A; }
+        .status-draft::before { background: #F4C430; }
+        .status-approved { background: #E8F5E9; color: #2E7D32; }
+        .status-approved::before { background: #4CAF50; }
+        .status-posted { background: #E3F2FD; color: #1565C0; }
+        .status-posted::before { background: #2196F3; }
+        .status-needsrevision { background: #FFEBEE; color: #C62828; }
+        .status-needsrevision::before { background: #EF5350; }
+        
+        .type-badge { display: inline-block; padding: 5px 12px; border-radius: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .type-post { background: #F3F4F6; color: #374151; }
+        .type-reel { background: #FDF2F8; color: #BE185D; }
+        .type-highlight { background: #FEF3C7; color: #B45309; }
+        
+        .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 32px; margin-bottom: 48px; }
+        .post-card { background: var(--bg-secondary); border-radius: 20px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 8px 32px var(--shadow); transition: all 0.3s ease; }
+        .post-card:hover { transform: translateY(-4px); box-shadow: 0 4px 12px var(--shadow-md), 0 16px 48px var(--shadow-md); }
+        .post-card-media { width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--border-light); }
+        .post-card-media.video-container { position: relative; background: #000; }
+        .post-card-media iframe { width: 100%; height: 100%; border: none; }
+        .post-card-body { padding: 24px; }
+        .post-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; gap: 12px; }
+        .post-card-title { font-size: 17px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+        .post-card-caption { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; }
+        .post-card-hashtags { font-size: 13px; color: var(--accent-warm); font-weight: 500; }
+        .no-media { width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, var(--border-light) 0%, var(--border) 100%); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }
+        
+        .type-section { margin-bottom: 64px; }
+        .type-section:last-child { margin-bottom: 0; }
+        .type-section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .type-section-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--bg-primary); border-radius: 10px; font-size: 18px; }
+        .type-section-title { font-size: 20px; font-weight: 600; }
+        .type-section-count { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+        
+        .stories-strip { display: flex; gap: 20px; overflow-x: auto; padding: 24px 0; }
+        .story-item { flex-shrink: 0; width: 140px; text-align: center; }
+        .story-thumb-wrapper { position: relative; width: 120px; height: 213px; margin: 0 auto 12px; border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #E1306C 0%, #F77737 50%, #FCAF45 100%); padding: 3px; }
+        .story-thumb { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; background: var(--bg-secondary); }
+        .story-title { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+        .story-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        
+        .interactions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 24px; }
+        .interaction-card { background: var(--bg-secondary); border-radius: 16px; padding: 28px; box-shadow: 0 1px 3px var(--shadow); }
+        .interaction-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .interaction-account { font-weight: 600; font-size: 17px; margin-bottom: 4px; }
+        .interaction-platform { font-size: 13px; color: var(--text-muted); }
+        .interaction-goal-badge { display: inline-block; padding: 6px 14px; background: var(--bg-primary); border-radius: 100px; font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+        .week-checklist { display: flex; gap: 8px; }
+        .day-check { flex: 1; text-align: center; }
+        .day-check label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+        .day-check input[type="checkbox"] { appearance: none; width: 32px; height: 32px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease; position: relative; }
+        .day-check input[type="checkbox"]:checked { background: var(--accent); border-color: var(--accent); }
+        .day-check input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 600; }
+        
+        .empty-state { text-align: center; padding: 48px; color: var(--text-muted); background: var(--bg-primary); border-radius: 16px; }
+        
+        /* Tab Navigation */
+        .tab-nav { position: sticky; top: 0; z-index: 50; background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 0 64px; }
+        .tab-list { display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .tab-list::-webkit-scrollbar { display: none; }
+        .tab-btn { padding: 16px 24px; background: none; border: none; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--text-secondary); cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.2s ease; }
+        .tab-btn:hover { color: var(--text-primary); }
+        .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Calendar Styles */
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .calendar-title { font-family: 'Instrument Serif', serif; font-size: 32px; font-weight: 400; }
+        .calendar-nav { display: flex; gap: 8px; }
+        .calendar-nav-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }
+        .calendar-nav-btn:hover { background: var(--bg-primary); }
+        
+        .view-toggle { display: flex; gap: 4px; background: var(--bg-primary); padding: 4px; border-radius: 8px; margin-bottom: 32px; }
+        .view-toggle-btn { padding: 8px 16px; background: none; border: none; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: 6px; transition: all 0.2s ease; }
+        .view-toggle-btn.active { background: var(--bg-secondary); color: var(--text-primary); box-shadow: 0 1px 3px var(--shadow); }
+        
+        /* Monthly Calendar Grid */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border-radius: 16px; overflow: hidden; }
+        .calendar-day-header { background: var(--bg-primary); padding: 12px 8px; text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; }
+        .calendar-day { background: var(--bg-secondary); min-height: 100px; padding: 12px; position: relative; cursor: pointer; transition: background 0.2s ease; }
+        .calendar-day:hover { background: var(--bg-primary); }
+        .calendar-day.other-month { background: var(--bg-primary); opacity: 0.5; }
+        .calendar-day.today { background: #FFFBEB; }
+        .calendar-day-number { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+        .calendar-day.today .calendar-day-number { color: var(--accent-warm); }
+        .calendar-day-posts { display: flex; flex-direction: column; gap: 4px; }
+        .calendar-post-indicator { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .calendar-post-indicator.type-post { background: #F3F4F6; color: #374151; }
+        .calendar-post-indicator.type-reel { background: #FDF2F8; color: #BE185D; }
+        .calendar-post-indicator.type-highlight { background: #FEF3C7; color: #B45309; }
+        
+        /* Weekly View */
+        .week-section { margin-bottom: 32px; }
+        .week-header { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+        .week-number { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+        .week-date-range { font-size: 18px; font-weight: 600; color: var(--text-primary); }
+        .week-post-count { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+        .week-days { display: flex; flex-direction: column; gap: 16px; }
+        .day-row { display: flex; gap: 24px; padding: 16px; background: var(--bg-secondary); border-radius: 12px; }
+        .day-date { width: 80px; flex-shrink: 0; }
+        .day-date-weekday { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); }
+        .day-date-number { font-size: 24px; font-weight: 600; color: var(--text-primary); }
+        .day-posts { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+        .day-post-card { display: flex; gap: 16px; padding: 16px; background: var(--bg-primary); border-radius: 8px; align-items: center; }
+        .day-post-time { font-size: 13px; font-weight: 600; color: var(--text-muted); width: 60px; flex-shrink: 0; }
+        .day-post-info { flex: 1; }
+        .day-post-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+        .day-post-meta { font-size: 13px; color: var(--text-secondary); }
+        
+        @media print { .nav { display: none; } .main { margin-left: 0; } .title-page { min-height: auto; padding: 60px; } .tab-nav { display: none; } }
+        @media (max-width: 1024px) { 
+            .nav { display: none; } 
+            .main { margin-left: 0; } 
+            .content-section { padding: 48px 24px; } 
+            .title-header, .title-content, .title-footer { padding-left: 24px; padding-right: 24px; } 
+            .title-decoration { display: none; } 
+            .tab-nav { padding: 0 16px; }
+            .calendar-day { min-height: 80px; padding: 8px; }
+            .calendar-post-indicator { font-size: 10px; padding: 2px 4px; }
+            .day-row { flex-direction: column; gap: 12px; }
+            .day-date { width: auto; display: flex; gap: 8px; align-items: baseline; }
+        }
+        @media (max-width: 640px) {
+            .calendar-day { min-height: 60px; }
+            .calendar-day-number { font-size: 12px; }
+            .calendar-post-indicator { display: none; }
+            .calendar-day-posts { display: flex; flex-direction: row; gap: 2px; }
+            .calendar-day-posts::after { content: attr(data-count); font-size: 10px; color: var(--text-muted); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-logo">Content Schedule</div>
+        <div class="nav-subtitle">Social Media Report</div>
+        <div class="nav-section">Overview</div>
+        <a href="#title">Cover</a>
+        <a href="#calendar">Calendar</a>
+        <a href="#schedule">Posting Schedule</a>
+        <div class="nav-section">Content</div>
+        <a href="#posts">Draft Posts</a>
+        <a href="#posts-posts" class="sub-link">Posts</a>
+        <a href="#posts-reels" class="sub-link">Reels</a>
+        <a href="#posts-highlights" class="sub-link">Highlights</a>
+        <div class="nav-section">Engagement</div>
+        <a href="#stories">Stories</a>
+        <a href="#interactions">Interactions</a>
+    </nav>
+
+    <main class="main">
+        <section id="title" class="title-page">
+            <div class="title-decoration"></div>
+            <header class="title-header">
+                <div class="title-badge">
+                    <span class="title-badge-dot"></span>
+                    <span>Content Calendar</span>
+                </div>
+                <div class="title-date">Monday, December 15, 2025</div>
+            </header>
+            <div class="title-content">
+                <div class="title-eyebrow">Social Media Strategy</div>
+                <h1 class="title-main">Content <em>Schedule</em> & Asset Review</h1>
+                <p class="title-description">A comprehensive overview of planned content, posting schedule, and engagement strategy.</p>
+            </div>
+            <footer class="title-footer">
+                <div class="title-meta">
+                    <div class="title-meta-item">
+                        <div class="title-meta-label">Account</div>
+                        <div class="title-meta-value">smoothiebarinfusions</div>
+                    </div>
+                    <div class="title-meta-item">
+                        <div class="title-meta-label">Created</div>
+                        <div class="title-meta-value">12/09/2025</div>
+                    </div>
+                    <div class="title-meta-item">
+                        <div class="title-meta-label">Total Posts</div>
+                        <div class="title-meta-value">22</div>
+                    </div>
+                </div>
+            </footer>
+        </section>
+
+        <section id="calendar" class="content-section">
+            <div class="section-header">
+                <div class="section-number">01</div>
+                <h2 class="section-title">Content Calendar</h2>
+                <p class="section-desc">Visual overview of your posting schedule.</p>
+            </div>
+            
+            <div class="view-toggle">
+                <button class="view-toggle-btn active" onclick="showCalendarView('monthly')">Monthly View</button>
+                <button class="view-toggle-btn" onclick="showCalendarView('weekly')">Weekly View</button>
+            </div>
+            
+            <div id="calendar-monthly" class="calendar-view">
+                <div class="calendar-header">
+        <h2 class="calendar-title">December 2025</h2>
+    </div>
+    <div class="calendar-grid">
+        <div class="calendar-day-header">Sun</div><div class="calendar-day-header">Mon</div><div class="calendar-day-header">Tue</div><div class="calendar-day-header">Wed</div><div class="calendar-day-header">Thu</div><div class="calendar-day-header">Fri</div><div class="calendar-day-header">Sat</div>
+        <div class="calendar-day other-month"></div><div class="calendar-day" data-day="1">
+                <div class="calendar-day-number">1</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="2">
+                <div class="calendar-day-number">2</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="3">
+                <div class="calendar-day-number">3</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="4">
+                <div class="calendar-day-number">4</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="5">
+                <div class="calendar-day-number">5</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="6">
+                <div class="calendar-day-number">6</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="7">
+                <div class="calendar-day-number">7</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="8">
+                <div class="calendar-day-number">8</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="9">
+                <div class="calendar-day-number">9</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="10">
+                <div class="calendar-day-number">10</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="11">
+                <div class="calendar-day-number">11</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="12">
+                <div class="calendar-day-number">12</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="13">
+                <div class="calendar-day-number">13</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="14">
+                <div class="calendar-day-number">14</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day today" data-day="15">
+                <div class="calendar-day-number">15</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="16">
+                <div class="calendar-day-number">16</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="17">
+                <div class="calendar-day-number">17</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="18">
+                <div class="calendar-day-number">18</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="19">
+                <div class="calendar-day-number">19</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="20">
+                <div class="calendar-day-number">20</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="21">
+                <div class="calendar-day-number">21</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="22">
+                <div class="calendar-day-number">22</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="23">
+                <div class="calendar-day-number">23</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="24">
+                <div class="calendar-day-number">24</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="25">
+                <div class="calendar-day-number">25</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="26">
+                <div class="calendar-day-number">26</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="27">
+                <div class="calendar-day-number">27</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="28">
+                <div class="calendar-day-number">28</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="29">
+                <div class="calendar-day-number">29</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="30">
+                <div class="calendar-day-number">30</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day" data-day="31">
+                <div class="calendar-day-number">31</div>
+                <div class="calendar-day-posts" data-count="0"></div>
+            </div><div class="calendar-day other-month"></div><div class="calendar-day other-month"></div><div class="calendar-day other-month"></div>
+    </div>
+            </div>
+            
+            <div id="calendar-weekly" class="calendar-view" style="display: none;">
+                <div class="empty-state">No posts scheduled for this month</div>
+            </div>
+            
+            <script>
+                function showCalendarView(view) {
+                    document.querySelectorAll('.calendar-view').forEach(el => el.style.display = 'none');
+                    document.querySelectorAll('.view-toggle-btn').forEach(btn => btn.classList.remove('active'));
+                    document.getElementById('calendar-' + view).style.display = 'block';
+                    event.target.classList.add('active');
+                }
+            </script>
+        </section>
+
+        <section id="schedule" class="content-section">
+            <div class="section-header">
+                <div class="section-number">02</div>
+                <h2 class="section-title">Posting Schedule</h2>
+                <p class="section-desc">Complete overview of all planned content.</p>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Hashtags</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>WIB</strong></td>
+                            <td>12/13</td>
+                            <td>11:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</td>
+                            <td style="max-width: 180px; font-size: 13px;">SL x PJ</td>
+                        </tr><tr>
+                            <td><strong>The Student</strong></td>
+                            <td>12/14</td>
+                            <td>9:00am</td>
+                            <td><span class="type-badge type-reel">reel</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Media used</td>
+                        </tr><tr>
+                            <td><strong>Pier #2</strong></td>
+                            <td>12/15</td>
+                            <td>10:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</td>
+                            <td style="max-width: 180px; font-size: 13px;">Lifestyle</td>
+                        </tr><tr>
+                            <td><strong>SmoothiEdu</strong></td>
+                            <td>12/16</td>
+                            <td>1:00pm</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Genetics & Flavor</td>
+                        </tr><tr>
+                            <td><strong>WIB</strong></td>
+                            <td>12/17</td>
+                            <td>12:00pm</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#WillItBlend</td>
+                            <td style="max-width: 180px; font-size: 13px;">CL x ZU</td>
+                        </tr><tr>
+                            <td><strong>The Baller</strong></td>
+                            <td>12/18</td>
+                            <td>9:00am</td>
+                            <td><span class="type-badge type-reel">reel</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Media exists</td>
+                        </tr><tr>
+                            <td><strong>Pier #3</strong></td>
+                            <td>12/19</td>
+                            <td>11:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</td>
+                            <td style="max-width: 180px; font-size: 13px;">Lifestyle</td>
+                        </tr><tr>
+                            <td><strong>SmoothiEdu</strong></td>
+                            <td>12/20</td>
+                            <td>5:00pm</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Topic TBD</td>
+                        </tr><tr>
+                            <td><strong>WIB</strong></td>
+                            <td>12/21</td>
+                            <td>10:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#WillItBlend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Blend TBD</td>
+                        </tr><tr>
+                            <td><strong>Render</strong></td>
+                            <td>12/22</td>
+                            <td>10:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Flat</td>
+                        </tr><tr>
+                            <td><strong>Lifestyle</strong></td>
+                            <td>12/23</td>
+                            <td>11:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Dropbox</td>
+                        </tr><tr>
+                            <td><strong>Render</strong></td>
+                            <td>12/24</td>
+                            <td>8:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend#Xmaseve</td>
+                            <td style="max-width: 180px; font-size: 13px;">Fanned</td>
+                        </tr><tr>
+                            <td><strong>Xmas theme render?</strong></td>
+                            <td>12/25</td>
+                            <td>8:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend#Xmas</td>
+                            <td style="max-width: 180px; font-size: 13px;">Bouquet</td>
+                        </tr><tr>
+                            <td><strong>WIB</strong></td>
+                            <td>12/26</td>
+                            <td>11:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#WillItBlend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Blend TBD</td>
+                        </tr><tr>
+                            <td><strong>SmoothiEdu</strong></td>
+                            <td>12/27</td>
+                            <td>5:00pm</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Topic TBD</td>
+                        </tr><tr>
+                            <td><strong>Lifestyle</strong></td>
+                            <td>12/28</td>
+                            <td>10:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Dropbox</td>
+                        </tr><tr>
+                            <td><strong>Render</strong></td>
+                            <td>12/29</td>
+                            <td>11:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Front Flat</td>
+                        </tr><tr>
+                            <td><strong>Lifestyle</strong></td>
+                            <td>12/30</td>
+                            <td>9:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;">Dropbox</td>
+                        </tr><tr>
+                            <td><strong>New Years</strong></td>
+                            <td>12/31</td>
+                            <td>8:00am</td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend#NewYear</td>
+                            <td style="max-width: 180px; font-size: 13px;">Dropbox</td>
+                        </tr><tr>
+                            <td><strong>Santa Monica Pier Batch 1</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#santamonicapier #whatsyourblend #smoothiebar</td>
+                            <td style="max-width: 180px; font-size: 13px;"></td>
+                        </tr><tr>
+                            <td><strong>Santa Monica Pier Batch 2</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #whatsyourblend #santamonicapier</td>
+                            <td style="max-width: 180px; font-size: 13px;"></td>
+                        </tr><tr>
+                            <td><strong>Santa Monica Pier Batch 3</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="type-badge type-post">post</span></td>
+                            <td><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #whatsyourblend #santamonicapier</td>
+                            <td style="max-width: 180px; font-size: 13px;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="posts" class="content-section">
+            <div class="section-header">
+                <div class="section-number">03</div>
+                <h2 class="section-title">Draft Posts</h2>
+                <p class="section-desc">Content previews organized by format.</p>
+            </div>
+
+            <div id="posts-posts" class="type-section">
+                <div class="type-section-header">
+                    <div class="type-section-icon">📷</div>
+                    <div class="type-section-title">Feed Posts</div>
+                    <div class="type-section-count">20 posts</div>
+                </div>
+                <div class="posts-grid">
+                    <div class="post-card" id="post-0">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">WIB</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</div>
+        </div>
+    </div><div class="post-card" id="post-2">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Pier #2</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
+        </div>
+    </div><div class="post-card" id="post-3">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">SmoothiEdu</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-4">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">WIB</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#WillItBlend</div>
+        </div>
+    </div><div class="post-card" id="post-6">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Pier #3</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
+        </div>
+    </div><div class="post-card" id="post-7">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">SmoothiEdu</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-8">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">WIB</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#WillItBlend</div>
+        </div>
+    </div><div class="post-card" id="post-9">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Render</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-10">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Lifestyle</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-11">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Render</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend#Xmaseve</div>
+        </div>
+    </div><div class="post-card" id="post-12">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Xmas theme render?</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend#Xmas</div>
+        </div>
+    </div><div class="post-card" id="post-13">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">WIB</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#WillItBlend</div>
+        </div>
+    </div><div class="post-card" id="post-14">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">SmoothiEdu</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-15">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Lifestyle</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-16">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Render</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-17">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Lifestyle</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-18">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">New Years</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend#NewYear</div>
+        </div>
+    </div><div class="post-card" id="post-19">
+        <img class="post-card-media" src="https://imgur.com/a/EAXj3Qp - Album
+
+https://imgur.com/a/QLsH0K4 - Full Post Preview" alt="Santa Monica Pier Batch 1" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Santa Monica Pier Batch 1</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">Wherever life may take you, Smoothie Bar will be there to make every experience just a bit brighter.
+
+Nothing but good vibes and sunshine at the Santa Monica Pier! 😎</p>
+            <div class="post-card-hashtags">#santamonicapier #whatsyourblend #smoothiebar</div>
+        </div>
+    </div><div class="post-card" id="post-20">
+        <img class="post-card-media" src="https://imgur.com/a/ZnMfSL4 - Album
+
+https://imgur.com/a/fLS6pMp - Full Post Preview" alt="Santa Monica Pier Batch 2" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Santa Monica Pier Batch 2</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">We don't pass judgement, just the vape. 💯</p>
+            <div class="post-card-hashtags">#smoothiebar #whatsyourblend #santamonicapier</div>
+        </div>
+    </div><div class="post-card" id="post-21">
+        <img class="post-card-media" src="https://imgur.com/a/j296LcL - Album
+
+https://imgur.com/a/hPgT0e9 - Full Post Preview" alt="Santa Monica Pier Batch 3" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Santa Monica Pier Batch 3</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <p class="post-card-caption">The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊</p>
+            <div class="post-card-hashtags">#smoothiebar #whatsyourblend #santamonicapier</div>
+        </div>
+    </div>
+                </div>
+            </div>
+
+            <div id="posts-reels" class="type-section">
+                <div class="type-section-header">
+                    <div class="type-section-icon">🎬</div>
+                    <div class="type-section-title">Reels</div>
+                    <div class="type-section-count">2 reels</div>
+                </div>
+                <div class="posts-grid">
+                    <div class="post-card" id="post-1">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">The Student</span>
+                <span class="type-badge type-reel">reel</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-5">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">The Baller</span>
+                <span class="type-badge type-reel">reel</span>
+            </div>
+            <p class="post-card-caption">No caption provided</p>
+            <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
+        </div>
+    </div>
+                </div>
+            </div>
+
+            <div id="posts-highlights" class="type-section">
+                <div class="type-section-header">
+                    <div class="type-section-icon">⭐</div>
+                    <div class="type-section-title">Highlights</div>
+                    <div class="type-section-count">0 highlights</div>
+                </div>
+                <div class="posts-grid">
+                    <div class="empty-state">No highlights scheduled</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stories" class="content-section">
+            <div class="section-header">
+                <div class="section-number">04</div>
+                <h2 class="section-title">Stories Schedule</h2>
+                <p class="section-desc">Ephemeral content planned for the period.</p>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Interactive Elements</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Educational</strong></td>
+                            <td>12/13</td>
+                            <td>8:00am</td>
+                            <td>Users will know their safety is priority</td>
+                            <td>Safety/tutorial</td>
+                        </tr><tr>
+                            <td><strong>Behind Scenes</strong></td>
+                            <td>12/14</td>
+                            <td>8:00am</td>
+                            <td>Users appreciate transparency</td>
+                            <td>How it’s made</td>
+                        </tr><tr>
+                            <td><strong>Render Spotlight</strong></td>
+                            <td>12/15</td>
+                            <td>8:00am</td>
+                            <td>Consistency, show off product</td>
+                            <td>Easy post for caption</td>
+                        </tr><tr>
+                            <td><strong>Product Demo</strong></td>
+                            <td>12/16</td>
+                            <td>8:00am</td>
+                            <td>Device in action</td>
+                            <td>Shows device in use up close</td>
+                        </tr><tr>
+                            <td><strong>Poll</strong></td>
+                            <td>12/17</td>
+                            <td>8:00am</td>
+                            <td>User votes, gather data</td>
+                            <td>Where do you prefer to sesh?</td>
+                        </tr><tr>
+                            <td><strong>Fun Facts</strong></td>
+                            <td>12/18</td>
+                            <td>8:00am</td>
+                            <td>Unique info, likely to stick</td>
+                            <td>unique combos</td>
+                        </tr><tr>
+                            <td><strong>Q&A</strong></td>
+                            <td>12/19</td>
+                            <td>8:00am</td>
+                            <td>Connect to community by offering knowledge</td>
+                            <td>Show person on pc, then respond to questions</td>
+                        </tr><tr>
+                            <td><strong>Render Spotlight</strong></td>
+                            <td>12/20</td>
+                            <td>8:00am</td>
+                            <td>Expose to product</td>
+                            <td>Easy images for caption</td>
+                        </tr><tr>
+                            <td><strong>Lifestyle</strong></td>
+                            <td>12/21</td>
+                            <td>8:00am</td>
+                            <td>Give off SB vibe/tone</td>
+                            <td>Day in the life, pier shot</td>
+                        </tr><tr>
+                            <td><strong>Educational</strong></td>
+                            <td>12/22</td>
+                            <td>8:00am</td>
+                            <td>Users will appreciate facts about product safety</td>
+                            <td>Reassures product is safe, easy caption</td>
+                        </tr><tr>
+                            <td><strong>Poll</strong></td>
+                            <td>12/23</td>
+                            <td>8:00am</td>
+                            <td>User Holiday plans, make user think about it on Xmas.</td>
+                            <td>Which Blend are you bringing for Xmas?</td>
+                        </tr><tr>
+                            <td><strong>Xmas Lifestyle</strong></td>
+                            <td>12/24</td>
+                            <td>8:00am</td>
+                            <td>Holiday vibe, easy caption</td>
+                            <td>Twas the night before Xmas</td>
+                        </tr><tr>
+                            <td><strong>Xmas Post</strong></td>
+                            <td>12/25</td>
+                            <td>8:00am</td>
+                            <td>Xmas engagement</td>
+                            <td>Green bouquet render</td>
+                        </tr><tr>
+                            <td><strong>Behind Scenes</strong></td>
+                            <td>12/26</td>
+                            <td>8:00am</td>
+                            <td>Users can see effort going to product and transparency</td>
+                            <td>Interesting shot of process</td>
+                        </tr><tr>
+                            <td><strong>Q&A</strong></td>
+                            <td>12/27</td>
+                            <td>8:00am</td>
+                            <td>Users will submit question</td>
+                            <td>Simple render for Q&A</td>
+                        </tr><tr>
+                            <td><strong>Poll</strong></td>
+                            <td>12/28</td>
+                            <td>8:00am</td>
+                            <td>Users share interests and relate to activity with product</td>
+                            <td>Which passion of yours calls for a sesh?</td>
+                        </tr><tr>
+                            <td><strong>Educational</strong></td>
+                            <td>12/29</td>
+                            <td>8:00am</td>
+                            <td>Users will easily understand with visual aid</td>
+                            <td>Fact about dual tank to customer</td>
+                        </tr><tr>
+                            <td><strong>Poll</strong></td>
+                            <td>12/30</td>
+                            <td>8:00am</td>
+                            <td>WIB branding, user considers past purchases</td>
+                            <td>Favorite blend product of the year</td>
+                        </tr><tr>
+                            <td><strong>New Year Lifestyle</strong></td>
+                            <td>12/31</td>
+                            <td>8:00am</td>
+                            <td>User will relate; holidays offer chance to connect</td>
+                            <td>Be extraordinary, surpass your limits. Happy New Year!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="type-section-header" style="margin-top: 48px;">
+                <div class="type-section-icon">📱</div>
+                <div class="type-section-title">Story Assets</div>
+            </div>
+            <div class="stories-strip">
+                <div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/zc7nfaj" alt="Educational" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Educational</div>
+                    <div class="story-date">12/13</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/Mip0bAs" alt="Behind Scenes" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Behind Scenes</div>
+                    <div class="story-date">12/14</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/G79t3TM" alt="Render Spotlight" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Render Spotlight</div>
+                    <div class="story-date">12/15</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/cQSxnNp" alt="Product Demo" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Product Demo</div>
+                    <div class="story-date">12/16</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/jJFpv8G" alt="Poll" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Poll</div>
+                    <div class="story-date">12/17</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/0CjNkQg" alt="Fun Facts" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Fun Facts</div>
+                    <div class="story-date">12/18</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/dlzQBVD" alt="Q&A" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Q&A</div>
+                    <div class="story-date">12/19</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/bL2NYCm" alt="Render Spotlight" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Render Spotlight</div>
+                    <div class="story-date">12/20</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/RccTdVI" alt="Lifestyle" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Lifestyle</div>
+                    <div class="story-date">12/21</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/ODqvMKX" alt="Educational" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Educational</div>
+                    <div class="story-date">12/22</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/q826o0U" alt="Poll" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Poll</div>
+                    <div class="story-date">12/23</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/MxnCdUd" alt="Xmas Lifestyle" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Xmas Lifestyle</div>
+                    <div class="story-date">12/24</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/RJO8aUf" alt="Xmas Post" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Xmas Post</div>
+                    <div class="story-date">12/25</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/UTQEItS" alt="Behind Scenes" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Behind Scenes</div>
+                    <div class="story-date">12/26</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/Nh6M0lX" alt="Q&A" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Q&A</div>
+                    <div class="story-date">12/27</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/Bj49GCg" alt="Poll" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Poll</div>
+                    <div class="story-date">12/28</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/PZlADYO" alt="Educational" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Educational</div>
+                    <div class="story-date">12/29</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/uHWe3PV" alt="Poll" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">Poll</div>
+                    <div class="story-date">12/30</div>
+                </div><div class="story-item">
+                    <div class="story-thumb-wrapper">
+                        <img class="story-thumb" src="https://imgur.com/Qn7Tb5V" alt="New Year Lifestyle" onerror="this.style.background='#f5f5f5'">
+                    </div>
+                    <div class="story-title">New Year Lifestyle</div>
+                    <div class="story-date">12/31</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="interactions" class="content-section">
+            <div class="section-header">
+                <div class="section-number">05</div>
+                <h2 class="section-title">Account Interactions</h2>
+                <p class="section-desc">Daily engagement targets and tracking.</p>
+            </div>
+            <div class="interactions-grid">
+                <div class="interaction-card">
+        <div class="interaction-header">
+            <div>
+                <div class="interaction-account">@cookiesmaywoodsofficial</div>
+                <div class="interaction-platform">Instagram · Likes + Comments</div>
+            </div>
+            <div class="interaction-goal-badge">5/day</div>
+        </div>
+        <div class="week-checklist"><div class="day-check">
+        <label>Mon</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Tue</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Wed</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Thu</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Fri</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Sat</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Sun</label>
+        <input type="checkbox" >
+    </div></div>
+    </div><div class="interaction-card">
+        <div class="interaction-header">
+            <div>
+                <div class="interaction-account">@elevate.cannabis.culture</div>
+                <div class="interaction-platform">Instagram · Comments</div>
+            </div>
+            <div class="interaction-goal-badge">3/day</div>
+        </div>
+        <div class="week-checklist"><div class="day-check">
+        <label>Mon</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Tue</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Wed</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Thu</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Fri</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Sat</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Sun</label>
+        <input type="checkbox" >
+    </div></div>
+    </div><div class="interaction-card">
+        <div class="interaction-header">
+            <div>
+                <div class="interaction-account">@smoothiebar_ny</div>
+                <div class="interaction-platform">Instagram · Story Replies</div>
+            </div>
+            <div class="interaction-goal-badge">2/day</div>
+        </div>
+        <div class="week-checklist"><div class="day-check">
+        <label>Mon</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Tue</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Wed</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Thu</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Fri</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Sat</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Sun</label>
+        <input type="checkbox" >
+    </div></div>
+    </div><div class="interaction-card">
+        <div class="interaction-header">
+            <div>
+                <div class="interaction-account">@flxextracts</div>
+                <div class="interaction-platform">Instagram · Likes + Comments</div>
+            </div>
+            <div class="interaction-goal-badge">2/day</div>
+        </div>
+        <div class="week-checklist"><div class="day-check">
+        <label>Mon</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Tue</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Wed</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Thu</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Fri</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Sat</label>
+        <input type="checkbox" >
+    </div><div class="day-check">
+        <label>Sun</label>
+        <input type="checkbox" >
+    </div></div>
+    </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

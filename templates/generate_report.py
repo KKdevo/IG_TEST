@@ -177,24 +177,68 @@ def get_week_date_range(week_num, month, year):
     return f"{month_abbr} {start_day}-{end_day}"
 
 def parse_posts_table(table):
-    """Parse the posting schedule table."""
+    """Parse the posting schedule table by reading headers dynamically."""
     posts = []
-    headers = ["Title", "PostDate", "Time", "Type", "Status", "Hashtags", "Notes"]
+    if not table or len(table) < 2:
+        return posts
     
+    # Build header index map (case-insensitive)
+    header_row = table[0]
+    header_map = {}
+    for idx, h in enumerate(header_row):
+        h_lower = h.lower().strip()
+        if "title" in h_lower:
+            header_map["title"] = idx
+        elif "date" in h_lower:
+            header_map["date"] = idx
+        elif "time" in h_lower:
+            header_map["time"] = idx
+        elif "type" in h_lower:
+            header_map["type"] = idx
+        elif "status" in h_lower:
+            header_map["status"] = idx
+        elif "hashtag" in h_lower:
+            header_map["hashtags"] = idx
+        elif "note" in h_lower:
+            header_map["notes"] = idx
+        elif "link" in h_lower:
+            header_map["link"] = idx
+    
+    # Parse rows
     for i, row in enumerate(table):
         if i == 0:  # Skip header row
             continue
-        if len(row) >= 7 and row[0] and not row[0].startswith("["):
-            post = {
-                "Title": row[0],
-                "PostDate": row[1],
-                "Time": row[2],
-                "Type": row[3].lower().replace("[", "").replace("]", ""),
-                "Status": row[4].replace("[", "").replace("]", ""),
-                "Hashtags": row[5],
-                "Notes": row[6] if len(row) > 6 else ""
-            }
-            posts.append(post)
+        
+        # Get title - skip if empty or placeholder
+        title_idx = header_map.get("title", 0)
+        title = row[title_idx].strip() if title_idx < len(row) else ""
+        if not title or title.startswith("["):
+            continue
+        
+        post = {"Title": title}
+        
+        if "date" in header_map and header_map["date"] < len(row):
+            post["PostDate"] = row[header_map["date"]].strip()
+        if "time" in header_map and header_map["time"] < len(row):
+            post["Time"] = row[header_map["time"]].strip()
+        if "type" in header_map and header_map["type"] < len(row):
+            post["Type"] = row[header_map["type"]].strip().lower().replace("[", "").replace("]", "")
+        else:
+            post["Type"] = "post"
+        if "status" in header_map and header_map["status"] < len(row):
+            post["Status"] = row[header_map["status"]].strip().replace("[", "").replace("]", "")
+        else:
+            post["Status"] = "Draft"
+        if "hashtags" in header_map and header_map["hashtags"] < len(row):
+            post["Hashtags"] = row[header_map["hashtags"]].strip()
+        if "notes" in header_map and header_map["notes"] < len(row):
+            post["Notes"] = row[header_map["notes"]].strip()
+        if "link" in header_map and header_map["link"] < len(row):
+            link = row[header_map["link"]].strip()
+            if link and not link.startswith("["):
+                post["MediaURL"] = link
+        
+        posts.append(post)
     return posts
 
 def parse_post_blocks(tables):
@@ -233,25 +277,55 @@ def parse_post_blocks(tables):
     return posts
 
 def parse_stories_table(table):
-    """Parse the stories table."""
+    """Parse the stories table by reading headers dynamically."""
     stories = []
+    if not table or len(table) < 2:
+        return stories
     
+    # Build header index map
+    header_row = table[0]
+    header_map = {}
+    for idx, h in enumerate(header_row):
+        h_lower = h.lower().strip()
+        if "title" in h_lower:
+            header_map["title"] = idx
+        elif "date" in h_lower:
+            header_map["date"] = idx
+        elif "time" in h_lower:
+            header_map["time"] = idx
+        elif "interaction" in h_lower:
+            header_map["interaction"] = idx
+        elif "note" in h_lower:
+            header_map["notes"] = idx
+        elif "link" in h_lower:
+            header_map["link"] = idx
+    
+    # Parse rows
     for i, row in enumerate(table):
-        if i == 0:  # Skip header
+        if i == 0:
             continue
-        if len(row) >= 5 and row[0] and not row[0].startswith("["):
-            story = {
-                "Title": row[0],
-                "PostDate": row[1],
-                "Time": row[2],
-                "InteractiveElements": row[3],
-                "Notes": row[4],
-                "MediaURL": row[5] if len(row) > 5 else ""
-            }
-            # Clean placeholder URLs
-            if story["MediaURL"].startswith("["):
-                story["MediaURL"] = ""
-            stories.append(story)
+        
+        title_idx = header_map.get("title", 0)
+        title = row[title_idx].strip() if title_idx < len(row) else ""
+        if not title or title.startswith("["):
+            continue
+        
+        story = {"Title": title}
+        
+        if "date" in header_map and header_map["date"] < len(row):
+            story["PostDate"] = row[header_map["date"]].strip()
+        if "time" in header_map and header_map["time"] < len(row):
+            story["Time"] = row[header_map["time"]].strip()
+        if "interaction" in header_map and header_map["interaction"] < len(row):
+            story["InteractiveElements"] = row[header_map["interaction"]].strip()
+        if "notes" in header_map and header_map["notes"] < len(row):
+            story["Notes"] = row[header_map["notes"]].strip()
+        if "link" in header_map and header_map["link"] < len(row):
+            link = row[header_map["link"]].strip()
+            if link and not link.startswith("["):
+                story["MediaURL"] = link
+        
+        stories.append(story)
     return stories
 
 def parse_interactions_table(table):
@@ -288,33 +362,48 @@ def identify_tables(tables, doc):
         "interactions": None
     }
     
-    for table in tables:
+    for i, table in enumerate(tables):
         if not table or not table[0]:
             continue
             
         first_row = [c.lower().strip() for c in table[0]]
         
-        # Config table (Account Name / Date Created)
-        if any("account" in c for c in first_row):
-            result["config"] = table
-            
-        # Posts schedule (has Title, Date, Time, Type columns)
-        elif "title" in first_row and "date" in first_row and "type" in first_row:
-            result["posts_schedule"] = table
-            
-        # Stories table (has Interactive Elements)
-        elif any("interactive" in c for c in first_row):
+        # Config table (2-column with Account Name / Date Created in first column)
+        if len(table[0]) == 2 and len(table) <= 5:
+            labels = [row[0].lower().strip() if len(row) >= 2 else "" for row in table]
+            if "account name" in labels or "date created" in labels:
+                result["config"] = table
+                continue
+        
+        # Posts schedule (has Title and Type columns - main posting schedule)
+        # This is typically the first large table with 7 columns
+        if "title" in first_row and "type" in first_row and len(table) > 5:
+            if result["posts_schedule"] is None:
+                result["posts_schedule"] = table
+                continue
+        
+        # Stories table (has Title, Post Date, Interaction but no Type column)
+        # Usually the second large schedule table
+        if "title" in first_row and any("interaction" in c for c in first_row) and "type" not in first_row:
             result["stories"] = table
+            continue
             
-        # Interactions table (has Daily Goal and day columns)
-        elif any("goal" in c for c in first_row) and any("mon" in c for c in first_row):
+        # Interactions table (has Account, Daily Goal, Mon/Tue/etc columns)
+        if any("account" in c for c in first_row) and any("goal" in c for c in first_row) and any("mon" in c for c in first_row):
             result["interactions"] = table
+            continue
             
-        # Post detail block (Title/Caption/Hashtags format)
-        elif len(table) >= 3 and len(table[0]) == 2:
+        # Post detail block (Title/Caption/Hashtags format - 2 column small tables)
+        if len(table) >= 3 and len(table[0]) == 2:
             labels = [row[0].lower().strip() if len(row) >= 2 else "" for row in table]
             if "title" in labels and ("caption" in labels or "description" in labels):
-                result["post_blocks"].append(table)
+                # Skip placeholder templates
+                title_value = ""
+                for row in table:
+                    if len(row) >= 2 and row[0].lower().strip() == "title":
+                        title_value = row[1].strip()
+                if title_value and not title_value.startswith("["):
+                    result["post_blocks"].append(table)
     
     return result
 
