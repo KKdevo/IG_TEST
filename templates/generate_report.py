@@ -13,7 +13,8 @@ import os
 import re
 from docx import Document
 from docx.table import Table
-from datetime import datetime
+from datetime import datetime, timedelta
+import calendar
 
 def extract_tables(doc):
     """Extract all tables from the document."""
@@ -27,8 +28,8 @@ def extract_tables(doc):
     return tables
 
 def parse_config(tables):
-    """Parse the config table (first table with Account Name/Date Created)."""
-    config = {"AccountName": "", "DateCreated": ""}
+    """Parse the config table (first table with Account Name/Date Created/Month)."""
+    config = {"AccountName": "", "DateCreated": "", "Month": ""}
     for table in tables:
         for row in table:
             if len(row) >= 2:
@@ -37,11 +38,143 @@ def parse_config(tables):
                     config["AccountName"] = row[1].strip()
                 elif key == "DateCreated":
                     config["DateCreated"] = row[1].strip()
+                elif key == "Month":
+                    config["Month"] = row[1].strip()
     # Clean placeholder text
     for k, v in config.items():
         if v.startswith("[") and v.endswith("]"):
             config[k] = ""
     return config
+
+
+def parse_date(date_str, year=None):
+    """
+    Parse date string in various formats to datetime object.
+    Supports: MM/DD/YY, MM/DD/YYYY, Dec 5, December 5, etc.
+    """
+    if not date_str:
+        return None
+    
+    date_str = date_str.strip()
+    
+    # Try MM/DD/YY or MM/DD/YYYY format
+    for fmt in ["%m/%d/%y", "%m/%d/%Y"]:
+        try:
+            return datetime.strptime(date_str, fmt)
+        except ValueError:
+            continue
+    
+    # Try "Dec 5" or "December 5" format
+    month_formats = [
+        ("%b %d", True),   # Dec 5
+        ("%B %d", True),   # December 5
+        ("%b %d, %Y", False),  # Dec 5, 2025
+        ("%B %d, %Y", False),  # December 5, 2025
+    ]
+    
+    for fmt, needs_year in month_formats:
+        try:
+            parsed = datetime.strptime(date_str, fmt)
+            if needs_year and year:
+                parsed = parsed.replace(year=year)
+            elif needs_year:
+                parsed = parsed.replace(year=datetime.now().year)
+            return parsed
+        except ValueError:
+            continue
+    
+    return None
+
+
+def parse_month_year(month_str):
+    """
+    Parse month string like 'December 2025' or 'Dec 2025' to (month_num, year).
+    Returns (month_number, year) tuple or (current_month, current_year) if parsing fails.
+    """
+    if not month_str:
+        now = datetime.now()
+        return (now.month, now.year)
+    
+    month_str = month_str.strip()
+    
+    # Try "December 2025" or "Dec 2025" format
+    for fmt in ["%B %Y", "%b %Y"]:
+        try:
+            parsed = datetime.strptime(month_str, fmt)
+            return (parsed.month, parsed.year)
+        except ValueError:
+            continue
+    
+    # Try "12/2025" or "12-2025" format
+    for sep in ['/', '-']:
+        if sep in month_str:
+            parts = month_str.split(sep)
+            if len(parts) == 2:
+                try:
+                    month = int(parts[0])
+                    year = int(parts[1])
+                    if 1 <= month <= 12:
+                        return (month, year)
+                except ValueError:
+                    continue
+    
+    # Default to current month/year
+    now = datetime.now()
+    return (now.month, now.year)
+
+
+def group_posts_by_week(posts, month, year):
+    """
+    Group posts by week number within the month.
+    Returns dict: {week_num: [(day, post), ...]}
+    """
+    # Get calendar info for the month
+    cal = calendar.Calendar(firstweekday=6)  # Sunday start
+    month_days = list(cal.itermonthdays(year, month))
+    
+    # Calculate week boundaries
+    weeks = {}
+    current_week = 1
+    week_posts = []
+    
+    for i, day in enumerate(month_days):
+        if day == 0:
+            continue
+        if i > 0 and i % 7 == 0:
+            if week_posts:
+                weeks[current_week] = week_posts
+            current_week += 1
+            week_posts = []
+    
+    # Now assign posts to weeks
+    weeks = {}
+    for post in posts:
+        post_date = parse_date(post.get("PostDate", ""), year)
+        if post_date and post_date.month == month and post_date.year == year:
+            day = post_date.day
+            # Determine which week this day falls in
+            week_num = (day - 1) // 7 + 1
+            if week_num not in weeks:
+                weeks[week_num] = []
+            weeks[week_num].append((day, post))
+    
+    # Sort posts within each week by day
+    for week_num in weeks:
+        weeks[week_num].sort(key=lambda x: x[0])
+    
+    return weeks
+
+
+def get_week_date_range(week_num, month, year):
+    """
+    Get the date range string for a week (e.g., 'Dec 1-7').
+    """
+    # Calculate start and end days for this week
+    start_day = (week_num - 1) * 7 + 1
+    end_day = min(start_day + 6, calendar.monthrange(year, month)[1])
+    
+    month_abbr = calendar.month_abbr[month]
+    return f"{month_abbr} {start_day}-{end_day}"
 
 def parse_posts_table(table):
     """Parse the posting schedule table."""
@@ -209,6 +342,13 @@ def generate_html(config, posts, stories, interactions):
     reels_count = len([p for p in posts if p.get("Type", "").lower() == "reel"])
     highlights_count = len([p for p in posts if p.get("Type", "").lower() == "highlight"])
     
+    # Parse month for calendar
+    month, year = parse_month_year(config.get("Month", ""))
+    
+    # Generate calendar views
+    monthly_calendar_html = render_monthly_calendar(posts, month, year)
+    weekly_view_html = render_weekly_view(posts, month, year)
+    
     html = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -338,8 +478,80 @@ def generate_html(config, posts, stories, interactions):
         
         .empty-state {{ text-align: center; padding: 48px; color: var(--text-muted); background: var(--bg-primary); border-radius: 16px; }}
         
-        @media print {{ .nav {{ display: none; }} .main {{ margin-left: 0; }} .title-page {{ min-height: auto; padding: 60px; }} }}
-        @media (max-width: 1024px) {{ .nav {{ display: none; }} .main {{ margin-left: 0; }} .content-section {{ padding: 48px 32px; }} .title-header, .title-content, .title-footer {{ padding-left: 32px; padding-right: 32px; }} .title-decoration {{ display: none; }} }}
+        /* Tab Navigation */
+        .tab-nav {{ position: sticky; top: 0; z-index: 50; background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 0 64px; }}
+        .tab-list {{ display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }}
+        .tab-list::-webkit-scrollbar {{ display: none; }}
+        .tab-btn {{ padding: 16px 24px; background: none; border: none; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--text-secondary); cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.2s ease; }}
+        .tab-btn:hover {{ color: var(--text-primary); }}
+        .tab-btn.active {{ color: var(--text-primary); border-bottom-color: var(--accent); }}
+        .tab-content {{ display: none; }}
+        .tab-content.active {{ display: block; }}
+        
+        /* Calendar Styles */
+        .calendar-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }}
+        .calendar-title {{ font-family: 'Instrument Serif', serif; font-size: 32px; font-weight: 400; }}
+        .calendar-nav {{ display: flex; gap: 8px; }}
+        .calendar-nav-btn {{ width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }}
+        .calendar-nav-btn:hover {{ background: var(--bg-primary); }}
+        
+        .view-toggle {{ display: flex; gap: 4px; background: var(--bg-primary); padding: 4px; border-radius: 8px; margin-bottom: 32px; }}
+        .view-toggle-btn {{ padding: 8px 16px; background: none; border: none; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: 6px; transition: all 0.2s ease; }}
+        .view-toggle-btn.active {{ background: var(--bg-secondary); color: var(--text-primary); box-shadow: 0 1px 3px var(--shadow); }}
+        
+        /* Monthly Calendar Grid */
+        .calendar-grid {{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border-radius: 16px; overflow: hidden; }}
+        .calendar-day-header {{ background: var(--bg-primary); padding: 12px 8px; text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; }}
+        .calendar-day {{ background: var(--bg-secondary); min-height: 100px; padding: 12px; position: relative; cursor: pointer; transition: background 0.2s ease; }}
+        .calendar-day:hover {{ background: var(--bg-primary); }}
+        .calendar-day.other-month {{ background: var(--bg-primary); opacity: 0.5; }}
+        .calendar-day.today {{ background: #FFFBEB; }}
+        .calendar-day-number {{ font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }}
+        .calendar-day.today .calendar-day-number {{ color: var(--accent-warm); }}
+        .calendar-day-posts {{ display: flex; flex-direction: column; gap: 4px; }}
+        .calendar-post-indicator {{ padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+        .calendar-post-indicator.type-post {{ background: #F3F4F6; color: #374151; }}
+        .calendar-post-indicator.type-reel {{ background: #FDF2F8; color: #BE185D; }}
+        .calendar-post-indicator.type-highlight {{ background: #FEF3C7; color: #B45309; }}
+        
+        /* Weekly View */
+        .week-section {{ margin-bottom: 32px; }}
+        .week-header {{ display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }}
+        .week-number {{ font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }}
+        .week-date-range {{ font-size: 18px; font-weight: 600; color: var(--text-primary); }}
+        .week-post-count {{ font-size: 13px; color: var(--text-muted); margin-left: auto; }}
+        .week-days {{ display: flex; flex-direction: column; gap: 16px; }}
+        .day-row {{ display: flex; gap: 24px; padding: 16px; background: var(--bg-secondary); border-radius: 12px; }}
+        .day-date {{ width: 80px; flex-shrink: 0; }}
+        .day-date-weekday {{ font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); }}
+        .day-date-number {{ font-size: 24px; font-weight: 600; color: var(--text-primary); }}
+        .day-posts {{ flex: 1; display: flex; flex-direction: column; gap: 12px; }}
+        .day-post-card {{ display: flex; gap: 16px; padding: 16px; background: var(--bg-primary); border-radius: 8px; align-items: center; }}
+        .day-post-time {{ font-size: 13px; font-weight: 600; color: var(--text-muted); width: 60px; flex-shrink: 0; }}
+        .day-post-info {{ flex: 1; }}
+        .day-post-title {{ font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }}
+        .day-post-meta {{ font-size: 13px; color: var(--text-secondary); }}
+        
+        @media print {{ .nav {{ display: none; }} .main {{ margin-left: 0; }} .title-page {{ min-height: auto; padding: 60px; }} .tab-nav {{ display: none; }} }}
+        @media (max-width: 1024px) {{ 
+            .nav {{ display: none; }} 
+            .main {{ margin-left: 0; }} 
+            .content-section {{ padding: 48px 24px; }} 
+            .title-header, .title-content, .title-footer {{ padding-left: 24px; padding-right: 24px; }} 
+            .title-decoration {{ display: none; }} 
+            .tab-nav {{ padding: 0 16px; }}
+            .calendar-day {{ min-height: 80px; padding: 8px; }}
+            .calendar-post-indicator {{ font-size: 10px; padding: 2px 4px; }}
+            .day-row {{ flex-direction: column; gap: 12px; }}
+            .day-date {{ width: auto; display: flex; gap: 8px; align-items: baseline; }}
+        }}
+        @media (max-width: 640px) {{
+            .calendar-day {{ min-height: 60px; }}
+            .calendar-day-number {{ font-size: 12px; }}
+            .calendar-post-indicator {{ display: none; }}
+            .calendar-day-posts {{ display: flex; flex-direction: row; gap: 2px; }}
+            .calendar-day-posts::after {{ content: attr(data-count); font-size: 10px; color: var(--text-muted); }}
+        }}
     </style>
 </head>
 <body>
@@ -348,6 +560,7 @@ def generate_html(config, posts, stories, interactions):
         <div class="nav-subtitle">Social Media Report</div>
         <div class="nav-section">Overview</div>
         <a href="#title">Cover</a>
+        <a href="#calendar">Calendar</a>
         <a href="#schedule">Posting Schedule</a>
         <div class="nav-section">Content</div>
         <a href="#posts">Draft Posts</a>
@@ -392,9 +605,39 @@ def generate_html(config, posts, stories, interactions):
             </footer>
         </section>
 
-        <section id="schedule" class="content-section">
+        <section id="calendar" class="content-section">
             <div class="section-header">
                 <div class="section-number">01</div>
+                <h2 class="section-title">Content Calendar</h2>
+                <p class="section-desc">Visual overview of your posting schedule.</p>
+            </div>
+            
+            <div class="view-toggle">
+                <button class="view-toggle-btn active" onclick="showCalendarView('monthly')">Monthly View</button>
+                <button class="view-toggle-btn" onclick="showCalendarView('weekly')">Weekly View</button>
+            </div>
+            
+            <div id="calendar-monthly" class="calendar-view">
+                {monthly_calendar_html}
+            </div>
+            
+            <div id="calendar-weekly" class="calendar-view" style="display: none;">
+                {weekly_view_html}
+            </div>
+            
+            <script>
+                function showCalendarView(view) {{
+                    document.querySelectorAll('.calendar-view').forEach(el => el.style.display = 'none');
+                    document.querySelectorAll('.view-toggle-btn').forEach(btn => btn.classList.remove('active'));
+                    document.getElementById('calendar-' + view).style.display = 'block';
+                    event.target.classList.add('active');
+                }}
+            </script>
+        </section>
+
+        <section id="schedule" class="content-section">
+            <div class="section-header">
+                <div class="section-number">02</div>
                 <h2 class="section-title">Posting Schedule</h2>
                 <p class="section-desc">Complete overview of all planned content.</p>
             </div>
@@ -428,7 +671,7 @@ def generate_html(config, posts, stories, interactions):
 
         <section id="posts" class="content-section">
             <div class="section-header">
-                <div class="section-number">02</div>
+                <div class="section-number">03</div>
                 <h2 class="section-title">Draft Posts</h2>
                 <p class="section-desc">Content previews organized by format.</p>
             </div>
@@ -469,7 +712,7 @@ def generate_html(config, posts, stories, interactions):
 
         <section id="stories" class="content-section">
             <div class="section-header">
-                <div class="section-number">03</div>
+                <div class="section-number">04</div>
                 <h2 class="section-title">Stories Schedule</h2>
                 <p class="section-desc">Ephemeral content planned for the period.</p>
             </div>
@@ -513,7 +756,7 @@ def generate_html(config, posts, stories, interactions):
 
         <section id="interactions" class="content-section">
             <div class="section-header">
-                <div class="section-number">04</div>
+                <div class="section-number">05</div>
                 <h2 class="section-title">Account Interactions</h2>
                 <p class="section-desc">Daily engagement targets and tracking.</p>
             </div>
@@ -570,6 +813,123 @@ def render_interaction_card(interaction):
         </div>
         <div class="week-checklist">{checkboxes}</div>
     </div>'''
+
+def render_monthly_calendar(posts, month, year):
+    """Render the monthly calendar grid HTML."""
+    cal = calendar.Calendar(firstweekday=6)  # Sunday start
+    month_name = calendar.month_name[month]
+    today = datetime.now()
+    
+    # Build a dict of day -> posts for quick lookup
+    posts_by_day = {}
+    for post in posts:
+        post_date = parse_date(post.get("PostDate", ""), year)
+        if post_date and post_date.month == month and post_date.year == year:
+            day = post_date.day
+            if day not in posts_by_day:
+                posts_by_day[day] = []
+            posts_by_day[day].append(post)
+    
+    # Day headers
+    day_headers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    headers_html = ''.join(f'<div class="calendar-day-header">{d}</div>' for d in day_headers)
+    
+    # Calendar days
+    days_html = ''
+    for day in cal.itermonthdays(year, month):
+        if day == 0:
+            days_html += '<div class="calendar-day other-month"></div>'
+        else:
+            is_today = (today.year == year and today.month == month and today.day == day)
+            today_class = ' today' if is_today else ''
+            day_posts = posts_by_day.get(day, [])
+            
+            posts_indicators = ''
+            for p in day_posts[:3]:  # Show max 3 indicators
+                post_type = p.get("Type", "post").lower()
+                title = p.get("Title", "")[:20]
+                posts_indicators += f'<div class="calendar-post-indicator type-{post_type}">{title}</div>'
+            
+            if len(day_posts) > 3:
+                posts_indicators += f'<div class="calendar-post-indicator" style="background: var(--bg-primary); color: var(--text-muted);">+{len(day_posts) - 3} more</div>'
+            
+            days_html += f'''<div class="calendar-day{today_class}" data-day="{day}">
+                <div class="calendar-day-number">{day}</div>
+                <div class="calendar-day-posts" data-count="{len(day_posts)}">{posts_indicators}</div>
+            </div>'''
+    
+    return f'''<div class="calendar-header">
+        <h2 class="calendar-title">{month_name} {year}</h2>
+    </div>
+    <div class="calendar-grid">
+        {headers_html}
+        {days_html}
+    </div>'''
+
+
+def render_weekly_view(posts, month, year):
+    """Render the weekly detail view HTML."""
+    weeks = group_posts_by_week(posts, month, year)
+    month_name = calendar.month_name[month]
+    
+    if not weeks:
+        return '<div class="empty-state">No posts scheduled for this month</div>'
+    
+    weeks_html = ''
+    for week_num in sorted(weeks.keys()):
+        week_posts = weeks[week_num]
+        date_range = get_week_date_range(week_num, month, year)
+        
+        # Group by day
+        days_dict = {}
+        for day, post in week_posts:
+            if day not in days_dict:
+                days_dict[day] = []
+            days_dict[day].append(post)
+        
+        days_html = ''
+        for day in sorted(days_dict.keys()):
+            day_posts = days_dict[day]
+            day_date = datetime(year, month, day)
+            weekday = day_date.strftime('%a')
+            
+            posts_html = ''
+            for p in day_posts:
+                post_type = p.get("Type", "post").lower()
+                title = p.get("Title", "Untitled")
+                time = p.get("Time", "")
+                status = p.get("Status", "Draft")
+                
+                posts_html += f'''<div class="day-post-card">
+                    <div class="day-post-time">{time}</div>
+                    <div class="day-post-info">
+                        <div class="day-post-title">{title}</div>
+                        <div class="day-post-meta">
+                            <span class="type-badge type-{post_type}">{post_type}</span>
+                            <span class="status status-{status.lower().replace(" ", "")}">{status}</span>
+                        </div>
+                    </div>
+                </div>'''
+            
+            days_html += f'''<div class="day-row">
+                <div class="day-date">
+                    <div class="day-date-weekday">{weekday}</div>
+                    <div class="day-date-number">{day}</div>
+                </div>
+                <div class="day-posts">{posts_html}</div>
+            </div>'''
+        
+        weeks_html += f'''<div class="week-section">
+            <div class="week-header">
+                <div class="week-number">Week {week_num}</div>
+                <div class="week-date-range">{date_range}</div>
+                <div class="week-post-count">{len(week_posts)} posts</div>
+            </div>
+            <div class="week-days">{days_html}</div>
+        </div>'''
+    
+    return weeks_html
+
 
 def get_embed_url(url):
     """Convert video URLs to embed format."""
