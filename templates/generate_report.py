@@ -1699,11 +1699,13 @@ def convert_imgur_url(url):
 
 def convert_dropbox_url(url):
     """
-    Convert Dropbox share URLs to direct download URLs.
+    Convert Dropbox share URLs to direct download URLs that work on mobile.
     
     Converts:
-        https://www.dropbox.com/...?dl=0  →  https://www.dropbox.com/...?dl=1
-        https://www.dropbox.com/scl/fi/...  →  adds ?dl=1 or changes dl=0 to dl=1
+        https://www.dropbox.com/...?dl=0  →  https://dl.dropboxusercontent.com/...?raw=1
+        https://www.dropbox.com/scl/fi/...  →  https://dl.dropboxusercontent.com/scl/fi/...?raw=1
+    
+    Using dl.dropboxusercontent.com with raw=1 avoids redirect issues on mobile browsers.
     """
     if not url:
         return url
@@ -1714,16 +1716,22 @@ def convert_dropbox_url(url):
     if "dropbox.com" not in url:
         return url
     
-    # Convert dl=0 to dl=1 for direct access
-    if "dl=0" in url:
-        return url.replace("dl=0", "dl=1")
+    # Convert www.dropbox.com to dl.dropboxusercontent.com for direct access
+    if "www.dropbox.com" in url:
+        url = url.replace("www.dropbox.com", "dl.dropboxusercontent.com")
+    elif "dropbox.com" in url and "dl.dropboxusercontent.com" not in url:
+        url = url.replace("dropbox.com", "dl.dropboxusercontent.com")
     
-    # If no dl parameter, add dl=1
-    if "dl=" not in url:
+    # Use raw=1 instead of dl=1 for better mobile compatibility
+    if "dl=0" in url:
+        url = url.replace("dl=0", "raw=1")
+    elif "dl=1" in url:
+        url = url.replace("dl=1", "raw=1")
+    elif "raw=" not in url:
         if "?" in url:
-            return url + "&dl=1"
+            url = url + "&raw=1"
         else:
-            return url + "?dl=1"
+            url = url + "?raw=1"
     
     return url
 
