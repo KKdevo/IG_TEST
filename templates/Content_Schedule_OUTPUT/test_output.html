@@ -25,9 +25,9 @@
         body { font-family: 'Manrope', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
         
         .nav { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; transition: transform 0.3s ease; }
-        .nav-logo { width: 100%; max-width: 160px; margin-bottom: 0; margin-top: -40px; }
-        .nav-logo img { width: 100%; height: auto; margin-bottom: -40px; }
-        .nav-subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 32px; text-align: center; margin-top: 0; }
+        .nav-logo { width: 100%; max-width: 160px; margin: -55px auto -45px auto; display: block; }
+        .nav-logo img { width: 100%; height: auto; display: block; }
+        .nav-subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 24px; text-align: center; margin-top: 0; }
         
         /* Hamburger Menu */
         .hamburger { display: none; position: fixed; top: 16px; left: 16px; z-index: 200; width: 44px; height: 44px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 2px 8px var(--shadow); }
@@ -70,9 +70,9 @@
         .title-decoration::before { content: ''; position: absolute; top: 40px; left: 40px; right: 40px; bottom: 40px; border: 1px solid rgba(255,255,255,0.05); border-radius: 50%; }
         
         /* Title Page Brand Image */
-        .title-brand-image { position: absolute; right: -50px; top: 50%; transform: translateY(-50%); height: 255%; max-height: 1800px; width: auto; opacity: 0.9; pointer-events: none; z-index: 0; }
-        @media (max-width: 1024px) { .title-brand-image { right: -80px; height: 180%; max-height: 1200px; } }
-        @media (max-width: 640px) { .title-brand-image { right: -60px; height: 135%; max-height: 840px; opacity: 0.7; } }
+        .title-brand-image { position: absolute; right: -50px; top: 50%; transform: translateY(-50%); height: 185%; max-height: 1300px; width: auto; opacity: 0.9; pointer-events: none; z-index: 0; }
+        @media (max-width: 1024px) { .title-brand-image { right: -80px; height: 130%; max-height: 867px; } }
+        @media (max-width: 640px) { .title-brand-image { right: -60px; height: 98%; max-height: 607px; opacity: 0.7; } }
         
         .content-section { padding: 80px 64px; border-bottom: 1px solid var(--border); }
         .section-header { margin-bottom: 48px; max-width: 600px; }
