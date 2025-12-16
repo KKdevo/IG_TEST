@@ -1,4 +1,4 @@
-p#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Social Media Report Generator
 Reads a Word document template and generates a beautiful HTML report.
@@ -540,10 +540,21 @@ def generate_html(config, posts, stories, interactions):
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: 'Manrope', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }}
         
-        .nav {{ position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; }}
-        .nav-logo {{ font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.5px; margin-bottom: 8px; }}
-        .nav-subtitle {{ font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 48px; }}
+        .nav {{ position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; transition: transform 0.3s ease; }}
+        .nav-logo {{ width: 100%; max-width: 160px; margin: -55px auto -45px auto; display: block; }}
+        .nav-logo img {{ width: 100%; height: auto; display: block; }}
+        .nav-subtitle {{ font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 24px; text-align: center; margin-top: 0; }}
+        
+        /* Hamburger Menu */
+        .hamburger {{ display: none; position: fixed; top: 20px; right: 20px; z-index: 200; width: 40px; height: 40px; background: rgba(255,255,255,0.95); border: none; border-radius: 10px; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }}
+        .hamburger .bar {{ display: block; width: 18px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }}
+        .hamburger.active .bar:nth-child(1) {{ transform: rotate(45deg) translate(5px, 5px); }}
+        .hamburger.active .bar:nth-child(2) {{ opacity: 0; }}
+        .hamburger.active .bar:nth-child(3) {{ transform: rotate(-45deg) translate(5px, -5px); }}
+        .nav-overlay {{ display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }}
+        .nav-overlay.active {{ opacity: 1; pointer-events: auto; }}
         .nav-section {{ font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 32px 0 12px; }}
+        .nav-section:first-of-type {{ margin-top: 42px; }}
         .nav a {{ display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 0; font-size: 14px; transition: all 0.2s ease; }}
         .nav a:hover {{ color: var(--text-primary); }}
         .nav .sub-link {{ padding-left: 16px; font-size: 13px; color: var(--text-muted); }}
@@ -571,6 +582,7 @@ def generate_html(config, posts, stories, interactions):
         .title-meta-value {{ font-size: 18px; color: #FFFFFF; font-weight: 500; }}
         .title-decoration {{ position: absolute; right: 64px; bottom: 50%; transform: translateY(50%); width: 320px; height: 320px; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; }}
         .title-decoration::before {{ content: ''; position: absolute; top: 40px; left: 40px; right: 40px; bottom: 40px; border: 1px solid rgba(255,255,255,0.05); border-radius: 50%; }}
+        .title-brand-image {{ position: absolute; right: -50px; top: calc(50% + 40px); transform: translateY(-50%); height: 172%; max-height: 1210px; width: auto; opacity: 0.9; pointer-events: none; z-index: 0; }}
         
         .content-section {{ padding: 80px 64px; border-bottom: 1px solid var(--border); }}
         .section-header {{ margin-bottom: 48px; max-width: 600px; }}
@@ -691,9 +703,9 @@ def generate_html(config, posts, stories, interactions):
         .sort-info {{ font-size: 12px; color: var(--text-muted); }}
         th.sortable {{ cursor: pointer; user-select: none; position: relative; }}
         th.sortable:hover {{ background: var(--border-light); }}
-        th.sortable::after {{ content: '⇅'; margin-left: 6px; opacity: 0.4; font-size: 10px; }}
-        th.sortable.asc::after {{ content: '↑'; opacity: 1; }}
-        th.sortable.desc::after {{ content: '↓'; opacity: 1; }}
+        th.sortable::after {{ content: ''; margin-left: 6px; opacity: 0.4; font-size: 10px; }}
+        th.sortable.asc::after {{ content: ''; opacity: 1; }}
+        th.sortable.desc::after {{ content: ''; opacity: 1; }}
         .no-results {{ text-align: center; padding: 24px; color: var(--text-muted); font-size: 14px; }}
         
         /* Tab Navigation */
@@ -800,12 +812,16 @@ def generate_html(config, posts, stories, interactions):
         
         @media print {{ .nav {{ display: none; }} .main {{ margin-left: 0; }} .title-page {{ min-height: auto; padding: 60px; }} .tab-nav {{ display: none; }} }}
         @media (max-width: 1024px) {{ 
-            .nav {{ display: none; }} 
-            .main {{ margin-left: 0; }} 
+            .hamburger {{ display: flex; }}
+            .nav {{ transform: translateX(-100%); }}
+            .nav.active {{ transform: translateX(0); }}
+            .nav-overlay {{ display: block; }}
+            .main {{ margin-left: 0; }}
             .content-section {{ padding: 48px 24px; }} 
             .title-header, .title-content, .title-footer {{ padding-left: 24px; padding-right: 24px; }} 
             .title-decoration {{ display: none; }} 
             .tab-nav {{ padding: 0 16px; }}
+            .title-brand-image {{ right: -100px; height: 121%; max-height: 807px; }}
             .calendar-day {{ min-height: 80px; padding: 8px; }}
             .calendar-post-indicator {{ font-size: 10px; padding: 2px 4px; }}
             .day-row {{ flex-direction: column; gap: 12px; }}
@@ -817,6 +833,7 @@ def generate_html(config, posts, stories, interactions):
             .calendar-post-indicator {{ display: none; }}
             .calendar-day-posts {{ display: flex; flex-direction: row; gap: 2px; }}
             .calendar-day-posts::after {{ content: attr(data-count); font-size: 10px; color: var(--text-muted); }}
+            .title-brand-image {{ right: -175px; height: 91%; max-height: 564px; opacity: 0.7; }}
             
             /* Mobile image fixes */
             .posts-grid {{ gap: 20px; }}
@@ -843,8 +860,10 @@ def generate_html(config, posts, stories, interactions):
     </style>
 </head>
 <body>
+    <button class="hamburger" onclick="toggleNav()"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
+    <div class="nav-overlay" onclick="toggleNav()"></div>
     <nav class="nav">
-        <div class="nav-logo">Content Schedule</div>
+        <div class="nav-logo"><img src="Smoothie-Bar--Logo-Assets---3D-Curved-Logo--Branding-Assets---11.21.25.png" alt="Smoothie Bar Logo"></div>
         <div class="nav-subtitle">Social Media Report</div>
         <div class="nav-section">Overview</div>
         <a href="#title">Cover</a>
@@ -862,7 +881,7 @@ def generate_html(config, posts, stories, interactions):
 
     <main class="main">
         <section id="title" class="title-page">
-            <div class="title-decoration"></div>
+            <img class="title-brand-image" src="Smoothie-Bar---Logo-Assets--Branding-Assets---11.21.25.png" alt="Smoothie Bar">
             <header class="title-header">
                 <div class="title-date">{datetime.now().strftime("%A, %B %d, %Y")}</div>
             </header>
@@ -1112,6 +1131,22 @@ def generate_html(config, posts, stories, interactions):
     </main>
     
     <script>
+        // Hamburger menu toggle
+        function toggleNav() {{
+            document.querySelector('.hamburger').classList.toggle('active');
+            document.querySelector('.nav').classList.toggle('active');
+            document.querySelector('.nav-overlay').classList.toggle('active');
+        }}
+        
+        // Close nav when clicking a link (mobile)
+        document.querySelectorAll('.nav a').forEach(link => {{
+            link.addEventListener('click', () => {{
+                if (window.innerWidth <= 1024) {{
+                    toggleNav();
+                }}
+            }});
+        }});
+        
         // Table filtering
         function filterTable(tableId, searchText) {{
             const table = document.getElementById(tableId);
