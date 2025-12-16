@@ -24,21 +24,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Manrope', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
         
-        .nav { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; transition: transform 0.3s ease; }
-        .nav-logo { width: 100%; max-width: 160px; margin: -55px auto -45px auto; display: block; }
-        .nav-logo img { width: 100%; height: auto; display: block; }
-        .nav-subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 24px; text-align: center; margin-top: 0; }
-        
-        /* Hamburger Menu */
-        .hamburger { display: none; position: fixed; top: 20px; right: 20px; z-index: 200; width: 40px; height: 40px; background: rgba(255,255,255,0.95); border: none; border-radius: 10px; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }
-        .hamburger .bar { display: block; width: 18px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }
-        .hamburger.active .bar:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-        .hamburger.active .bar:nth-child(2) { opacity: 0; }
-        .hamburger.active .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-        .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
-        .nav-overlay.active { opacity: 1; pointer-events: auto; }
+        .nav { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; }
+        .nav-logo { font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .nav-subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 48px; }
         .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 32px 0 12px; }
-        .nav-section:first-of-type { margin-top: 42px; }
         .nav a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 0; font-size: 14px; transition: all 0.2s ease; }
         .nav a:hover { color: var(--text-primary); }
         .nav .sub-link { padding-left: 16px; font-size: 13px; color: var(--text-muted); }
@@ -66,11 +55,6 @@
         .title-meta-value { font-size: 18px; color: #FFFFFF; font-weight: 500; }
         .title-decoration { position: absolute; right: 64px; bottom: 50%; transform: translateY(50%); width: 320px; height: 320px; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; }
         .title-decoration::before { content: ''; position: absolute; top: 40px; left: 40px; right: 40px; bottom: 40px; border: 1px solid rgba(255,255,255,0.05); border-radius: 50%; }
-        
-        /* Title Page Brand Image */
-        .title-brand-image { position: absolute; right: -50px; top: calc(50% + 40px); transform: translateY(-50%); height: 172%; max-height: 1210px; width: auto; opacity: 0.9; pointer-events: none; z-index: 0; }
-        @media (max-width: 1024px) { .title-brand-image { right: -100px; height: 121%; max-height: 807px; } }
-        @media (max-width: 640px) { .title-brand-image { right: -250px; height: 91%; max-height: 564px; opacity: 0.7; } }
         
         .content-section { padding: 80px 64px; border-bottom: 1px solid var(--border); }
         .section-header { margin-bottom: 48px; max-width: 600px; }
@@ -138,16 +122,7 @@
         .type-section-count { font-size: 13px; color: var(--text-muted); margin-left: auto; }
         
         /* Collapsible Sections - Common */
-        .collapse-icon { 
-            display: inline-block; 
-            width: 0; 
-            height: 0; 
-            border-left: 6px solid var(--text-muted); 
-            border-top: 5px solid transparent; 
-            border-bottom: 5px solid transparent; 
-            transition: transform 0.2s ease;
-            margin-right: 4px;
-        }
+        .collapse-icon { display: inline-block; width: 0; height: 0; border-left: 6px solid var(--text-muted); border-top: 5px solid transparent; border-bottom: 5px solid transparent; transition: transform 0.2s ease; margin-right: 4px; }
         details[open] > summary .collapse-icon { transform: rotate(90deg); }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -309,11 +284,8 @@
         
         @media print { .nav { display: none; } .main { margin-left: 0; } .title-page { min-height: auto; padding: 60px; } .tab-nav { display: none; } }
         @media (max-width: 1024px) { 
-            .hamburger { display: flex; }
-            .nav { transform: translateX(-100%); }
-            .nav.active { transform: translateX(0); }
-            .nav-overlay { display: block; }
-            .main { margin-left: 0; }
+            .nav { display: none; } 
+            .main { margin-left: 0; } 
             .content-section { padding: 48px 24px; } 
             .title-header, .title-content, .title-footer { padding-left: 24px; padding-right: 24px; } 
             .title-decoration { display: none; } 
@@ -355,10 +327,8 @@
     </style>
 </head>
 <body>
-    <button class="hamburger" onclick="toggleNav()"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
-    <div class="nav-overlay" onclick="toggleNav()"></div>
     <nav class="nav">
-        <div class="nav-logo"><img src="Smoothie-Bar--Logo-Assets---3D-Curved-Logo--Branding-Assets---11.21.25.png" alt="Smoothie Bar Logo"></div>
+        <div class="nav-logo">Content Schedule</div>
         <div class="nav-subtitle">Social Media Report</div>
         <div class="nav-section">Overview</div>
         <a href="#title">Cover</a>
@@ -376,7 +346,7 @@
 
     <main class="main">
         <section id="title" class="title-page">
-            <img class="title-brand-image" src="Smoothie-Bar---Logo-Assets--Branding-Assets---11.21.25.png" alt="Smoothie Bar">
+            <div class="title-decoration"></div>
             <header class="title-header">
                 <div class="title-date">Tuesday, December 16, 2025</div>
             </header>
@@ -576,7 +546,7 @@ New Y</div><div class="calendar-post-indicator type-story">New Year Lifestyle</d
                 <div class="week-detail-title">Will It Blend: Sour Lemon x Pineapple Jack</div>
                 <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
                 <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
-                <div class="week-detail-notes"></div>
+                <div class="week-detail-notes">Media TBD</div>
             </div><div class="week-detail-row">
                 <div class="week-detail-day"></div>
                 <div class="week-detail-time">8:00am</div>
@@ -889,7 +859,7 @@ New Years Eve</div>
                             <td data-sort="post"><span class="type-badge type-post">post</span></td>
                             <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
                             <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</td>
-                            <td style="max-width: 180px; font-size: 13px;"></td>
+                            <td style="max-width: 180px; font-size: 13px;">Media TBD</td>
                         </tr><tr>
                             <td><strong>BLEND Society: The Student</strong></td>
                             <td data-sort="2025-12-14">12/14</td>
@@ -1072,18 +1042,34 @@ Themed Render</strong></td>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/13 • 11:00am</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in a way that feels intentional...because it is.</p>
             <div class="post-card-hashtags">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</div>
         </div>
     </div><div class="post-card" id="post-2">
-        <div class="no-media">No media uploaded</div>
+        <div class="carousel" data-card="2">
+                <div class="carousel-container">
+                    <div class="carousel-slide" data-index="0">
+                <img src="https://dl.dropboxusercontent.com/scl/fo/ydhk0p1v3fkl6dxmfczj2/AO4KKfqx1KHbDvh37t5Igrk/DSC01581.jpg?rlkey=3ikkjyt6xech88p6unan4ndsw&raw=1" alt="Pier Photoshoot #2 - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="1">
+                <img src="https://dl.dropboxusercontent.com/scl/fo/ydhk0p1v3fkl6dxmfczj2/AFbajkK8DwIVeJcb14_Yerg/DSC01331.jpg?rlkey=3ikkjyt6xech88p6unan4ndsw&raw=1" alt="Pier Photoshoot #2 - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="2">
+                <img src="https://dl.dropboxusercontent.com/scl/fo/ydhk0p1v3fkl6dxmfczj2/AJZewxXZiwu00W0wSyK11U8/DSC01670.jpg?rlkey=3ikkjyt6xech88p6unan4ndsw&raw=1" alt="Pier Photoshoot #2 - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div>
+                </div>
+                <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
+                <button class="carousel-btn carousel-next" onclick="nextSlide(this)">›</button>
+                <div class="carousel-indicators">
+                    <span class="carousel-dot active" data-index="0" onclick="goToSlide(this, 0)"></span><span class="carousel-dot" data-index="1" onclick="goToSlide(this, 1)"></span><span class="carousel-dot" data-index="2" onclick="goToSlide(this, 2)"></span>
+                    <span class="carousel-counter">1 / 3</span>
+                </div>
+            </div>
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">Pier Photoshoot #2</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/17 • 10:00am</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">We don't pass judgement, just the vape. 💯</p>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
     </div><div class="post-card" id="post-3">
@@ -1106,7 +1092,7 @@ Genetics & Flavor</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/22 • 12:00pm</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">Cherry fizz meets soda clarity. Built to feel bubbly, refreshing, and layered.</p>
             <div class="post-card-hashtags">#WillItBlend</div>
         </div>
     </div><div class="post-card" id="post-6">
@@ -1133,7 +1119,7 @@ Genetics & Flavor</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/25 • 11:00am</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊</p>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
     </div><div class="post-card" id="post-7">
@@ -1160,36 +1146,36 @@ New Years Eve</span>
             <div class="post-card-hashtags">#WillItBlend</div>
         </div>
     </div><div class="post-card" id="post-9">
-        <div class="no-media">No media uploaded</div>
+        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/fuowoo1kldmtm8hua0zg7/3GreenRender.png?rlkey=heznrpdp26hl47dhv6x1ltsjl&st=dmxc9pvl&raw=1" alt="Render Pic – Fanned New Years" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">Render Pic – Fanned New Years</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">01/01 • 10:00am</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">Our New Years resolution? Continue providing you with the best blends!</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-10">
-        <div class="no-media">No media uploaded</div>
+        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/tq98lqajr2sjoeuovzknj/FavePlace.png?rlkey=xmyoju8xqi3rymhznvovivmbr&st=82nc3zaq&raw=1" alt="Lifestyle" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">Lifestyle</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">01/05 • 11:00am</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">A moment of zen on demand</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-11">
-        <div class="no-media">No media uploaded</div>
+        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/qj0x1813p7qfa6ulz902q/Render-Spotlight.png?rlkey=d5qiflu55d01ikdntcqstfwi1&st=q9jv7wad&raw=1" alt="Render Pic - Bouquet" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">Render Pic - Bouquet</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">01/08 • 8:00am</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">A Cornucopia of delicious blends</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend#Xmaseve</div>
         </div>
     </div><div class="post-card" id="post-12">
@@ -1227,25 +1213,25 @@ Themed Render</span>
             <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-15">
-        <div class="no-media">No media uploaded</div>
+        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/4g27v1gvc3w38orvyhtpj/Pier1.png?rlkey=492kh8647fj452rv5hab6znq7&st=iunhxo53&raw=1" alt="Lifestyle pic or reel" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">Lifestyle pic or reel</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">01/17 • 10:00am</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">Fresh air and a fresh blend, a good day.</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-16">
-        <div class="no-media">No media uploaded</div>
+        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/5ypdhnvdlwk92i53ve8et/OrangeRenders.png?rlkey=psxkga8rxckwcooknmvqv8bkj&st=98qtn8p1&raw=1" alt="Render Pic – Front Flat" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">Render Pic – Front Flat</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">01/22 • 11:00am</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">Another day, another blend.</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-17">
@@ -1286,7 +1272,7 @@ Themed Render</span>
                 <div class="subsection-content">
                     <div class="posts-grid">
                         <div class="post-card" id="post-1">
-        <div class="no-media">No media uploaded</div>
+        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/9ck6akw51x7l3c9wfh65j/Q-A.png?rlkey=ptorueeerjlikxwuvqwifvy1n&st=16vppqmm&raw=1" alt="BLEND Society: The Student" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">BLEND Society: The Student</span>
@@ -1297,14 +1283,14 @@ Themed Render</span>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-5">
-        <div class="no-media">No media uploaded</div>
+        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/1bi5u83ck7jggg74ne0r5/Dunk.png?rlkey=f6rcqyhv36vwsybbn40gynt6s&st=ppfeyxua&raw=1" alt="BLEND Society: The Baller" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">BLEND Society: The Baller</span>
                 <span class="type-badge type-reel">reel</span>
             </div>
             <div class="post-card-date">12/24 • 9:00am</div>
-            <p class="post-card-caption">No caption provided</p>
+            <p class="post-card-caption">The sky is the limit. Smoothie Bar will always take you higher!</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div>
@@ -1714,22 +1700,6 @@ Themed Render</span>
     </main>
     
     <script>
-        // Hamburger menu toggle
-        function toggleNav() {
-            document.querySelector('.hamburger').classList.toggle('active');
-            document.querySelector('.nav').classList.toggle('active');
-            document.querySelector('.nav-overlay').classList.toggle('active');
-        }
-        
-        // Close nav when clicking a link (mobile)
-        document.querySelectorAll('.nav a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 1024) {
-                    toggleNav();
-                }
-            });
-        });
-        
         // Table filtering
         function filterTable(tableId, searchText) {
             const table = document.getElementById(tableId);
