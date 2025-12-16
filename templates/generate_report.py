@@ -602,7 +602,7 @@ def generate_html(config, posts, stories, interactions):
         .type-highlight {{ background: #FEF3C7; color: #B45309; }}
         .type-story {{ background: #EDE9FE; color: #7C3AED; }}
         
-        .posts-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 32px; margin-bottom: 48px; }}
+        .posts-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 32px; margin-bottom: 48px; }}
         .post-card {{ background: var(--bg-secondary); border-radius: 20px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 8px 32px var(--shadow); transition: all 0.3s ease; }}
         .post-card:hover {{ transform: translateY(-4px); box-shadow: 0 4px 12px var(--shadow-md), 0 16px 48px var(--shadow-md); }}
         .post-card-media {{ width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--border-light); }}
@@ -620,7 +620,7 @@ def generate_html(config, posts, stories, interactions):
         .carousel {{ position: relative; width: 100%; aspect-ratio: 1; background: var(--border-light); overflow: hidden; }}
         .carousel-container {{ display: flex; width: 100%; height: 100%; transition: transform 0.3s ease; }}
         .carousel-slide {{ flex-shrink: 0; width: 100%; height: 100%; }}
-        .carousel-slide img {{ width: 100%; height: 100%; object-fit: cover; }}
+        .carousel-slide img {{ width: 100%; height: 100%; object-fit: cover; max-width: 100%; }}
         .carousel-btn {{ position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.9); border: none; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }}
         .carousel:hover .carousel-btn {{ opacity: 1; }}
         .carousel-prev {{ left: 12px; }}
@@ -817,6 +817,28 @@ def generate_html(config, posts, stories, interactions):
             .calendar-post-indicator {{ display: none; }}
             .calendar-day-posts {{ display: flex; flex-direction: row; gap: 2px; }}
             .calendar-day-posts::after {{ content: attr(data-count); font-size: 10px; color: var(--text-muted); }}
+            
+            /* Mobile image fixes */
+            .posts-grid {{ gap: 20px; }}
+            .post-card-media {{ max-width: 100%; }}
+            .post-card-body {{ padding: 16px; }}
+            .post-card-title {{ font-size: 15px; }}
+            .carousel {{ max-width: 100%; }}
+            .carousel-slide img {{ max-width: 100%; height: auto; min-height: 100%; }}
+            .carousel-btn {{ opacity: 1; width: 32px; height: 32px; font-size: 16px; }}
+            
+            /* Story thumbnails responsive scaling */
+            .stories-strip {{ gap: 12px; padding: 16px 0; }}
+            .story-item {{ width: 100px; }}
+            .story-thumb-wrapper {{ width: 80px; height: 142px; border-radius: 12px; padding: 2px; }}
+            .story-thumb {{ border-radius: 10px; max-width: 100%; }}
+            .story-title {{ font-size: 11px; }}
+            .story-date {{ font-size: 10px; }}
+            
+            /* Section padding mobile */
+            .section-collapsible {{ padding: 24px 16px; }}
+            .section-collapsible[open] .section-header {{ margin-bottom: 24px; }}
+            .section-title {{ font-size: 28px; }}
         }}
     </style>
 </head>
