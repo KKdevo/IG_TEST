@@ -41,6 +41,7 @@
         .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; opacity: 0; transition: opacity 0.3s ease; }
         .nav-overlay.active { opacity: 1; }
         .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 32px 0 12px; }
+        .nav-section:first-of-type { margin-top: 42px; }
         .nav a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 0; font-size: 14px; transition: all 0.2s ease; }
         .nav a:hover { color: var(--text-primary); }
         .nav .sub-link { padding-left: 16px; font-size: 13px; color: var(--text-muted); }
@@ -70,9 +71,9 @@
         .title-decoration::before { content: ''; position: absolute; top: 40px; left: 40px; right: 40px; bottom: 40px; border: 1px solid rgba(255,255,255,0.05); border-radius: 50%; }
         
         /* Title Page Brand Image */
-        .title-brand-image { position: absolute; right: -50px; top: 50%; transform: translateY(-50%); height: 185%; max-height: 1300px; width: auto; opacity: 0.9; pointer-events: none; z-index: 0; }
-        @media (max-width: 1024px) { .title-brand-image { right: -80px; height: 130%; max-height: 867px; } }
-        @media (max-width: 640px) { .title-brand-image { right: -60px; height: 98%; max-height: 607px; opacity: 0.7; } }
+        .title-brand-image { position: absolute; right: -50px; top: 50%; transform: translateY(-50%); height: 172%; max-height: 1210px; width: auto; opacity: 0.9; pointer-events: none; z-index: 0; }
+        @media (max-width: 1024px) { .title-brand-image { right: -80px; height: 121%; max-height: 807px; } }
+        @media (max-width: 640px) { .title-brand-image { right: -60px; height: 91%; max-height: 564px; opacity: 0.7; } }
         
         .content-section { padding: 80px 64px; border-bottom: 1px solid var(--border); }
         .section-header { margin-bottom: 48px; max-width: 600px; }
