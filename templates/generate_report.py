@@ -540,21 +540,10 @@ def generate_html(config, posts, stories, interactions):
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: 'Manrope', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }}
         
-        .nav {{ position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; transition: transform 0.3s ease; }}
-        .nav-logo {{ width: 100%; max-width: 160px; margin: -55px auto -45px auto; display: block; }}
-        .nav-logo img {{ width: 100%; height: auto; display: block; }}
-        .nav-subtitle {{ font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 24px; text-align: center; margin-top: 0; }}
-        
-        /* Hamburger Menu */
-        .hamburger {{ display: none; position: fixed; top: 20px; right: 20px; z-index: 200; width: 40px; height: 40px; background: rgba(255,255,255,0.95); border: none; border-radius: 10px; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }}
-        .hamburger .bar {{ display: block; width: 18px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }}
-        .hamburger.active .bar:nth-child(1) {{ transform: rotate(45deg) translate(5px, 5px); }}
-        .hamburger.active .bar:nth-child(2) {{ opacity: 0; }}
-        .hamburger.active .bar:nth-child(3) {{ transform: rotate(-45deg) translate(5px, -5px); }}
-        .nav-overlay {{ display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }}
-        .nav-overlay.active {{ opacity: 1; pointer-events: auto; }}
+        .nav {{ position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; }}
+        .nav-logo {{ font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.5px; margin-bottom: 8px; }}
+        .nav-subtitle {{ font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 48px; }}
         .nav-section {{ font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 32px 0 12px; }}
-        .nav-section:first-of-type {{ margin-top: 42px; }}
         .nav a {{ display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 0; font-size: 14px; transition: all 0.2s ease; }}
         .nav a:hover {{ color: var(--text-primary); }}
         .nav .sub-link {{ padding-left: 16px; font-size: 13px; color: var(--text-muted); }}
@@ -582,7 +571,6 @@ def generate_html(config, posts, stories, interactions):
         .title-meta-value {{ font-size: 18px; color: #FFFFFF; font-weight: 500; }}
         .title-decoration {{ position: absolute; right: 64px; bottom: 50%; transform: translateY(50%); width: 320px; height: 320px; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; }}
         .title-decoration::before {{ content: ''; position: absolute; top: 40px; left: 40px; right: 40px; bottom: 40px; border: 1px solid rgba(255,255,255,0.05); border-radius: 50%; }}
-        .title-brand-image {{ position: absolute; right: -50px; top: calc(50% + 40px); transform: translateY(-50%); height: 172%; max-height: 1210px; width: auto; opacity: 0.9; pointer-events: none; z-index: 0; }}
         
         .content-section {{ padding: 80px 64px; border-bottom: 1px solid var(--border); }}
         .section-header {{ margin-bottom: 48px; max-width: 600px; }}
@@ -590,7 +578,12 @@ def generate_html(config, posts, stories, interactions):
         .section-title {{ font-family: 'Instrument Serif', serif; font-size: 38px; font-weight: 400; letter-spacing: -1px; margin-bottom: 12px; line-height: 1.2; display: inline-flex; align-items: center; gap: 12px; }}
         .section-desc {{ font-size: 15px; color: var(--text-secondary); line-height: 1.7; }}
         
-        .table-wrapper {{ background: var(--bg-secondary); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 4px 20px var(--shadow); margin-bottom: 48px; }}
+        .table-wrapper {{ background: var(--bg-secondary); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 4px 20px var(--shadow); margin-bottom: 48px; overflow-x: auto; -webkit-overflow-scrolling: touch; }}
+        .table-wrapper::-webkit-scrollbar {{ height: 8px; }}
+        .table-wrapper::-webkit-scrollbar-track {{ background: var(--bg-primary); border-radius: 4px; }}
+        .table-wrapper::-webkit-scrollbar-thumb {{ background: var(--border); border-radius: 4px; }}
+        .table-wrapper::-webkit-scrollbar-thumb:hover {{ background: var(--text-muted); }}
+        .table-wrapper table {{ min-width: 700px; }}
         table {{ width: 100%; border-collapse: collapse; }}
         th {{ background: var(--bg-primary); padding: 12px 16px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border); }}
         td {{ padding: 12px 16px; border-bottom: 1px solid var(--border-light); font-size: 14px; vertical-align: middle; }}
@@ -703,9 +696,9 @@ def generate_html(config, posts, stories, interactions):
         .sort-info {{ font-size: 12px; color: var(--text-muted); }}
         th.sortable {{ cursor: pointer; user-select: none; position: relative; }}
         th.sortable:hover {{ background: var(--border-light); }}
-        th.sortable::after {{ content: ''; margin-left: 6px; opacity: 0.4; font-size: 10px; }}
-        th.sortable.asc::after {{ content: ''; opacity: 1; }}
-        th.sortable.desc::after {{ content: ''; opacity: 1; }}
+        th.sortable::after {{ content: '⇅'; margin-left: 6px; opacity: 0.4; font-size: 10px; }}
+        th.sortable.asc::after {{ content: '↑'; opacity: 1; }}
+        th.sortable.desc::after {{ content: '↓'; opacity: 1; }}
         .no-results {{ text-align: center; padding: 24px; color: var(--text-muted); font-size: 14px; }}
         
         /* Tab Navigation */
@@ -810,18 +803,46 @@ def generate_html(config, posts, stories, interactions):
             .week-detail-time {{ display: none; }}
         }}
         
+        /* Weekly Posts Carousel - Draft Posts Section */
+        .week-posts-section {{ margin-bottom: 32px; }}
+        .week-posts-header {{ display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: linear-gradient(135deg, var(--accent) 0%, #3D3D3D 100%); border-radius: 16px 16px 0 0; color: #fff; }}
+        .week-posts-label {{ font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7; }}
+        .week-posts-range {{ font-size: 18px; font-weight: 600; }}
+        .week-posts-count {{ font-size: 13px; margin-left: auto; opacity: 0.8; }}
+        .week-posts-carousel-wrapper {{ position: relative; background: var(--bg-secondary); border-radius: 0 0 16px 16px; box-shadow: 0 1px 3px var(--shadow), 0 4px 20px var(--shadow); }}
+        .week-posts-carousel {{ display: flex; gap: 20px; overflow-x: auto; padding: 24px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: var(--border) var(--bg-primary); }}
+        .week-posts-carousel::-webkit-scrollbar {{ height: 8px; }}
+        .week-posts-carousel::-webkit-scrollbar-track {{ background: var(--bg-primary); border-radius: 4px; }}
+        .week-posts-carousel::-webkit-scrollbar-thumb {{ background: var(--border); border-radius: 4px; }}
+        .week-posts-carousel::-webkit-scrollbar-thumb:hover {{ background: var(--text-muted); }}
+        .week-posts-carousel .post-card {{ flex-shrink: 0; width: 300px; scroll-snap-align: start; }}
+        .week-posts-nav {{ position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; box-shadow: 0 2px 8px var(--shadow-md); transition: all 0.2s ease; font-size: 18px; color: var(--text-secondary); }}
+        .week-posts-nav:hover {{ background: var(--bg-primary); color: var(--text-primary); }}
+        .week-posts-nav.prev {{ left: -20px; }}
+        .week-posts-nav.next {{ right: -20px; }}
+        .week-posts-indicators {{ display: flex; justify-content: center; gap: 6px; padding: 16px; border-top: 1px solid var(--border-light); }}
+        .week-posts-dot {{ width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all 0.2s ease; }}
+        .week-posts-dot.active {{ background: var(--accent); width: 24px; border-radius: 4px; }}
+        
+        @media (max-width: 1024px) {{
+            .week-posts-carousel .post-card {{ width: 280px; }}
+            .week-posts-nav {{ display: none; }}
+        }}
+        @media (max-width: 640px) {{
+            .week-posts-carousel {{ gap: 16px; padding: 16px; }}
+            .week-posts-carousel .post-card {{ width: 260px; }}
+            .week-posts-header {{ padding: 12px 16px; border-radius: 12px 12px 0 0; }}
+            .week-posts-carousel-wrapper {{ border-radius: 0 0 12px 12px; }}
+        }}
+        
         @media print {{ .nav {{ display: none; }} .main {{ margin-left: 0; }} .title-page {{ min-height: auto; padding: 60px; }} .tab-nav {{ display: none; }} }}
         @media (max-width: 1024px) {{ 
-            .hamburger {{ display: flex; }}
-            .nav {{ transform: translateX(-100%); }}
-            .nav.active {{ transform: translateX(0); }}
-            .nav-overlay {{ display: block; }}
-            .main {{ margin-left: 0; }}
+            .nav {{ display: none; }} 
+            .main {{ margin-left: 0; }} 
             .content-section {{ padding: 48px 24px; }} 
             .title-header, .title-content, .title-footer {{ padding-left: 24px; padding-right: 24px; }} 
             .title-decoration {{ display: none; }} 
             .tab-nav {{ padding: 0 16px; }}
-            .title-brand-image {{ right: -100px; height: 121%; max-height: 807px; }}
             .calendar-day {{ min-height: 80px; padding: 8px; }}
             .calendar-post-indicator {{ font-size: 10px; padding: 2px 4px; }}
             .day-row {{ flex-direction: column; gap: 12px; }}
@@ -833,7 +854,6 @@ def generate_html(config, posts, stories, interactions):
             .calendar-post-indicator {{ display: none; }}
             .calendar-day-posts {{ display: flex; flex-direction: row; gap: 2px; }}
             .calendar-day-posts::after {{ content: attr(data-count); font-size: 10px; color: var(--text-muted); }}
-            .title-brand-image {{ right: -175px; height: 91%; max-height: 564px; opacity: 0.7; }}
             
             /* Mobile image fixes */
             .posts-grid {{ gap: 20px; }}
@@ -860,10 +880,8 @@ def generate_html(config, posts, stories, interactions):
     </style>
 </head>
 <body>
-    <button class="hamburger" onclick="toggleNav()"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
-    <div class="nav-overlay" onclick="toggleNav()"></div>
     <nav class="nav">
-        <div class="nav-logo"><img src="Smoothie-Bar--Logo-Assets---3D-Curved-Logo--Branding-Assets---11.21.25.png" alt="Smoothie Bar Logo"></div>
+        <div class="nav-logo">Content Schedule</div>
         <div class="nav-subtitle">Social Media Report</div>
         <div class="nav-section">Overview</div>
         <a href="#title">Cover</a>
@@ -881,7 +899,7 @@ def generate_html(config, posts, stories, interactions):
 
     <main class="main">
         <section id="title" class="title-page">
-            <img class="title-brand-image" src="Smoothie-Bar---Logo-Assets--Branding-Assets---11.21.25.png" alt="Smoothie Bar">
+            <div class="title-decoration"></div>
             <header class="title-header">
                 <div class="title-date">{datetime.now().strftime("%A, %B %d, %Y")}</div>
             </header>
@@ -994,7 +1012,13 @@ def generate_html(config, posts, stories, interactions):
                 </div>
             </summary>
             <div class="section-content">
-
+            
+            <div class="view-toggle">
+                <button class="view-toggle-btn active" onclick="showDraftsView('type')">By Type</button>
+                <button class="view-toggle-btn" onclick="showDraftsView('week')">By Week</button>
+            </div>
+            
+            <div id="drafts-by-type" class="drafts-view">
             <details id="posts-posts" class="subsection-collapsible">
                 <summary>
                     <div class="subsection-header">
@@ -1039,6 +1063,27 @@ def generate_html(config, posts, stories, interactions):
                     </div>
                 </div>
             </details>
+            </div>
+            
+            <div id="drafts-by-week" class="drafts-view" style="display: none;">
+                {render_posts_by_week_carousel(posts, month, year)}
+            </div>
+            
+            <script>
+                function showDraftsView(view) {{
+                    document.querySelectorAll('.drafts-view').forEach(el => el.style.display = 'none');
+                    document.querySelectorAll('#posts .view-toggle-btn').forEach(btn => btn.classList.remove('active'));
+                    document.getElementById('drafts-by-' + view).style.display = 'block';
+                    event.target.classList.add('active');
+                }}
+                
+                function scrollWeekCarousel(btn, direction) {{
+                    const wrapper = btn.closest('.week-posts-carousel-wrapper');
+                    const carousel = wrapper.querySelector('.week-posts-carousel');
+                    const cardWidth = carousel.querySelector('.post-card').offsetWidth + 20; // card width + gap
+                    carousel.scrollBy({{ left: cardWidth * direction, behavior: 'smooth' }});
+                }}
+            </script>
             </div>
         </details>
 
@@ -1131,22 +1176,6 @@ def generate_html(config, posts, stories, interactions):
     </main>
     
     <script>
-        // Hamburger menu toggle
-        function toggleNav() {{
-            document.querySelector('.hamburger').classList.toggle('active');
-            document.querySelector('.nav').classList.toggle('active');
-            document.querySelector('.nav-overlay').classList.toggle('active');
-        }}
-        
-        // Close nav when clicking a link (mobile)
-        document.querySelectorAll('.nav a').forEach(link => {{
-            link.addEventListener('click', () => {{
-                if (window.innerWidth <= 1024) {{
-                    toggleNav();
-                }}
-            }});
-        }});
-        
         // Table filtering
         function filterTable(tableId, searchText) {{
             const table = document.getElementById(tableId);
@@ -1632,6 +1661,94 @@ def render_weekly_view(posts, stories, month, year):
     return weeks_html
 
 
+def render_posts_by_week_carousel(posts, month, year):
+    """
+    Render posts grouped by week as horizontal carousels.
+    Each week gets its own swipeable carousel of post cards.
+    """
+    # Build posts by day for quick lookup (only posts, not stories)
+    posts_by_day = {}
+    for i, post in enumerate(posts):
+        post_date = parse_date(post.get("PostDate", ""), year)
+        if post_date and post_date.month == month and post_date.year == year:
+            day = post_date.day
+            if day not in posts_by_day:
+                posts_by_day[day] = []
+            posts_by_day[day].append((i, post))
+    
+    # Sort posts within each day by time
+    for day in posts_by_day:
+        posts_by_day[day].sort(key=lambda x: x[1].get("Time", "99:99"))
+    
+    if not posts_by_day:
+        return '<div class="empty-state">No posts scheduled for this month</div>'
+    
+    # Get calendar structure
+    cal = calendar.Calendar(firstweekday=6)  # Sunday start
+    month_days = list(cal.itermonthdays(year, month))
+    
+    # Generate week sections
+    weeks_html = ''
+    week_num = 0
+    
+    i = 0
+    while i < len(month_days):
+        week_days = month_days[i:i+7]
+        i += 7
+        
+        # Skip weeks with no days in this month
+        if all(d == 0 for d in week_days):
+            continue
+        
+        week_num += 1
+        
+        # Calculate week date range
+        valid_days = [d for d in week_days if d > 0]
+        if not valid_days:
+            continue
+            
+        start_day = min(valid_days)
+        end_day = max(valid_days)
+        month_abbr = calendar.month_abbr[month]
+        date_range = f"{month_abbr} {start_day}-{end_day}"
+        
+        # Collect all posts for this week
+        week_posts = []
+        for day in week_days:
+            if day > 0 and day in posts_by_day:
+                for idx, post in posts_by_day[day]:
+                    week_posts.append((day, idx, post))
+        
+        # Skip weeks with no posts
+        if not week_posts:
+            continue
+        
+        # Sort by day and time
+        week_posts.sort(key=lambda x: (x[0], x[2].get("Time", "99:99")))
+        
+        # Generate post cards HTML for this week
+        cards_html = ''
+        for day, idx, post in week_posts:
+            cards_html += render_post_card(post, idx)
+        
+        weeks_html += f'''<div class="week-posts-section">
+            <div class="week-posts-header">
+                <span class="week-posts-label">Week {week_num}</span>
+                <span class="week-posts-range">{date_range}</span>
+                <span class="week-posts-count">{len(week_posts)} posts</span>
+            </div>
+            <div class="week-posts-carousel-wrapper">
+                <button class="week-posts-nav prev" onclick="scrollWeekCarousel(this, -1)">‹</button>
+                <div class="week-posts-carousel">
+                    {cards_html}
+                </div>
+                <button class="week-posts-nav next" onclick="scrollWeekCarousel(this, 1)">›</button>
+            </div>
+        </div>'''
+    
+    return weeks_html
+
+
 def convert_date_to_sortable(date_str, year=None):
     """Convert date string to sortable ISO format (YYYY-MM-DD) for proper sorting."""
     if not date_str:
@@ -1737,6 +1854,9 @@ def convert_dropbox_url(url):
         https://www.dropbox.com/scl/fi/...  →  https://dl.dropboxusercontent.com/scl/fi/...?raw=1
     
     Using dl.dropboxusercontent.com with raw=1 avoids redirect issues on mobile browsers.
+    
+    IMPORTANT: Removes the &st= session token parameter which EXPIRES and causes
+    mobile loading failures. Only the rlkey= parameter is needed for permanent access.
     """
     if not url:
         return url
@@ -1752,6 +1872,15 @@ def convert_dropbox_url(url):
         url = url.replace("www.dropbox.com", "dl.dropboxusercontent.com")
     elif "dropbox.com" in url and "dl.dropboxusercontent.com" not in url:
         url = url.replace("dropbox.com", "dl.dropboxusercontent.com")
+    
+    # CRITICAL: Remove the &st= session token parameter - it EXPIRES and breaks mobile loading!
+    # The rlkey= parameter is the permanent share key, st= is a temporary session token
+    import re
+    url = re.sub(r'[&?]st=[^&]*', '', url)
+    
+    # Clean up any double && or trailing & or ?& that might result from removal
+    url = url.replace('&&', '&').replace('?&', '?')
+    url = url.rstrip('&').rstrip('?')
     
     # Use raw=1 instead of dl=1 for better mobile compatibility
     if "dl=0" in url:
