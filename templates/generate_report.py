@@ -542,6 +542,17 @@ def generate_html(config, posts, stories, interactions):
         
         .nav {{ position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; }}
         .nav-logo {{ font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.5px; margin-bottom: 8px; }}
+        .nav-logo img {{ width: 100%; max-width: 160px; height: auto; }}
+        .title-brand-image {{ position: absolute; top: 24px; left: 24px; width: 140px; height: auto; z-index: 2; }}
+        
+        /* Hamburger Menu */
+        .hamburger {{ display: none; position: fixed; top: 20px; right: 20px; z-index: 200; width: 40px; height: 40px; background: rgba(255,255,255,0.95); border: none; border-radius: 10px; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }}
+        .hamburger .bar {{ display: block; width: 18px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }}
+        .hamburger.active .bar:nth-child(1) {{ transform: rotate(45deg) translate(5px, 5px); }}
+        .hamburger.active .bar:nth-child(2) {{ opacity: 0; }}
+        .hamburger.active .bar:nth-child(3) {{ transform: rotate(-45deg) translate(5px, -5px); }}
+        .nav-overlay {{ display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }}
+        .nav-overlay.active {{ display: block; opacity: 1; pointer-events: auto; }}
         .nav-subtitle {{ font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 48px; }}
         .nav-section {{ font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 32px 0 12px; }}
         .nav a {{ display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 0; font-size: 14px; transition: all 0.2s ease; }}
@@ -837,8 +848,10 @@ def generate_html(config, posts, stories, interactions):
         
         @media print {{ .nav {{ display: none; }} .main {{ margin-left: 0; }} .title-page {{ min-height: auto; padding: 60px; }} .tab-nav {{ display: none; }} }}
         @media (max-width: 1024px) {{ 
-            .nav {{ display: none; }} 
-            .main {{ margin-left: 0; }} 
+            .hamburger {{ display: flex; }}
+            .nav {{ transform: translateX(-100%); }}
+            .nav.active {{ transform: translateX(0); display: block; }}
+            .main {{ margin-left: 0; }}
             .content-section {{ padding: 48px 24px; }} 
             .title-header, .title-content, .title-footer {{ padding-left: 24px; padding-right: 24px; }} 
             .title-decoration {{ display: none; }} 
@@ -880,8 +893,11 @@ def generate_html(config, posts, stories, interactions):
     </style>
 </head>
 <body>
+    <button class="hamburger" onclick="toggleNav()"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
+    <div class="nav-overlay" onclick="toggleNav()"></div>
+    
     <nav class="nav">
-        <div class="nav-logo">Content Schedule</div>
+        <div class="nav-logo"><img src="Smoothie-Bar--Logo-Assets---3D-Curved-Logo--Branding-Assets---11.21.25.png" alt="Smoothie Bar Logo"></div>
         <div class="nav-subtitle">Social Media Report</div>
         <div class="nav-section">Overview</div>
         <a href="#title">Cover</a>
@@ -899,6 +915,7 @@ def generate_html(config, posts, stories, interactions):
 
     <main class="main">
         <section id="title" class="title-page">
+            <img class="title-brand-image" src="Smoothie-Bar---Logo-Assets--Branding-Assets---11.21.25.png" alt="Smoothie Bar">
             <div class="title-decoration"></div>
             <header class="title-header">
                 <div class="title-date">{datetime.now().strftime("%A, %B %d, %Y")}</div>
@@ -1176,6 +1193,13 @@ def generate_html(config, posts, stories, interactions):
     </main>
     
     <script>
+        /* Hamburger Menu */
+        function toggleNav() {{
+            document.querySelector('.hamburger').classList.toggle('active');
+            document.querySelector('.nav').classList.toggle('active');
+            document.querySelector('.nav-overlay').classList.toggle('active');
+        }}
+        
         // Table filtering
         function filterTable(tableId, searchText) {{
             const table = document.getElementById(tableId);
