@@ -122,7 +122,16 @@
         .type-section-count { font-size: 13px; color: var(--text-muted); margin-left: auto; }
         
         /* Collapsible Sections - Common */
-        .collapse-icon { display: inline-block; font-size: 12px; color: var(--text-muted); transition: transform 0.2s ease; }
+        .collapse-icon { 
+            display: inline-block; 
+            width: 0; 
+            height: 0; 
+            border-left: 6px solid var(--text-muted); 
+            border-top: 5px solid transparent; 
+            border-bottom: 5px solid transparent; 
+            transition: transform 0.2s ease;
+            margin-right: 4px;
+        }
         details[open] > summary .collapse-icon { transform: rotate(90deg); }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -381,7 +390,7 @@
             <summary>
                 <div class="section-header">
                     <div class="section-number">01</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Content Calendar</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Content Calendar</h2>
                     <p class="section-desc">Visual overview of your posting schedule.</p>
                 </div>
             </summary>
@@ -831,7 +840,7 @@ New Years Eve</div>
             <summary>
                 <div class="section-header">
                     <div class="section-number">02</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Posting Schedule</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Posting Schedule</h2>
                     <p class="section-desc">Complete overview of all planned content.</p>
                 </div>
             </summary>
@@ -1022,7 +1031,7 @@ Themed Render</strong></td>
             <summary>
                 <div class="section-header">
                     <div class="section-number">03</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Draft Posts</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Draft Posts</h2>
                     <p class="section-desc">Content previews organized by format.</p>
                 </div>
             </summary>
@@ -1031,7 +1040,7 @@ Themed Render</strong></td>
             <details id="posts-posts" class="subsection-collapsible">
                 <summary>
                     <div class="subsection-header">
-                        <span class="collapse-icon">▶</span>
+                        <span class="collapse-icon"></span>
                         <span class="subsection-title">Feed Posts</span>
                         <span class="subsection-count">17 posts</span>
                     </div>
@@ -1252,7 +1261,7 @@ Themed Render</span>
             <details id="posts-reels" class="subsection-collapsible">
                 <summary>
                     <div class="subsection-header">
-                        <span class="collapse-icon">▶</span>
+                        <span class="collapse-icon"></span>
                         <span class="subsection-title">Reels</span>
                         <span class="subsection-count">2 reels</span>
                     </div>
@@ -1289,7 +1298,7 @@ Themed Render</span>
             <details id="posts-highlights" class="subsection-collapsible" >
                 <summary>
                     <div class="subsection-header">
-                        <span class="collapse-icon">▶</span>
+                        <span class="collapse-icon"></span>
                         <span class="subsection-title">Highlights</span>
                         <span class="subsection-count">0 highlights</span>
                     </div>
@@ -1307,7 +1316,7 @@ Themed Render</span>
             <summary>
                 <div class="section-header">
                     <div class="section-number">04</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Stories Schedule</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Stories Schedule</h2>
                     <p class="section-desc">Ephemeral content planned for the period.</p>
                 </div>
             </summary>
@@ -1576,7 +1585,7 @@ Themed Render</span>
             <summary>
                 <div class="section-header">
                     <div class="section-number">05</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Account Interactions</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Account Interactions</h2>
                     <p class="section-desc">Daily engagement targets and tracking (4 accounts).</p>
                 </div>
             </summary>

@@ -638,7 +638,7 @@ def generate_html(config, posts, stories, interactions):
         .type-section-count {{ font-size: 13px; color: var(--text-muted); margin-left: auto; }}
         
         /* Collapsible Sections - Common */
-        .collapse-icon {{ display: inline-block; font-size: 12px; color: var(--text-muted); transition: transform 0.2s ease; }}
+        .collapse-icon {{ display: inline-block; width: 0; height: 0; border-left: 6px solid var(--text-muted); border-top: 5px solid transparent; border-bottom: 5px solid transparent; transition: transform 0.2s ease; margin-right: 4px; }}
         details[open] > summary .collapse-icon {{ transform: rotate(90deg); }}
         @keyframes slideDown {{ from {{ opacity: 0; transform: translateY(-8px); }} to {{ opacity: 1; transform: translateY(0); }} }}
         
@@ -897,7 +897,7 @@ def generate_html(config, posts, stories, interactions):
             <summary>
                 <div class="section-header">
                     <div class="section-number">01</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Content Calendar</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Content Calendar</h2>
                     <p class="section-desc">Visual overview of your posting schedule.</p>
                 </div>
             </summary>
@@ -930,7 +930,7 @@ def generate_html(config, posts, stories, interactions):
             <summary>
                 <div class="section-header">
                     <div class="section-number">02</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Posting Schedule</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Posting Schedule</h2>
                     <p class="section-desc">Complete overview of all planned content.</p>
                 </div>
             </summary>
@@ -974,7 +974,7 @@ def generate_html(config, posts, stories, interactions):
             <summary>
                 <div class="section-header">
                     <div class="section-number">03</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Draft Posts</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Draft Posts</h2>
                     <p class="section-desc">Content previews organized by format.</p>
                 </div>
             </summary>
@@ -983,7 +983,7 @@ def generate_html(config, posts, stories, interactions):
             <details id="posts-posts" class="subsection-collapsible">
                 <summary>
                     <div class="subsection-header">
-                        <span class="collapse-icon">▶</span>
+                        <span class="collapse-icon"></span>
                         <span class="subsection-title">Feed Posts</span>
                         <span class="subsection-count">{posts_count} posts</span>
                     </div>
@@ -998,7 +998,7 @@ def generate_html(config, posts, stories, interactions):
             <details id="posts-reels" class="subsection-collapsible">
                 <summary>
                     <div class="subsection-header">
-                        <span class="collapse-icon">▶</span>
+                        <span class="collapse-icon"></span>
                         <span class="subsection-title">Reels</span>
                         <span class="subsection-count">{reels_count} reels</span>
                     </div>
@@ -1013,7 +1013,7 @@ def generate_html(config, posts, stories, interactions):
             <details id="posts-highlights" class="subsection-collapsible" {"" if highlights_count > 0 else ""}>
                 <summary>
                     <div class="subsection-header">
-                        <span class="collapse-icon">▶</span>
+                        <span class="collapse-icon"></span>
                         <span class="subsection-title">Highlights</span>
                         <span class="subsection-count">{highlights_count} highlights</span>
                     </div>
@@ -1031,7 +1031,7 @@ def generate_html(config, posts, stories, interactions):
             <summary>
                 <div class="section-header">
                     <div class="section-number">04</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Stories Schedule</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Stories Schedule</h2>
                     <p class="section-desc">Ephemeral content planned for the period.</p>
                 </div>
             </summary>
@@ -1084,7 +1084,7 @@ def generate_html(config, posts, stories, interactions):
             <summary>
                 <div class="section-header">
                     <div class="section-number">05</div>
-                    <h2 class="section-title"><span class="collapse-icon">▶</span> Account Interactions</h2>
+                    <h2 class="section-title"><span class="collapse-icon"></span> Account Interactions</h2>
                     <p class="section-desc">Daily engagement targets and tracking ({len(interactions)} accounts).</p>
                 </div>
             </summary>
