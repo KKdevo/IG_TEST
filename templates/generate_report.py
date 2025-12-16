@@ -16,6 +16,31 @@ from docx.table import Table
 from datetime import datetime, timedelta
 import calendar
 
+def extract_hyperlinks_from_cell(cell, doc_rels):
+    """Extract all hyperlink URLs from a cell using doc relationships."""
+    import re
+    hyperlinks = []
+    
+    try:
+        # Get cell XML
+        cell_xml = cell._tc.xml
+        
+        # Find all r:id references in the cell XML
+        rids = re.findall(r'r:id="(rId\d+)"', cell_xml)
+        
+        # Look up each rId in the document relationships
+        for rid in rids:
+            if rid in doc_rels:
+                rel = doc_rels[rid]
+                # Check if it's a hyperlink
+                if 'hyperlink' in rel.reltype.lower():
+                    hyperlinks.append(rel.target_ref)
+    except:
+        pass
+    
+    return hyperlinks
+
+
 def extract_tables(doc):
     """Extract all tables from the document."""
     tables = []
@@ -23,6 +48,30 @@ def extract_tables(doc):
         rows = []
         for row in table.rows:
             cells = [cell.text.strip() for cell in row.cells]
+            rows.append(cells)
+        tables.append(rows)
+    return tables
+
+
+def extract_tables_with_hyperlinks(doc):
+    """Extract all tables from the document, including embedded hyperlinks."""
+    # Get document relationships for hyperlink lookup
+    doc_rels = doc.part.rels
+    
+    tables = []
+    for table in doc.tables:
+        rows = []
+        for row in table.rows:
+            cells = []
+            for cell in row.cells:
+                text = cell.text.strip()
+                hyperlinks = extract_hyperlinks_from_cell(cell, doc_rels)
+                # If we have hyperlinks, use them instead of/alongside text
+                if hyperlinks:
+                    # Join all hyperlinks with newlines for URLs
+                    cells.append('\n'.join(hyperlinks))
+                else:
+                    cells.append(text)
             rows.append(cells)
         tables.append(rows)
     return tables
@@ -51,19 +100,31 @@ def parse_config(tables):
 def parse_date(date_str, year=None):
     """
     Parse date string in various formats to datetime object.
-    Supports: MM/DD/YY, MM/DD/YYYY, Dec 5, December 5, etc.
+    Supports: MM/DD, MM/DD/YY, MM/DD/YYYY, Dec 5, December 5, etc.
     """
     if not date_str:
         return None
     
     date_str = date_str.strip()
     
-    # Try MM/DD/YY or MM/DD/YYYY format
+    # Try MM/DD/YY or MM/DD/YYYY format first
     for fmt in ["%m/%d/%y", "%m/%d/%Y"]:
         try:
             return datetime.strptime(date_str, fmt)
         except ValueError:
             continue
+    
+    # Try MM/DD format (without year) - common in schedules
+    if re.match(r'^\d{1,2}/\d{1,2}$', date_str):
+        try:
+            parsed = datetime.strptime(date_str, "%m/%d")
+            if year:
+                parsed = parsed.replace(year=year)
+            else:
+                parsed = parsed.replace(year=datetime.now().year)
+            return parsed
+        except ValueError:
+            pass
     
     # Try "Dec 5" or "December 5" format
     month_formats = [
@@ -202,6 +263,11 @@ def parse_posts_table(table):
             header_map["hashtags"] = idx
         elif "note" in h_lower:
             header_map["notes"] = idx
+        elif "caption" in h_lower:
+            header_map["caption"] = idx
+        elif "photo" in h_lower:
+            # "Photo Links" column for media URLs
+            header_map["photo_links"] = idx
         elif "link" in h_lower:
             header_map["link"] = idx
     
@@ -234,9 +300,18 @@ def parse_posts_table(table):
             post["Hashtags"] = row[header_map["hashtags"]].strip()
         if "notes" in header_map and header_map["notes"] < len(row):
             post["Notes"] = row[header_map["notes"]].strip()
+        if "caption" in header_map and header_map["caption"] < len(row):
+            caption = row[header_map["caption"]].strip()
+            if caption and not caption.startswith("["):
+                post["Caption"] = caption
+        if "photo_links" in header_map and header_map["photo_links"] < len(row):
+            photo_links = row[header_map["photo_links"]].strip()
+            if photo_links and not photo_links.startswith("["):
+                post["MediaURL"] = photo_links
         if "link" in header_map and header_map["link"] < len(row):
             link = row[header_map["link"]].strip()
-            if link and not link.startswith("["):
+            # Only use Link column for MediaURL if Photo Links wasn't already set
+            if link and not link.startswith("[") and not post.get("MediaURL"):
                 post["MediaURL"] = link
         
         posts.append(post)
@@ -435,9 +510,9 @@ def generate_html(config, posts, stories, interactions):
     # Parse month for calendar
     month, year = parse_month_year(config.get("Month", ""))
     
-    # Generate calendar views
-    monthly_calendar_html = render_monthly_calendar(posts, month, year)
-    weekly_view_html = render_weekly_view(posts, month, year)
+    # Generate calendar views (include both posts AND stories)
+    monthly_calendar_html = render_monthly_calendar(posts, stories, month, year)
+    weekly_view_html = render_weekly_view(posts, stories, month, year)
     
     html = f'''<!DOCTYPE html>
 <html lang="en">
@@ -500,13 +575,13 @@ def generate_html(config, posts, stories, interactions):
         .content-section {{ padding: 80px 64px; border-bottom: 1px solid var(--border); }}
         .section-header {{ margin-bottom: 48px; max-width: 600px; }}
         .section-number {{ font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 16px; font-weight: 500; }}
-        .section-title {{ font-family: 'Instrument Serif', serif; font-size: 38px; font-weight: 400; letter-spacing: -1px; margin-bottom: 12px; line-height: 1.2; }}
+        .section-title {{ font-family: 'Instrument Serif', serif; font-size: 38px; font-weight: 400; letter-spacing: -1px; margin-bottom: 12px; line-height: 1.2; display: inline-flex; align-items: center; gap: 12px; }}
         .section-desc {{ font-size: 15px; color: var(--text-secondary); line-height: 1.7; }}
         
         .table-wrapper {{ background: var(--bg-secondary); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 4px 20px var(--shadow); margin-bottom: 48px; }}
         table {{ width: 100%; border-collapse: collapse; }}
-        th {{ background: var(--bg-primary); padding: 16px 20px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border); }}
-        td {{ padding: 20px; border-bottom: 1px solid var(--border-light); font-size: 14px; vertical-align: middle; }}
+        th {{ background: var(--bg-primary); padding: 12px 16px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border); }}
+        td {{ padding: 12px 16px; border-bottom: 1px solid var(--border-light); font-size: 14px; vertical-align: middle; }}
         tr:last-child td {{ border-bottom: none; }}
         tr:hover {{ background: var(--bg-primary); }}
         
@@ -525,6 +600,7 @@ def generate_html(config, posts, stories, interactions):
         .type-post {{ background: #F3F4F6; color: #374151; }}
         .type-reel {{ background: #FDF2F8; color: #BE185D; }}
         .type-highlight {{ background: #FEF3C7; color: #B45309; }}
+        .type-story {{ background: #EDE9FE; color: #7C3AED; }}
         
         .posts-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 32px; margin-bottom: 48px; }}
         .post-card {{ background: var(--bg-secondary); border-radius: 20px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 8px 32px var(--shadow); transition: all 0.3s ease; }}
@@ -535,16 +611,54 @@ def generate_html(config, posts, stories, interactions):
         .post-card-body {{ padding: 24px; }}
         .post-card-header {{ display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; gap: 12px; }}
         .post-card-title {{ font-size: 17px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }}
+        .post-card-date {{ font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; }}
         .post-card-caption {{ font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; }}
         .post-card-hashtags {{ font-size: 13px; color: var(--accent-warm); font-weight: 500; }}
         .no-media {{ width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, var(--border-light) 0%, var(--border) 100%); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }}
         
+        /* Carousel Styles */
+        .carousel {{ position: relative; width: 100%; aspect-ratio: 1; background: var(--border-light); overflow: hidden; }}
+        .carousel-container {{ display: flex; width: 100%; height: 100%; transition: transform 0.3s ease; }}
+        .carousel-slide {{ flex-shrink: 0; width: 100%; height: 100%; }}
+        .carousel-slide img {{ width: 100%; height: 100%; object-fit: cover; }}
+        .carousel-btn {{ position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.9); border: none; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }}
+        .carousel:hover .carousel-btn {{ opacity: 1; }}
+        .carousel-prev {{ left: 12px; }}
+        .carousel-next {{ right: 12px; }}
+        .carousel-btn:hover {{ background: #fff; }}
+        .carousel-indicators {{ position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.5); padding: 6px 12px; border-radius: 100px; }}
+        .carousel-dot {{ width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.2s ease; }}
+        .carousel-dot.active {{ background: #fff; width: 8px; height: 8px; }}
+        .carousel-counter {{ font-size: 11px; color: #fff; font-weight: 600; margin-left: 6px; }}
+        
         .type-section {{ margin-bottom: 64px; }}
         .type-section:last-child {{ margin-bottom: 0; }}
         .type-section-header {{ display: flex; align-items: center; gap: 12px; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }}
-        .type-section-icon {{ width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--bg-primary); border-radius: 10px; font-size: 18px; }}
         .type-section-title {{ font-size: 20px; font-weight: 600; }}
         .type-section-count {{ font-size: 13px; color: var(--text-muted); margin-left: auto; }}
+        
+        /* Collapsible Sections - Common */
+        .collapse-icon {{ display: inline-block; font-size: 12px; color: var(--text-muted); transition: transform 0.2s ease; }}
+        details[open] > summary .collapse-icon {{ transform: rotate(90deg); }}
+        @keyframes slideDown {{ from {{ opacity: 0; transform: translateY(-8px); }} to {{ opacity: 1; transform: translateY(0); }} }}
+        
+        /* Collapsible Sub-sections */
+        .subsection-collapsible {{ margin-bottom: 32px; }}
+        .subsection-collapsible summary {{ padding: 16px 0; border-bottom: 1px solid var(--border); cursor: pointer; list-style: none; }}
+        .subsection-collapsible summary::-webkit-details-marker {{ display: none; }}
+        .subsection-collapsible summary::marker {{ display: none; }}
+        .subsection-header {{ display: inline-flex; align-items: center; gap: 8px; width: 100%; }}
+        .subsection-title {{ font-size: 18px; font-weight: 600; color: var(--text-primary); }}
+        .subsection-count {{ font-size: 13px; color: var(--text-muted); margin-left: auto; padding-right: 8px; }}
+        .subsection-content {{ padding-top: 24px; }}
+        
+        /* Collapsible Main Sections */
+        .section-collapsible {{ border: none; padding: 40px 64px; border-bottom: 1px solid var(--border); }}
+        .section-collapsible summary {{ cursor: pointer; list-style: none; }}
+        .section-collapsible summary::-webkit-details-marker {{ display: none; }}
+        .section-collapsible summary::marker {{ display: none; }}
+        .section-collapsible .section-header {{ margin-bottom: 0; }}
+        .section-collapsible[open] .section-header {{ margin-bottom: 48px; }}
         
         .stories-strip {{ display: flex; gap: 20px; overflow-x: auto; padding: 24px 0; }}
         .story-item {{ flex-shrink: 0; width: 140px; text-align: center; }}
@@ -568,6 +682,20 @@ def generate_html(config, posts, stories, interactions):
         
         .empty-state {{ text-align: center; padding: 48px; color: var(--text-muted); background: var(--bg-primary); border-radius: 16px; }}
         
+        /* Table Search and Filter */
+        .table-controls {{ display: flex; gap: 16px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }}
+        .search-box {{ position: relative; flex: 1; min-width: 200px; max-width: 300px; }}
+        .search-box input {{ width: 100%; padding: 10px 16px 10px 40px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-secondary); transition: border-color 0.2s ease; }}
+        .search-box input:focus {{ outline: none; border-color: var(--accent); }}
+        .search-box::before {{ content: '⌕'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; }}
+        .sort-info {{ font-size: 12px; color: var(--text-muted); }}
+        th.sortable {{ cursor: pointer; user-select: none; position: relative; }}
+        th.sortable:hover {{ background: var(--border-light); }}
+        th.sortable::after {{ content: '⇅'; margin-left: 6px; opacity: 0.4; font-size: 10px; }}
+        th.sortable.asc::after {{ content: '↑'; opacity: 1; }}
+        th.sortable.desc::after {{ content: '↓'; opacity: 1; }}
+        .no-results {{ text-align: center; padding: 24px; color: var(--text-muted); font-size: 14px; }}
+        
         /* Tab Navigation */
         .tab-nav {{ position: sticky; top: 0; z-index: 50; background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 0 64px; }}
         .tab-list {{ display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }}
@@ -584,6 +712,15 @@ def generate_html(config, posts, stories, interactions):
         .calendar-nav {{ display: flex; gap: 8px; }}
         .calendar-nav-btn {{ width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }}
         .calendar-nav-btn:hover {{ background: var(--bg-primary); }}
+        
+        /* Calendar Legend */
+        .calendar-legend {{ display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding: 16px 20px; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border); }}
+        .calendar-legend-item {{ display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); }}
+        .calendar-legend-icon {{ width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 11px; }}
+        .calendar-legend-icon.type-post {{ background: #F3F4F6; color: #374151; }}
+        .calendar-legend-icon.type-reel {{ background: #FDF2F8; color: #BE185D; }}
+        .calendar-legend-icon.type-story {{ background: #EDE9FE; color: #7C3AED; }}
+        .calendar-legend-icon.type-highlight {{ background: #FEF3C7; color: #B45309; }}
         
         .view-toggle {{ display: flex; gap: 4px; background: var(--bg-primary); padding: 4px; border-radius: 8px; margin-bottom: 32px; }}
         .view-toggle-btn {{ padding: 8px 16px; background: none; border: none; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: 6px; transition: all 0.2s ease; }}
@@ -603,24 +740,63 @@ def generate_html(config, posts, stories, interactions):
         .calendar-post-indicator.type-post {{ background: #F3F4F6; color: #374151; }}
         .calendar-post-indicator.type-reel {{ background: #FDF2F8; color: #BE185D; }}
         .calendar-post-indicator.type-highlight {{ background: #FEF3C7; color: #B45309; }}
+        .calendar-post-indicator.type-story {{ background: #EDE9FE; color: #7C3AED; }}
         
-        /* Weekly View */
-        .week-section {{ margin-bottom: 32px; }}
-        .week-header {{ display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }}
-        .week-number {{ font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }}
-        .week-date-range {{ font-size: 18px; font-weight: 600; color: var(--text-primary); }}
-        .week-post-count {{ font-size: 13px; color: var(--text-muted); margin-left: auto; }}
-        .week-days {{ display: flex; flex-direction: column; gap: 16px; }}
-        .day-row {{ display: flex; gap: 24px; padding: 16px; background: var(--bg-secondary); border-radius: 12px; }}
-        .day-date {{ width: 80px; flex-shrink: 0; }}
-        .day-date-weekday {{ font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); }}
-        .day-date-number {{ font-size: 24px; font-weight: 600; color: var(--text-primary); }}
-        .day-posts {{ flex: 1; display: flex; flex-direction: column; gap: 12px; }}
-        .day-post-card {{ display: flex; gap: 16px; padding: 16px; background: var(--bg-primary); border-radius: 8px; align-items: center; }}
-        .day-post-time {{ font-size: 13px; font-weight: 600; color: var(--text-muted); width: 60px; flex-shrink: 0; }}
-        .day-post-info {{ flex: 1; }}
-        .day-post-title {{ font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }}
-        .day-post-meta {{ font-size: 13px; color: var(--text-secondary); }}
+        /* Weekly View - Compact Grid */
+        .week-row-section {{ margin-bottom: 24px; background: var(--bg-secondary); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow); }}
+        .week-row-header {{ display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-primary); border-bottom: 1px solid var(--border); }}
+        .week-label {{ font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); }}
+        .week-range {{ font-size: 15px; font-weight: 600; color: var(--text-primary); }}
+        .week-count {{ font-size: 13px; color: var(--text-muted); margin-left: auto; }}
+        .week-row-grid {{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border-light); }}
+        .week-day-cell {{ background: var(--bg-secondary); min-height: 120px; padding: 12px; display: flex; flex-direction: column; }}
+        .week-day-cell.empty {{ background: var(--bg-primary); opacity: 0.5; }}
+        .week-day-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border-light); }}
+        .week-day-name {{ font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }}
+        .week-day-num {{ font-size: 16px; font-weight: 700; color: var(--text-primary); }}
+        .week-day-items {{ display: flex; flex-direction: column; gap: 4px; flex: 1; }}
+        .week-item {{ padding: 6px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+        .week-item.type-post {{ background: #F3F4F6; color: #374151; }}
+        .week-item.type-reel {{ background: #FDF2F8; color: #BE185D; }}
+        .week-item.type-highlight {{ background: #FEF3C7; color: #B45309; }}
+        .week-item.type-story {{ background: #EDE9FE; color: #7C3AED; }}
+        .week-item-time {{ font-size: 10px; color: var(--text-muted); margin-right: 4px; }}
+        .week-item-more {{ font-size: 10px; color: var(--text-muted); padding: 4px; }}
+        
+        /* Detailed Weekly View */
+        .week-detail-section {{ margin-bottom: 32px; background: var(--bg-secondary); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 4px 20px var(--shadow); }}
+        .week-detail-header {{ display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; background: linear-gradient(135deg, var(--accent) 0%, #3D3D3D 100%); color: #fff; }}
+        .week-detail-title-row {{ display: flex; align-items: baseline; gap: 12px; }}
+        .week-detail-label {{ font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7; }}
+        .week-detail-range {{ font-size: 20px; font-weight: 600; }}
+        .week-detail-stats {{ display: flex; gap: 20px; }}
+        .week-stat {{ font-size: 13px; opacity: 0.8; }}
+        .week-stat strong {{ font-weight: 700; }}
+        .week-stat-total {{ font-size: 13px; padding: 4px 12px; background: rgba(255,255,255,0.15); border-radius: 100px; }}
+        .week-detail-table {{ }}
+        .week-detail-header-row {{ display: grid; grid-template-columns: 80px 70px 1fr 90px 100px 1fr; gap: 12px; padding: 14px 24px; background: var(--bg-primary); border-bottom: 1px solid var(--border); font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); font-weight: 600; }}
+        .week-detail-row {{ display: grid; grid-template-columns: 80px 70px 1fr 90px 100px 1fr; gap: 12px; padding: 14px 24px; border-bottom: 1px solid var(--border-light); align-items: center; transition: background 0.2s ease; }}
+        .week-detail-row:hover {{ background: var(--bg-primary); }}
+        .week-detail-row:last-child {{ border-bottom: none; }}
+        .week-detail-day {{ font-size: 13px; font-weight: 600; color: var(--text-primary); }}
+        .week-detail-time {{ font-size: 13px; color: var(--text-muted); font-weight: 500; }}
+        .week-detail-title {{ font-size: 14px; font-weight: 600; color: var(--text-primary); }}
+        .week-detail-type {{ }}
+        .week-detail-status {{ }}
+        .week-detail-notes {{ font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+        
+        @media (max-width: 1024px) {{
+            .week-row-grid {{ grid-template-columns: repeat(4, 1fr); }}
+            .week-detail-header {{ flex-direction: column; gap: 12px; align-items: flex-start; }}
+            .week-detail-header-row, .week-detail-row {{ grid-template-columns: 70px 60px 1fr 80px; }}
+            .week-detail-status, .week-detail-notes {{ display: none; }}
+        }}
+        @media (max-width: 640px) {{
+            .week-row-grid {{ grid-template-columns: repeat(2, 1fr); }}
+            .week-day-cell {{ min-height: 100px; }}
+            .week-detail-header-row, .week-detail-row {{ grid-template-columns: 60px 1fr 70px; }}
+            .week-detail-time {{ display: none; }}
+        }}
         
         @media print {{ .nav {{ display: none; }} .main {{ margin-left: 0; }} .title-page {{ min-height: auto; padding: 60px; }} .tab-nav {{ display: none; }} }}
         @media (max-width: 1024px) {{ 
@@ -695,13 +871,15 @@ def generate_html(config, posts, stories, interactions):
             </footer>
         </section>
 
-        <section id="calendar" class="content-section">
-            <div class="section-header">
-                <div class="section-number">01</div>
-                <h2 class="section-title">Content Calendar</h2>
-                <p class="section-desc">Visual overview of your posting schedule.</p>
-            </div>
-            
+        <details id="calendar" class="section-collapsible">
+            <summary>
+                <div class="section-header">
+                    <div class="section-number">01</div>
+                    <h2 class="section-title"><span class="collapse-icon">▶</span> Content Calendar</h2>
+                    <p class="section-desc">Visual overview of your posting schedule.</p>
+                </div>
+            </summary>
+            <div class="section-content">
             <div class="view-toggle">
                 <button class="view-toggle-btn active" onclick="showCalendarView('monthly')">Monthly View</button>
                 <button class="view-toggle-btn" onclick="showCalendarView('weekly')">Weekly View</button>
@@ -723,23 +901,33 @@ def generate_html(config, posts, stories, interactions):
                     event.target.classList.add('active');
                 }}
             </script>
-        </section>
+            </div>
+        </details>
 
-        <section id="schedule" class="content-section">
-            <div class="section-header">
-                <div class="section-number">02</div>
-                <h2 class="section-title">Posting Schedule</h2>
-                <p class="section-desc">Complete overview of all planned content.</p>
+        <details id="schedule" class="section-collapsible">
+            <summary>
+                <div class="section-header">
+                    <div class="section-number">02</div>
+                    <h2 class="section-title"><span class="collapse-icon">▶</span> Posting Schedule</h2>
+                    <p class="section-desc">Complete overview of all planned content.</p>
+                </div>
+            </summary>
+            <div class="section-content">
+            <div class="table-controls">
+                <div class="search-box">
+                    <input type="text" id="posts-search" placeholder="Search posts..." onkeyup="filterTable('posts-table', this.value)">
+                </div>
+                <span class="sort-info">Click column headers to sort</span>
             </div>
             <div class="table-wrapper">
-                <table>
+                <table id="posts-table">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Status</th>
+                            <th class="sortable" onclick="sortTable('posts-table', 0)">Title</th>
+                            <th class="sortable" onclick="sortTable('posts-table', 1)">Date</th>
+                            <th class="sortable" onclick="sortTable('posts-table', 2)">Time</th>
+                            <th class="sortable" onclick="sortTable('posts-table', 3)">Type</th>
+                            <th class="sortable" onclick="sortTable('posts-table', 4)">Status</th>
                             <th>Hashtags</th>
                             <th>Notes</th>
                         </tr>
@@ -747,72 +935,98 @@ def generate_html(config, posts, stories, interactions):
                     <tbody>
                         {"".join(f'''<tr>
                             <td><strong>{p.get("Title", "")}</strong></td>
-                            <td>{p.get("PostDate", "")}</td>
-                            <td>{p.get("Time", "")}</td>
-                            <td><span class="type-badge type-{p.get("Type", "post").lower()}">{p.get("Type", "post")}</span></td>
-                            <td><span class="status status-{p.get("Status", "Draft").lower().replace(" ", "")}">{p.get("Status", "Draft")}</span></td>
+                            <td data-sort="{convert_date_to_sortable(p.get("PostDate", ""))}">{p.get("PostDate", "")}</td>
+                            <td data-sort="{convert_time_to_24hr(p.get("Time", ""))}">{p.get("Time", "")}</td>
+                            <td data-sort="{p.get("Type", "post")}"><span class="type-badge type-{p.get("Type", "post").lower()}">{p.get("Type", "post")}</span></td>
+                            <td data-sort="{p.get("Status", "Draft")}"><span class="status status-{p.get("Status", "Draft").lower().replace(" ", "")}">{p.get("Status", "Draft")}</span></td>
                             <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">{p.get("Hashtags", "")}</td>
                             <td style="max-width: 180px; font-size: 13px;">{p.get("Notes", "")}</td>
                         </tr>''' for p in posts) if posts else '<tr><td colspan="7" class="empty-state">No posts scheduled</td></tr>'}
                     </tbody>
                 </table>
             </div>
-        </section>
-
-        <section id="posts" class="content-section">
-            <div class="section-header">
-                <div class="section-number">03</div>
-                <h2 class="section-title">Draft Posts</h2>
-                <p class="section-desc">Content previews organized by format.</p>
             </div>
+        </details>
 
-            <div id="posts-posts" class="type-section">
-                <div class="type-section-header">
-                    <div class="type-section-icon">📷</div>
-                    <div class="type-section-title">Feed Posts</div>
-                    <div class="type-section-count">{posts_count} posts</div>
+        <details id="posts" class="section-collapsible">
+            <summary>
+                <div class="section-header">
+                    <div class="section-number">03</div>
+                    <h2 class="section-title"><span class="collapse-icon">▶</span> Draft Posts</h2>
+                    <p class="section-desc">Content previews organized by format.</p>
                 </div>
-                <div class="posts-grid">
-                    {"".join(render_post_card(p, i) for i, p in enumerate(posts) if p.get("Type", "").lower() == "post") or '<div class="empty-state">No posts scheduled</div>'}
+            </summary>
+            <div class="section-content">
+
+            <details id="posts-posts" class="subsection-collapsible">
+                <summary>
+                    <div class="subsection-header">
+                        <span class="collapse-icon">▶</span>
+                        <span class="subsection-title">Feed Posts</span>
+                        <span class="subsection-count">{posts_count} posts</span>
+                    </div>
+                </summary>
+                <div class="subsection-content">
+                    <div class="posts-grid">
+                        {"".join(render_post_card(p, i) for i, p in enumerate(posts) if p.get("Type", "").lower() == "post") or '<div class="empty-state">No posts scheduled</div>'}
+                    </div>
                 </div>
+            </details>
+
+            <details id="posts-reels" class="subsection-collapsible">
+                <summary>
+                    <div class="subsection-header">
+                        <span class="collapse-icon">▶</span>
+                        <span class="subsection-title">Reels</span>
+                        <span class="subsection-count">{reels_count} reels</span>
+                    </div>
+                </summary>
+                <div class="subsection-content">
+                    <div class="posts-grid">
+                        {"".join(render_post_card(p, i) for i, p in enumerate(posts) if p.get("Type", "").lower() == "reel") or '<div class="empty-state">No reels scheduled</div>'}
+                    </div>
+                </div>
+            </details>
+
+            <details id="posts-highlights" class="subsection-collapsible" {"" if highlights_count > 0 else ""}>
+                <summary>
+                    <div class="subsection-header">
+                        <span class="collapse-icon">▶</span>
+                        <span class="subsection-title">Highlights</span>
+                        <span class="subsection-count">{highlights_count} highlights</span>
+                    </div>
+                </summary>
+                <div class="subsection-content">
+                    <div class="posts-grid">
+                        {"".join(render_post_card(p, i) for i, p in enumerate(posts) if p.get("Type", "").lower() == "highlight") or '<div class="empty-state">No highlights scheduled</div>'}
+                    </div>
+                </div>
+            </details>
             </div>
+        </details>
 
-            <div id="posts-reels" class="type-section">
-                <div class="type-section-header">
-                    <div class="type-section-icon">🎬</div>
-                    <div class="type-section-title">Reels</div>
-                    <div class="type-section-count">{reels_count} reels</div>
+        <details id="stories" class="section-collapsible">
+            <summary>
+                <div class="section-header">
+                    <div class="section-number">04</div>
+                    <h2 class="section-title"><span class="collapse-icon">▶</span> Stories Schedule</h2>
+                    <p class="section-desc">Ephemeral content planned for the period.</p>
                 </div>
-                <div class="posts-grid">
-                    {"".join(render_post_card(p, i) for i, p in enumerate(posts) if p.get("Type", "").lower() == "reel") or '<div class="empty-state">No reels scheduled</div>'}
+            </summary>
+            <div class="section-content">
+            <div class="table-controls">
+                <div class="search-box">
+                    <input type="text" id="stories-search" placeholder="Search stories..." onkeyup="filterTable('stories-table', this.value)">
                 </div>
-            </div>
-
-            <div id="posts-highlights" class="type-section">
-                <div class="type-section-header">
-                    <div class="type-section-icon">⭐</div>
-                    <div class="type-section-title">Highlights</div>
-                    <div class="type-section-count">{highlights_count} highlights</div>
-                </div>
-                <div class="posts-grid">
-                    {"".join(render_post_card(p, i) for i, p in enumerate(posts) if p.get("Type", "").lower() == "highlight") or '<div class="empty-state">No highlights scheduled</div>'}
-                </div>
-            </div>
-        </section>
-
-        <section id="stories" class="content-section">
-            <div class="section-header">
-                <div class="section-number">04</div>
-                <h2 class="section-title">Stories Schedule</h2>
-                <p class="section-desc">Ephemeral content planned for the period.</p>
+                <span class="sort-info">Click column headers to sort</span>
             </div>
             <div class="table-wrapper">
-                <table>
+                <table id="stories-table">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th>Time</th>
+                            <th class="sortable" onclick="sortTable('stories-table', 0)">Title</th>
+                            <th class="sortable" onclick="sortTable('stories-table', 1)">Date</th>
+                            <th class="sortable" onclick="sortTable('stories-table', 2)">Time</th>
                             <th>Interactive Elements</th>
                             <th>Notes</th>
                         </tr>
@@ -820,8 +1034,8 @@ def generate_html(config, posts, stories, interactions):
                     <tbody>
                         {"".join(f'''<tr>
                             <td><strong>{s.get("Title", "")}</strong></td>
-                            <td>{s.get("PostDate", "")}</td>
-                            <td>{s.get("Time", "")}</td>
+                            <td data-sort="{convert_date_to_sortable(s.get("PostDate", ""))}">{s.get("PostDate", "")}</td>
+                            <td data-sort="{convert_time_to_24hr(s.get("Time", ""))}">{s.get("Time", "")}</td>
                             <td>{s.get("InteractiveElements", "")}</td>
                             <td>{s.get("Notes", "")}</td>
                         </tr>''' for s in stories) if stories else '<tr><td colspan="5" class="empty-state">No stories scheduled</td></tr>'}
@@ -830,26 +1044,29 @@ def generate_html(config, posts, stories, interactions):
             </div>
             
             <div class="type-section-header" style="margin-top: 48px;">
-                <div class="type-section-icon">📱</div>
                 <div class="type-section-title">Story Assets</div>
             </div>
             <div class="stories-strip">
                 {"".join(f'''<div class="story-item">
                     <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="{s.get("MediaURL", "")}" alt="{s.get("Title", "")}" onerror="this.style.background='#f5f5f5'">
+                        <img class="story-thumb" src="{get_direct_image_url(s.get("MediaURL", ""))}" alt="{s.get("Title", "")}" onerror="this.style.background='#f5f5f5'">
                     </div>
                     <div class="story-title">{s.get("Title", "")}</div>
                     <div class="story-date">{s.get("PostDate", "")}</div>
                 </div>''' for s in stories if s.get("MediaURL")) or '<div class="empty-state" style="width: 100%;">No story assets uploaded</div>'}
             </div>
-        </section>
-
-        <section id="interactions" class="content-section">
-            <div class="section-header">
-                <div class="section-number">05</div>
-                <h2 class="section-title">Account Interactions</h2>
-                <p class="section-desc">Daily engagement targets and tracking ({len(interactions)} accounts).</p>
             </div>
+        </details>
+
+        <details id="interactions" class="section-collapsible">
+            <summary>
+                <div class="section-header">
+                    <div class="section-number">05</div>
+                    <h2 class="section-title"><span class="collapse-icon">▶</span> Account Interactions</h2>
+                    <p class="section-desc">Daily engagement targets and tracking ({len(interactions)} accounts).</p>
+                </div>
+            </summary>
+            <div class="section-content">
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -872,25 +1089,218 @@ def generate_html(config, posts, stories, interactions):
                     </tbody>
                 </table>
             </div>
-        </section>
+            </div>
+        </details>
     </main>
+    
+    <script>
+        // Table filtering
+        function filterTable(tableId, searchText) {{
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const rows = tbody.querySelectorAll('tr');
+            const search = searchText.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            rows.forEach(row => {{
+                if (row.classList.contains('no-results-row')) {{
+                    row.remove();
+                    return;
+                }}
+                const text = row.textContent.toLowerCase();
+                const match = search === '' || text.includes(search);
+                row.style.display = match ? '' : 'none';
+                if (match) visibleCount++;
+            }});
+            
+            // Show "no results" message if needed
+            const existingNoResults = tbody.querySelector('.no-results-row');
+            if (existingNoResults) existingNoResults.remove();
+            
+            if (visibleCount === 0 && search !== '') {{
+                const colCount = table.querySelector('thead tr').children.length;
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.className = 'no-results-row';
+                noResultsRow.innerHTML = `<td colspan="${{colCount}}" class="no-results">No results found for "${{searchText}}"</td>`;
+                tbody.appendChild(noResultsRow);
+            }}
+        }}
+        
+        // Table sorting
+        function sortTable(tableId, colIndex) {{
+            const table = document.getElementById(tableId);
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+            const headers = thead.querySelectorAll('th');
+            const rows = Array.from(tbody.querySelectorAll('tr:not(.no-results-row)'));
+            
+            // Determine sort direction
+            const th = headers[colIndex];
+            const isAsc = th.classList.contains('asc');
+            
+            // Clear all sort classes
+            headers.forEach(h => h.classList.remove('asc', 'desc'));
+            
+            // Set new sort direction
+            th.classList.add(isAsc ? 'desc' : 'asc');
+            const direction = isAsc ? -1 : 1;
+            
+            // Sort rows
+            rows.sort((a, b) => {{
+                const aCell = a.children[colIndex];
+                const bCell = b.children[colIndex];
+                let aVal = aCell.dataset.sort || aCell.textContent.trim();
+                let bVal = bCell.dataset.sort || bCell.textContent.trim();
+                
+                // Check if values look like dates (YYYY-MM-DD or HH:MM format)
+                const isDateFormat = /^\d{{4}}-\d{{2}}-\d{{2}}$/.test(aVal) || /^\d{{4}}-\d{{2}}-\d{{2}}$/.test(bVal);
+                const isTimeFormat = /^\d{{2}}:\d{{2}}$/.test(aVal) || /^\d{{2}}:\d{{2}}$/.test(bVal);
+                
+                // Use string comparison for dates and times (ISO format sorts correctly as strings)
+                if (isDateFormat || isTimeFormat) {{
+                    return aVal.localeCompare(bVal) * direction;
+                }}
+                
+                // Try numeric comparison only if both values are purely numeric
+                const aNum = parseFloat(aVal);
+                const bNum = parseFloat(bVal);
+                const aIsNumeric = !isNaN(aNum) && String(aNum) === aVal.trim();
+                const bIsNumeric = !isNaN(bNum) && String(bNum) === bVal.trim();
+                
+                if (aIsNumeric && bIsNumeric) {{
+                    return (aNum - bNum) * direction;
+                }}
+                
+                // String comparison for everything else
+                return aVal.localeCompare(bVal) * direction;
+            }});
+            
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+        }}
+        
+        // Carousel functions
+        function getCarouselState(carousel) {{
+            const container = carousel.querySelector('.carousel-container');
+            const slides = carousel.querySelectorAll('.carousel-slide');
+            const currentIndex = parseInt(carousel.dataset.currentIndex || 0);
+            return {{ container, slides, currentIndex, total: slides.length }};
+        }}
+        
+        function updateCarousel(carousel, newIndex) {{
+            const {{ container, slides, total }} = getCarouselState(carousel);
+            const index = Math.max(0, Math.min(newIndex, total - 1));
+            
+            carousel.dataset.currentIndex = index;
+            container.style.transform = `translateX(-${{index * 100}}%)`;
+            
+            // Update dots
+            const dots = carousel.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            
+            // Update counter
+            const counter = carousel.querySelector('.carousel-counter');
+            if (counter) counter.textContent = `${{index + 1}} / ${{total}}`;
+        }}
+        
+        function prevSlide(btn) {{
+            const carousel = btn.closest('.carousel');
+            const {{ currentIndex }} = getCarouselState(carousel);
+            const {{ total }} = getCarouselState(carousel);
+            updateCarousel(carousel, currentIndex === 0 ? total - 1 : currentIndex - 1);
+        }}
+        
+        function nextSlide(btn) {{
+            const carousel = btn.closest('.carousel');
+            const {{ currentIndex, total }} = getCarouselState(carousel);
+            updateCarousel(carousel, currentIndex === total - 1 ? 0 : currentIndex + 1);
+        }}
+        
+        function goToSlide(dot, index) {{
+            const carousel = dot.closest('.carousel');
+            updateCarousel(carousel, index);
+        }}
+        
+        // Touch/swipe support for carousels
+        document.addEventListener('DOMContentLoaded', () => {{
+            document.querySelectorAll('.carousel').forEach(carousel => {{
+                let startX = 0;
+                let isDragging = false;
+                
+                carousel.addEventListener('touchstart', (e) => {{
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                }});
+                
+                carousel.addEventListener('touchmove', (e) => {{
+                    if (!isDragging) return;
+                }});
+                
+                carousel.addEventListener('touchend', (e) => {{
+                    if (!isDragging) return;
+                    isDragging = false;
+                    const endX = e.changedTouches[0].clientX;
+                    const diff = startX - endX;
+                    
+                    if (Math.abs(diff) > 50) {{
+                        if (diff > 0) {{
+                            nextSlide(carousel.querySelector('.carousel-next'));
+                        }} else {{
+                            prevSlide(carousel.querySelector('.carousel-prev'));
+                        }}
+                    }}
+                }});
+            }});
+        }});
+    </script>
 </body>
 </html>'''
     
     return html
 
 def render_post_card(post, index):
-    """Render a single post card."""
-    media_url = post.get("MediaURL", "")
-    is_video = any(x in media_url.lower() for x in ["youtube.com", "youtu.be", "vimeo.com"])
+    """Render a single post card with carousel support for multiple images."""
+    media_field = post.get("MediaURL", "")
+    
+    # Check for video first
+    is_video = any(x in media_field.lower() for x in ["youtube.com", "youtu.be", "vimeo.com"])
     
     if is_video:
-        embed_url = get_embed_url(media_url)
+        embed_url = get_embed_url(media_field)
         media_html = f'<div class="post-card-media video-container"><iframe src="{embed_url}" allowfullscreen></iframe></div>'
-    elif media_url:
-        media_html = f'<img class="post-card-media" src="{media_url}" alt="{post.get("Title", "")}" onerror="this.outerHTML=\'<div class=\\\'no-media\\\'>Image not available</div>\'">'
     else:
-        media_html = '<div class="no-media">No media uploaded</div>'
+        # Parse multiple URLs (carousel support)
+        media_urls = parse_media_urls(media_field)
+        
+        if len(media_urls) > 1:
+            # Carousel with multiple images
+            slides_html = ''.join(f'''<div class="carousel-slide" data-index="{i}">
+                <img src="{url}" alt="{post.get("Title", "")} - Image {i+1}" onerror="this.parentElement.innerHTML='<div class=\\'no-media\\'>Image not available</div>'">
+            </div>''' for i, url in enumerate(media_urls))
+            
+            dots_html = ''.join(f'<span class="carousel-dot{" active" if i == 0 else ""}" data-index="{i}" onclick="goToSlide(this, {i})"></span>' for i in range(len(media_urls)))
+            
+            media_html = f'''<div class="carousel" data-card="{index}">
+                <div class="carousel-container">
+                    {slides_html}
+                </div>
+                <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
+                <button class="carousel-btn carousel-next" onclick="nextSlide(this)">›</button>
+                <div class="carousel-indicators">
+                    {dots_html}
+                    <span class="carousel-counter">1 / {len(media_urls)}</span>
+                </div>
+            </div>'''
+        elif len(media_urls) == 1:
+            # Single image
+            media_html = f'<img class="post-card-media" src="{media_urls[0]}" alt="{post.get("Title", "")}" onerror="this.outerHTML=\'<div class=\\\'no-media\\\'>Image not available</div>\'">'
+        else:
+            media_html = '<div class="no-media">No media uploaded</div>'
+    
+    # Format date and time for display
+    post_date = post.get("PostDate", "")
+    post_time = post.get("Time", "")
+    date_display = f"{post_date} • {post_time}" if post_date and post_time else post_date or post_time or ""
     
     return f'''<div class="post-card" id="post-{index}">
         {media_html}
@@ -899,6 +1309,7 @@ def render_post_card(post, index):
                 <span class="post-card-title">{post.get("Title", "Untitled")}</span>
                 <span class="type-badge type-{post.get("Type", "post").lower()}">{post.get("Type", "post")}</span>
             </div>
+            {f'<div class="post-card-date">{date_display}</div>' if date_display else ''}
             <p class="post-card-caption">{post.get("Caption", "No caption provided")}</p>
             <div class="post-card-hashtags">{post.get("Hashtags", "")}</div>
         </div>
@@ -939,21 +1350,37 @@ def render_interaction_row(interaction):
         {day_cells}
     </tr>'''
 
-def render_monthly_calendar(posts, month, year):
-    """Render the monthly calendar grid HTML."""
+def render_monthly_calendar(posts, stories, month, year):
+    """Render the monthly calendar grid HTML with posts AND stories."""
     cal = calendar.Calendar(firstweekday=6)  # Sunday start
     month_name = calendar.month_name[month]
     today = datetime.now()
     
-    # Build a dict of day -> posts for quick lookup
-    posts_by_day = {}
+    # Build a dict of day -> items for quick lookup (combine posts + stories)
+    items_by_day = {}
+    
+    # Add posts
     for post in posts:
         post_date = parse_date(post.get("PostDate", ""), year)
         if post_date and post_date.month == month and post_date.year == year:
             day = post_date.day
-            if day not in posts_by_day:
-                posts_by_day[day] = []
-            posts_by_day[day].append(post)
+            if day not in items_by_day:
+                items_by_day[day] = []
+            item = post.copy()
+            item["_content_type"] = "post"
+            items_by_day[day].append(item)
+    
+    # Add stories
+    for story in stories:
+        story_date = parse_date(story.get("PostDate", ""), year)
+        if story_date and story_date.month == month and story_date.year == year:
+            day = story_date.day
+            if day not in items_by_day:
+                items_by_day[day] = []
+            item = story.copy()
+            item["_content_type"] = "story"
+            item["Type"] = "story"  # Mark as story type for styling
+            items_by_day[day].append(item)
     
     # Day headers
     day_headers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -967,23 +1394,49 @@ def render_monthly_calendar(posts, month, year):
         else:
             is_today = (today.year == year and today.month == month and today.day == day)
             today_class = ' today' if is_today else ''
-            day_posts = posts_by_day.get(day, [])
+            day_items = items_by_day.get(day, [])
             
             posts_indicators = ''
-            for p in day_posts[:3]:  # Show max 3 indicators
+            for p in day_items[:3]:  # Show max 3 indicators
                 post_type = p.get("Type", "post").lower()
                 title = p.get("Title", "")[:20]
                 posts_indicators += f'<div class="calendar-post-indicator type-{post_type}">{title}</div>'
             
-            if len(day_posts) > 3:
-                posts_indicators += f'<div class="calendar-post-indicator" style="background: var(--bg-primary); color: var(--text-muted);">+{len(day_posts) - 3} more</div>'
+            if len(day_items) > 3:
+                posts_indicators += f'<div class="calendar-post-indicator" style="background: var(--bg-primary); color: var(--text-muted);">+{len(day_items) - 3} more</div>'
             
             days_html += f'''<div class="calendar-day{today_class}" data-day="{day}">
                 <div class="calendar-day-number">{day}</div>
-                <div class="calendar-day-posts" data-count="{len(day_posts)}">{posts_indicators}</div>
+                <div class="calendar-day-posts" data-count="{len(day_items)}">{posts_indicators}</div>
             </div>'''
     
-    return f'''<div class="calendar-header">
+    return f'''<div class="calendar-legend">
+        <div class="calendar-legend-item">
+            <div class="calendar-legend-icon type-post">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg>
+            </div>
+            <span>Post</span>
+        </div>
+        <div class="calendar-legend-item">
+            <div class="calendar-legend-icon type-reel">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
+            </div>
+            <span>Reel</span>
+        </div>
+        <div class="calendar-legend-item">
+            <div class="calendar-legend-icon type-story">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
+            </div>
+            <span>Story</span>
+        </div>
+        <div class="calendar-legend-item">
+            <div class="calendar-legend-icon type-highlight">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9" fill="currentColor"/></svg>
+            </div>
+            <span>Highlight</span>
+        </div>
+    </div>
+    <div class="calendar-header">
         <h2 class="calendar-title">{month_name} {year}</h2>
     </div>
     <div class="calendar-grid">
@@ -992,68 +1445,181 @@ def render_monthly_calendar(posts, month, year):
     </div>'''
 
 
-def render_weekly_view(posts, month, year):
-    """Render the weekly detail view HTML."""
-    weeks = group_posts_by_week(posts, month, year)
-    month_name = calendar.month_name[month]
+def render_weekly_view(posts, stories, month, year):
+    """Render a detailed weekly breakdown showing all posts and stories by week."""
+    # Combine posts and stories
+    all_items = []
+    for post in posts:
+        item = post.copy()
+        item["_content_type"] = "post"
+        all_items.append(item)
+    for story in stories:
+        item = story.copy()
+        item["_content_type"] = "story"
+        item["Type"] = "story"
+        item["Status"] = "Draft"
+        all_items.append(item)
     
-    if not weeks:
-        return '<div class="empty-state">No posts scheduled for this month</div>'
+    # Build items by day for quick lookup
+    items_by_day = {}
+    for item in all_items:
+        item_date = parse_date(item.get("PostDate", ""), year)
+        if item_date and item_date.month == month and item_date.year == year:
+            day = item_date.day
+            if day not in items_by_day:
+                items_by_day[day] = []
+            items_by_day[day].append(item)
     
+    # Sort items within each day by time
+    for day in items_by_day:
+        items_by_day[day].sort(key=lambda x: x.get("Time", "99:99"))
+    
+    if not items_by_day:
+        return '<div class="empty-state">No content scheduled for this month</div>'
+    
+    # Get calendar structure
+    cal = calendar.Calendar(firstweekday=6)  # Sunday start
+    month_days = list(cal.itermonthdays(year, month))
+    day_names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    
+    # Generate week sections
     weeks_html = ''
-    for week_num in sorted(weeks.keys()):
-        week_posts = weeks[week_num]
-        date_range = get_week_date_range(week_num, month, year)
+    week_num = 0
+    
+    i = 0
+    while i < len(month_days):
+        week_days = month_days[i:i+7]
+        i += 7
         
-        # Group by day
-        days_dict = {}
-        for day, post in week_posts:
-            if day not in days_dict:
-                days_dict[day] = []
-            days_dict[day].append(post)
+        # Skip weeks with no days in this month
+        if all(d == 0 for d in week_days):
+            continue
         
+        week_num += 1
+        
+        # Calculate week date range
+        valid_days = [d for d in week_days if d > 0]
+        if not valid_days:
+            continue
+            
+        start_day = min(valid_days)
+        end_day = max(valid_days)
+        month_abbr = calendar.month_abbr[month]
+        date_range = f"{month_abbr} {start_day}-{end_day}"
+        
+        # Collect all items for this week
+        week_items = []
+        for idx, day in enumerate(week_days):
+            if day > 0 and day in items_by_day:
+                for item in items_by_day[day]:
+                    week_items.append((day, idx, item))
+        
+        # Skip weeks with no content
+        if not week_items:
+            continue
+        
+        # Count by type
+        post_count = sum(1 for _, _, item in week_items if item.get("Type", "").lower() in ["post", "reel", "highlight"])
+        story_count = sum(1 for _, _, item in week_items if item.get("Type", "").lower() == "story")
+        
+        # Build day rows
         days_html = ''
-        for day in sorted(days_dict.keys()):
-            day_posts = days_dict[day]
+        current_day = None
+        
+        for day, day_idx, item in sorted(week_items, key=lambda x: (x[0], x[2].get("Time", "99:99"))):
             day_date = datetime(year, month, day)
-            weekday = day_date.strftime('%a')
+            weekday_name = day_names[day_idx]
+            item_type = item.get("Type", "post").lower()
+            title = item.get("Title", "Untitled")
+            time = item.get("Time", "")
+            status = item.get("Status", "Draft")
+            notes = item.get("Notes", "") or item.get("InteractiveElements", "")
             
-            posts_html = ''
-            for p in day_posts:
-                post_type = p.get("Type", "post").lower()
-                title = p.get("Title", "Untitled")
-                time = p.get("Time", "")
-                status = p.get("Status", "Draft")
-                
-                posts_html += f'''<div class="day-post-card">
-                    <div class="day-post-time">{time}</div>
-                    <div class="day-post-info">
-                        <div class="day-post-title">{title}</div>
-                        <div class="day-post-meta">
-                            <span class="type-badge type-{post_type}">{post_type}</span>
-                            <span class="status status-{status.lower().replace(" ", "")}">{status}</span>
-                        </div>
-                    </div>
-                </div>'''
+            # Show day label only for first item of each day
+            if day != current_day:
+                day_label = f'<div class="week-detail-day">{weekday_name} {day}</div>'
+                current_day = day
+            else:
+                day_label = '<div class="week-detail-day"></div>'
             
-            days_html += f'''<div class="day-row">
-                <div class="day-date">
-                    <div class="day-date-weekday">{weekday}</div>
-                    <div class="day-date-number">{day}</div>
-                </div>
-                <div class="day-posts">{posts_html}</div>
+            days_html += f'''<div class="week-detail-row">
+                {day_label}
+                <div class="week-detail-time">{time}</div>
+                <div class="week-detail-title">{title}</div>
+                <div class="week-detail-type"><span class="type-badge type-{item_type}">{item_type}</span></div>
+                <div class="week-detail-status"><span class="status status-{status.lower().replace(" ", "")}">{status}</span></div>
+                <div class="week-detail-notes">{notes[:40]}{"..." if len(notes) > 40 else ""}</div>
             </div>'''
         
-        weeks_html += f'''<div class="week-section">
-            <div class="week-header">
-                <div class="week-number">Week {week_num}</div>
-                <div class="week-date-range">{date_range}</div>
-                <div class="week-post-count">{len(week_posts)} posts</div>
+        weeks_html += f'''<div class="week-detail-section">
+            <div class="week-detail-header">
+                <div class="week-detail-title-row">
+                    <span class="week-detail-label">Week {week_num}</span>
+                    <span class="week-detail-range">{date_range}</span>
+                </div>
+                <div class="week-detail-stats">
+                    <span class="week-stat"><strong>{post_count}</strong> posts</span>
+                    <span class="week-stat"><strong>{story_count}</strong> stories</span>
+                    <span class="week-stat-total"><strong>{len(week_items)}</strong> total</span>
+                </div>
             </div>
-            <div class="week-days">{days_html}</div>
+            <div class="week-detail-table">
+                <div class="week-detail-header-row">
+                    <div class="week-detail-day">Day</div>
+                    <div class="week-detail-time">Time</div>
+                    <div class="week-detail-title">Title</div>
+                    <div class="week-detail-type">Type</div>
+                    <div class="week-detail-status">Status</div>
+                    <div class="week-detail-notes">Notes</div>
+                </div>
+                {days_html}
+            </div>
         </div>'''
     
     return weeks_html
+
+
+def convert_date_to_sortable(date_str, year=None):
+    """Convert date string to sortable ISO format (YYYY-MM-DD) for proper sorting."""
+    if not date_str:
+        return "9999-99-99"  # Default to end for empty dates
+    
+    parsed = parse_date(date_str, year if year else datetime.now().year)
+    if parsed:
+        return parsed.strftime("%Y-%m-%d")
+    
+    return date_str  # Return as-is if couldn't parse
+
+
+def convert_time_to_24hr(time_str):
+    """Convert time string like '9:00 AM' or '12:30 PM' to 24-hour format for sorting."""
+    if not time_str:
+        return "99:99"  # Default to end for empty times
+    
+    time_str = time_str.strip().upper()
+    
+    # Try to parse AM/PM format
+    try:
+        # Handle formats like "9:00 AM", "12:30 PM", "9:00AM", "9AM"
+        import re
+        match = re.match(r'(\d{1,2}):?(\d{2})?\s*(AM|PM)?', time_str, re.IGNORECASE)
+        if match:
+            hour = int(match.group(1))
+            minute = int(match.group(2)) if match.group(2) else 0
+            period = match.group(3)
+            
+            if period:
+                period = period.upper()
+                if period == 'PM' and hour != 12:
+                    hour += 12
+                elif period == 'AM' and hour == 12:
+                    hour = 0
+            
+            return f"{hour:02d}:{minute:02d}"
+    except:
+        pass
+    
+    return time_str  # Return as-is if couldn't parse
 
 
 def get_embed_url(url):
@@ -1068,6 +1634,150 @@ def get_embed_url(url):
         video_id = url.split("vimeo.com/")[1].split("?")[0]
         return f"https://player.vimeo.com/video/{video_id}"
     return url
+
+
+def convert_imgur_url(url):
+    """
+    Convert Imgur page URLs to direct image URLs.
+    
+    Converts:
+        https://imgur.com/zc7nfaj  →  https://i.imgur.com/zc7nfaj.jpg
+        https://imgur.com/a/ABC123  →  (album - returns first item or placeholder)
+        https://i.imgur.com/xyz.jpg  →  unchanged (already direct)
+    """
+    if not url:
+        return url
+    
+    url = url.strip()
+    
+    # Already a direct image URL (i.imgur.com with extension)
+    if "i.imgur.com/" in url and any(url.lower().endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']):
+        return url
+    
+    # Handle album URLs - these can't be directly converted without API
+    # Return a note or try first image
+    if "imgur.com/a/" in url or "imgur.com/gallery/" in url:
+        # Album URLs need manual conversion - extract ID and try common pattern
+        # For albums, you'd need to get individual image IDs from the album
+        return url  # Can't auto-convert albums, return as-is
+    
+    # Single image page URL: https://imgur.com/zc7nfaj
+    # Convert to: https://i.imgur.com/zc7nfaj.jpg
+    if "imgur.com/" in url and "i.imgur.com" not in url:
+        # Extract the image ID
+        parts = url.split("imgur.com/")
+        if len(parts) > 1:
+            image_id = parts[1].split("?")[0].split("#")[0].strip("/")
+            # Skip if it looks like an album or gallery path
+            if image_id and "/" not in image_id and len(image_id) >= 5:
+                return f"https://i.imgur.com/{image_id}.jpg"
+    
+    return url
+
+
+def convert_dropbox_url(url):
+    """
+    Convert Dropbox share URLs to direct download URLs.
+    
+    Converts:
+        https://www.dropbox.com/...?dl=0  →  https://www.dropbox.com/...?dl=1
+        https://www.dropbox.com/scl/fi/...  →  adds ?dl=1 or changes dl=0 to dl=1
+    """
+    if not url:
+        return url
+    
+    url = url.strip()
+    
+    # Check if it's a Dropbox URL
+    if "dropbox.com" not in url:
+        return url
+    
+    # Convert dl=0 to dl=1 for direct access
+    if "dl=0" in url:
+        return url.replace("dl=0", "dl=1")
+    
+    # If no dl parameter, add dl=1
+    if "dl=" not in url:
+        if "?" in url:
+            return url + "&dl=1"
+        else:
+            return url + "?dl=1"
+    
+    return url
+
+
+def get_direct_image_url(url):
+    """
+    Get a direct image URL that can be used in <img src="">.
+    Handles Dropbox, Imgur, Google Drive, and other common hosts.
+    """
+    if not url:
+        return url
+    
+    url = url.strip()
+    
+    # Handle Dropbox (check first - most common now)
+    if "dropbox.com" in url:
+        return convert_dropbox_url(url)
+    
+    # Handle Imgur
+    if "imgur.com" in url:
+        return convert_imgur_url(url)
+    
+    # Handle Google Drive
+    # Convert: https://drive.google.com/file/d/FILE_ID/view
+    # To: https://drive.google.com/uc?export=view&id=FILE_ID
+    if "drive.google.com/file/d/" in url:
+        try:
+            file_id = url.split("/d/")[1].split("/")[0]
+            return f"https://drive.google.com/uc?export=view&id={file_id}"
+        except:
+            pass
+    
+    # Already a direct URL or unchanged
+    return url
+
+
+def parse_media_urls(media_field):
+    """
+    Parse a media URL field that may contain multiple URLs.
+    Returns a list of direct image URLs.
+    
+    Handles:
+        - Single URL
+        - Multiple URLs separated by newlines
+        - URLs with descriptive text (e.g., "https://... - Album")
+    """
+    if not media_field:
+        return []
+    
+    urls = []
+    
+    # Split by newlines
+    lines = media_field.strip().split('\n')
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        
+        # Extract URL from line (may have description like "https://... - Album")
+        # Look for URL pattern
+        url_match = re.search(r'(https?://[^\s]+)', line)
+        if url_match:
+            url = url_match.group(1)
+            # Clean up any trailing description markers
+            url = url.split(' - ')[0].strip()
+            url = url.split(' ')[0].strip()  # Take only the URL part
+            
+            # Convert to direct URL
+            direct_url = get_direct_image_url(url)
+            
+            # Skip album URLs that couldn't be converted
+            if "imgur.com/a/" not in direct_url and "imgur.com/gallery/" not in direct_url:
+                urls.append(direct_url)
+    
+    return urls
 
 def main():
     if len(sys.argv) < 2:
@@ -1087,24 +1797,30 @@ def main():
     # Load document
     doc = Document(input_file)
     tables = extract_tables(doc)
+    tables_with_hyperlinks = extract_tables_with_hyperlinks(doc)
     
     print(f"   Found {len(tables)} tables")
     
-    # Identify and parse tables
-    identified = identify_tables(tables, doc)
+    # Identify tables using hyperlink-aware extraction for posts schedule
+    # This ensures Photo Links column gets the actual URLs from hyperlinks
+    identified = identify_tables(tables_with_hyperlinks, doc)
     
     config = parse_config(tables)
     print(f"   Config: {config}")
     
-    # Parse posts from schedule table
+    # Parse posts from schedule table (using hyperlink-aware table)
     posts = []
     if identified["posts_schedule"]:
         posts = parse_posts_table(identified["posts_schedule"])
         print(f"   Posts from schedule: {len(posts)}")
     
     # Merge with post detail blocks (for captions/media)
+    # Use tables_with_hyperlinks instead of regular tables to get embedded URLs
+    # Re-identify post_blocks using the hyperlink-aware tables
+    identified_with_hyperlinks = identify_tables(tables_with_hyperlinks, doc)
+    
     post_blocks = []
-    for block in identified["post_blocks"]:
+    for block in identified_with_hyperlinks["post_blocks"]:
         block_data = {}
         post_type = "post"
         for row in block:
