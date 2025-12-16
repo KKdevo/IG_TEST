@@ -864,10 +864,6 @@ def generate_html(config, posts, stories, interactions):
         <section id="title" class="title-page">
             <div class="title-decoration"></div>
             <header class="title-header">
-                <div class="title-badge">
-                    <span class="title-badge-dot"></span>
-                    <span>Content Calendar</span>
-                </div>
                 <div class="title-date">{datetime.now().strftime("%A, %B %d, %Y")}</div>
             </header>
             <div class="title-content">
