@@ -24,9 +24,22 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Manrope', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
         
-        .nav { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; }
-        .nav-logo { font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.5px; margin-bottom: 8px; }
-        .nav-subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 48px; }
+        .nav { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; transition: transform 0.3s ease; }
+        .nav-logo { width: 100%; max-width: 180px; margin-bottom: 8px; }
+        .nav-logo img { width: 100%; height: auto; }
+        .nav-subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 48px; text-align: center; }
+        
+        /* Hamburger Menu */
+        .hamburger { display: none; position: fixed; top: 16px; left: 16px; z-index: 200; width: 44px; height: 44px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 2px 8px var(--shadow); }
+        .hamburger span { display: block; width: 20px; height: 2px; background: var(--text-primary); position: relative; transition: all 0.3s ease; }
+        .hamburger span::before, .hamburger span::after { content: ''; position: absolute; width: 20px; height: 2px; background: var(--text-primary); transition: all 0.3s ease; }
+        .hamburger span::before { top: -6px; }
+        .hamburger span::after { top: 6px; }
+        .hamburger.active span { background: transparent; }
+        .hamburger.active span::before { transform: rotate(45deg); top: 0; }
+        .hamburger.active span::after { transform: rotate(-45deg); top: 0; }
+        .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; opacity: 0; transition: opacity 0.3s ease; }
+        .nav-overlay.active { opacity: 1; }
         .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 32px 0 12px; }
         .nav a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 0; font-size: 14px; transition: all 0.2s ease; }
         .nav a:hover { color: var(--text-primary); }
@@ -55,6 +68,11 @@
         .title-meta-value { font-size: 18px; color: #FFFFFF; font-weight: 500; }
         .title-decoration { position: absolute; right: 64px; bottom: 50%; transform: translateY(50%); width: 320px; height: 320px; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; }
         .title-decoration::before { content: ''; position: absolute; top: 40px; left: 40px; right: 40px; bottom: 40px; border: 1px solid rgba(255,255,255,0.05); border-radius: 50%; }
+        
+        /* Title Page Brand Image */
+        .title-brand-image { position: absolute; right: -50px; top: 50%; transform: translateY(-50%); height: 85%; max-height: 600px; width: auto; opacity: 0.9; pointer-events: none; z-index: 0; }
+        @media (max-width: 1024px) { .title-brand-image { right: -80px; height: 60%; max-height: 400px; } }
+        @media (max-width: 640px) { .title-brand-image { right: -60px; height: 45%; max-height: 280px; opacity: 0.7; } }
         
         .content-section { padding: 80px 64px; border-bottom: 1px solid var(--border); }
         .section-header { margin-bottom: 48px; max-width: 600px; }
@@ -293,8 +311,11 @@
         
         @media print { .nav { display: none; } .main { margin-left: 0; } .title-page { min-height: auto; padding: 60px; } .tab-nav { display: none; } }
         @media (max-width: 1024px) { 
-            .nav { display: none; } 
-            .main { margin-left: 0; } 
+            .hamburger { display: flex; }
+            .nav { transform: translateX(-100%); }
+            .nav.active { transform: translateX(0); }
+            .nav-overlay { display: block; }
+            .main { margin-left: 0; }
             .content-section { padding: 48px 24px; } 
             .title-header, .title-content, .title-footer { padding-left: 24px; padding-right: 24px; } 
             .title-decoration { display: none; } 
@@ -336,8 +357,10 @@
     </style>
 </head>
 <body>
+    <button class="hamburger" onclick="toggleNav()"><span></span></button>
+    <div class="nav-overlay" onclick="toggleNav()"></div>
     <nav class="nav">
-        <div class="nav-logo">Content Schedule</div>
+        <div class="nav-logo"><img src="Smoothie-Bar--Logo-Assets---3D-Curved-Logo--Branding-Assets---11.21.25.png" alt="Smoothie Bar Logo"></div>
         <div class="nav-subtitle">Social Media Report</div>
         <div class="nav-section">Overview</div>
         <a href="#title">Cover</a>
@@ -355,7 +378,7 @@
 
     <main class="main">
         <section id="title" class="title-page">
-            <div class="title-decoration"></div>
+            <img class="title-brand-image" src="Smoothie-Bar---Logo-Assets--Branding-Assets---11.21.25.png" alt="Smoothie Bar">
             <header class="title-header">
                 <div class="title-date">Tuesday, December 16, 2025</div>
             </header>
@@ -1693,6 +1716,22 @@ Themed Render</span>
     </main>
     
     <script>
+        // Hamburger menu toggle
+        function toggleNav() {
+            document.querySelector('.hamburger').classList.toggle('active');
+            document.querySelector('.nav').classList.toggle('active');
+            document.querySelector('.nav-overlay').classList.toggle('active');
+        }
+        
+        // Close nav when clicking a link (mobile)
+        document.querySelectorAll('.nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    toggleNav();
+                }
+            });
+        });
+        
         // Table filtering
         function filterTable(tableId, searchText) {
             const table = document.getElementById(tableId);
