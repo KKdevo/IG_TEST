@@ -1511,9 +1511,9 @@ def render_post_card(post, index):
         media_urls = parse_media_urls(media_field)
         
         if len(media_urls) > 1:
-            # Carousel with multiple images
+            # Carousel with multiple images - add referrerpolicy for mobile Dropbox support
             slides_html = ''.join(f'''<div class="carousel-slide" data-index="{i}">
-                <img src="{url}" alt="{post.get("Title", "")} - Image {i+1}" onerror="this.parentElement.innerHTML='<div class=\\'no-media\\'>Image not available</div>'">
+                <img src="{url}" alt="{post.get("Title", "")} - Image {i+1}" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\\'no-media\\'>Image not available</div>'">
             </div>''' for i, url in enumerate(media_urls))
             
             dots_html = ''.join(f'<span class="carousel-dot{" active" if i == 0 else ""}" data-index="{i}" onclick="goToSlide(this, {i})"></span>' for i in range(len(media_urls)))
@@ -1530,8 +1530,8 @@ def render_post_card(post, index):
                 </div>
             </div>'''
         elif len(media_urls) == 1:
-            # Single image
-            media_html = f'<img class="post-card-media" src="{media_urls[0]}" alt="{post.get("Title", "")}" onerror="this.outerHTML=\'<div class=\\\'no-media\\\'>Image not available</div>\'">'
+            # Single image - add referrerpolicy for better mobile Dropbox support
+            media_html = f'<img class="post-card-media" src="{media_urls[0]}" alt="{post.get("Title", "")}" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.outerHTML=\'<div class=\\\'no-media\\\'>Image not available</div>\'">'
         else:
             media_html = '<div class="no-media">No media uploaded</div>'
     
