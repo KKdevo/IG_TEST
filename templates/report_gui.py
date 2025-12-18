@@ -7,9 +7,14 @@ Provides a file picker and generate button instead of command line.
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import os
-import subprocess
+import sys
 import webbrowser
 import threading
+
+# Add the script directory to path to ensure imports work
+script_dir = os.path.dirname(os.path.abspath(__file__))
+if script_dir not in sys.path:
+    sys.path.insert(0, script_dir)
 
 class ReportGeneratorGUI:
     def __init__(self, root):
@@ -155,9 +160,9 @@ class ReportGeneratorGUI:
             input_file = self.input_file.get()
             output_file = self.output_file.get()
             
-            # Build command
+            # Build command - use sys.executable to ensure same Python interpreter
             script_path = os.path.join(os.path.dirname(__file__), 'generate_report.py')
-            cmd = ['python', script_path, input_file]
+            cmd = [sys.executable, script_path, input_file]
             if output_file:
                 cmd.append(output_file)
             

@@ -11,10 +11,181 @@ Usage:
 import sys
 import os
 import re
+import hashlib
+import urllib.request
+import urllib.error
+import ssl
 from docx import Document
 from docx.table import Table
 from datetime import datetime, timedelta
 import calendar
+
+# Global settings for image downloading
+DOWNLOAD_IMAGES = True  # Set to False to use Dropbox URLs instead
+IMAGE_FOLDER = "images"  # Subfolder for downloaded images
+DOWNLOADED_IMAGES = {}  # Cache: url -> local_path
+
+def download_image(url, output_dir, index=0, post_title=""):
+    """
+    Download an image from URL and save to local images folder.
+    Returns the local path relative to output dir, or original URL if download fails.
+    """
+    if not url or not DOWNLOAD_IMAGES:
+        return url
+    
+    # Check cache first
+    if url in DOWNLOADED_IMAGES:
+        return DOWNLOADED_IMAGES[url]
+    
+    # Get direct download URL
+    direct_url = get_direct_image_url(url)
+    
+    # Create images directory
+    images_dir = os.path.join(output_dir, IMAGE_FOLDER)
+    os.makedirs(images_dir, exist_ok=True)
+    
+    # Generate filename from URL hash + extension
+    url_hash = hashlib.md5(url.encode()).hexdigest()[:12]
+    
+    # Try to get extension from URL
+    ext = ".jpg"  # default
+    for test_ext in [".png", ".jpg", ".jpeg", ".gif", ".webp"]:
+        if test_ext.lower() in url.lower():
+            ext = test_ext
+            break
+    
+    # Clean post title for filename
+    safe_title = re.sub(r'[^\w\s-]', '', post_title)[:30].strip().replace(' ', '_') if post_title else ""
+    filename = f"{safe_title}_{index}_{url_hash}{ext}" if safe_title else f"img_{index}_{url_hash}{ext}"
+    local_path = os.path.join(images_dir, filename)
+    relative_path = f"{IMAGE_FOLDER}/{filename}"
+    
+    # Skip if already downloaded
+    if os.path.exists(local_path):
+        DOWNLOADED_IMAGES[url] = relative_path
+        return relative_path
+    
+    try:
+        # Create SSL context that doesn't verify (for Dropbox redirects)
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        
+        # Download with headers to look like a browser
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'image/webp,image/apng,image/*,*/*;q=0.8',
+        }
+        
+        request = urllib.request.Request(direct_url, headers=headers)
+        
+        print(f"   📥 Downloading: {filename}...", end=" ", flush=True)
+        
+        with urllib.request.urlopen(request, timeout=30, context=ctx) as response:
+            # Check content type
+            content_type = response.headers.get('Content-Type', '')
+            if 'image' not in content_type and 'octet-stream' not in content_type:
+                print(f"❌ (not an image: {content_type})")
+                DOWNLOADED_IMAGES[url] = direct_url  # Fall back to URL
+                return direct_url
+            
+            # Read and save
+            data = response.read()
+            with open(local_path, 'wb') as f:
+                f.write(data)
+            
+            file_size = len(data) / 1024  # KB
+            print(f"✓ ({file_size:.1f} KB)")
+            
+            DOWNLOADED_IMAGES[url] = relative_path
+            return relative_path
+            
+    except urllib.error.HTTPError as e:
+        print(f"❌ HTTP {e.code}")
+    except urllib.error.URLError as e:
+        print(f"❌ URL Error: {e.reason}")
+    except Exception as e:
+        print(f"❌ {str(e)[:50]}")
+    
+    # Fall back to original URL on failure
+    DOWNLOADED_IMAGES[url] = direct_url
+    return direct_url
+
+
+def download_all_images(posts, stories, output_dir):
+    """
+    Download all images from posts and stories.
+    Updates the MediaURL fields with local paths.
+    """
+    if not DOWNLOAD_IMAGES:
+        print("\n⏭️  Image downloading disabled - using Dropbox URLs")
+        return
+    
+    print("\n📦 Downloading images...")
+    
+    total_images = 0
+    downloaded = 0
+    
+    # Process posts
+    for post in posts:
+        media_field = post.get("MediaURL", "")
+        if not media_field:
+            continue
+        
+        title = post.get("Title", "")
+        urls = parse_media_urls_raw(media_field)  # Get raw URLs without conversion
+        
+        new_urls = []
+        for i, url in enumerate(urls):
+            total_images += 1
+            local_path = download_image(url, output_dir, i, title)
+            if not local_path.startswith("http"):
+                downloaded += 1
+            new_urls.append(local_path)
+        
+        # Update post with local paths
+        post["_local_media_urls"] = new_urls
+    
+    # Process stories
+    for story in stories:
+        url = story.get("MediaURL", "")
+        if not url:
+            continue
+        
+        total_images += 1
+        title = story.get("Title", "")
+        local_path = download_image(url, output_dir, 0, title)
+        if not local_path.startswith("http"):
+            downloaded += 1
+        story["_local_media_url"] = local_path
+    
+    print(f"\n✅ Downloaded {downloaded}/{total_images} images to {IMAGE_FOLDER}/")
+
+
+def parse_media_urls_raw(media_field):
+    """
+    Parse media URLs without converting to direct URLs.
+    Used for downloading where we need the original URLs first.
+    """
+    if not media_field:
+        return []
+    
+    urls = []
+    lines = media_field.strip().split('\n')
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        
+        url_match = re.search(r'(https?://[^\s]+)', line)
+        if url_match:
+            url = url_match.group(1)
+            url = url.split(' - ')[0].strip()
+            url = url.split(' ')[0].strip()
+            urls.append(url)
+    
+    return urls
 
 def extract_hyperlinks_from_cell(cell, doc_rels):
     """Extract all hyperlink URLs from a cell using doc relationships AND field codes."""
@@ -1507,8 +1678,8 @@ def render_post_card(post, index):
                 </div>
             </div>'''
     else:
-        # Parse multiple URLs (carousel support)
-        media_urls = parse_media_urls(media_field)
+        # Parse multiple URLs (carousel support) - pass post for local paths
+        media_urls = parse_media_urls(media_field, post)
         
         if len(media_urls) > 1:
             # Carousel with multiple images - add referrerpolicy for mobile Dropbox support
@@ -2198,16 +2369,22 @@ def get_direct_image_url(url):
     return url
 
 
-def parse_media_urls(media_field):
+def parse_media_urls(media_field, post=None):
     """
     Parse a media URL field that may contain multiple URLs.
-    Returns a list of direct image URLs.
+    Returns a list of direct image URLs or local paths.
+    
+    If post is provided and has _local_media_urls, use those instead.
     
     Handles:
         - Single URL
         - Multiple URLs separated by newlines
         - URLs with descriptive text (e.g., "https://... - Album")
     """
+    # Check if we have local downloaded images
+    if post and "_local_media_urls" in post:
+        return post["_local_media_urls"]
+    
     if not media_field:
         return []
     
@@ -2332,6 +2509,10 @@ def main():
     if identified["interactions"]:
         interactions = parse_interactions_table(identified["interactions"])
     print(f"   Interactions: {len(interactions)}")
+    
+    # Download images to local folder
+    output_dir = os.path.dirname(os.path.abspath(output_file))
+    download_all_images(posts, stories, output_dir)
     
     # Generate HTML
     html = generate_html(config, posts, stories, interactions)
