@@ -17,17 +17,17 @@ from datetime import datetime, timedelta
 import calendar
 
 def extract_hyperlinks_from_cell(cell, doc_rels):
-    """Extract all hyperlink URLs from a cell using doc relationships."""
+    """Extract all hyperlink URLs from a cell using doc relationships AND field codes."""
     import re
     hyperlinks = []
-    
+
     try:
         # Get cell XML
         cell_xml = cell._tc.xml
-        
-        # Find all r:id references in the cell XML
+
+        # Method 1: Find all r:id references in the cell XML (standard hyperlinks)
         rids = re.findall(r'r:id="(rId\d+)"', cell_xml)
-        
+
         # Look up each rId in the document relationships
         for rid in rids:
             if rid in doc_rels:
@@ -35,9 +35,20 @@ def extract_hyperlinks_from_cell(cell, doc_rels):
                 # Check if it's a hyperlink
                 if 'hyperlink' in rel.reltype.lower():
                     hyperlinks.append(rel.target_ref)
+        
+        # Method 2: Extract field code hyperlinks (HYPERLINK "url" in instrText)
+        # This handles links pasted from browser or created differently in Word
+        # Handle both straight quotes (") and curly quotes (" ")
+        field_links = re.findall(r'HYPERLINK\s+["\u201c]([^"\u201d]+)["\u201d]', cell_xml)
+        for link in field_links:
+            # Unescape XML entities
+            link = link.replace('&amp;', '&')
+            if link not in hyperlinks:
+                hyperlinks.append(link)
+                
     except:
         pass
-    
+
     return hyperlinks
 
 
@@ -522,7 +533,7 @@ def generate_html(config, posts, stories, interactions):
     <title>Social Media Content Schedule - {config.get("AccountName", "Report")}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {{
             --bg-primary: #FAF9F7;
@@ -538,7 +549,7 @@ def generate_html(config, posts, stories, interactions):
             --shadow-md: rgba(0,0,0,0.08);
         }}
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ font-family: 'Manrope', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }}
+        body {{ font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }}
         
         .nav {{ position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; transition: transform 0.3s ease; }}
         .nav-logo {{ width: 100%; max-width: 160px; margin: -55px auto -45px auto; display: block; }}
@@ -559,7 +570,7 @@ def generate_html(config, posts, stories, interactions):
         .nav-overlay.active {{ display: block; opacity: 1; pointer-events: auto; }}
         .nav-subtitle {{ font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 24px; text-align: center; margin-top: 0; }}
         .nav-section:first-of-type {{ margin-top: 42px; }}
-        .nav-section {{ font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 32px 0 12px; }}
+        .nav-section {{ font-family: 'Bebas Neue', sans-serif; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin: 32px 0 12px; }}
         .nav a {{ display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 0; font-size: 14px; transition: all 0.2s ease; }}
         .nav a:hover {{ color: var(--text-primary); }}
         .nav .sub-link {{ padding-left: 16px; font-size: 13px; color: var(--text-muted); }}
@@ -576,9 +587,8 @@ def generate_html(config, posts, stories, interactions):
         .title-badge span {{ font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.7); font-weight: 500; }}
         .title-date {{ font-size: 13px; color: rgba(255,255,255,0.5); }}
         .title-content {{ flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 64px; position: relative; z-index: 1; }}
-        .title-eyebrow {{ font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-warm); margin-bottom: 24px; font-weight: 600; }}
-        .title-main {{ font-family: 'Instrument Serif', serif; font-size: clamp(48px, 8vw, 86px); font-weight: 400; color: #FFFFFF; line-height: 1.05; letter-spacing: -2px; margin-bottom: 24px; max-width: 800px; }}
-        .title-main em {{ font-style: italic; color: var(--accent-warm); }}
+        .title-eyebrow {{ font-family: 'Bebas Neue', sans-serif; font-size: 16px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-warm); margin-bottom: 24px; }}
+        .title-main {{ font-family: 'Montserrat', sans-serif; font-size: clamp(48px, 8vw, 64px); font-weight: 900; color: #FFFFFF; line-height: 1.1; letter-spacing: 0; margin-bottom: 24px; max-width: 800px; text-transform: uppercase; }}
         .title-description {{ font-size: 17px; color: rgba(255,255,255,0.5); max-width: 500px; line-height: 1.7; font-weight: 300; }}
         .title-footer {{ padding: 48px 64px; display: flex; justify-content: space-between; align-items: flex-end; position: relative; z-index: 1; }}
         .title-meta {{ display: flex; gap: 64px; }}
@@ -590,8 +600,8 @@ def generate_html(config, posts, stories, interactions):
         
         .content-section {{ padding: 80px 64px; border-bottom: 1px solid var(--border); }}
         .section-header {{ margin-bottom: 48px; max-width: 600px; }}
-        .section-number {{ font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 16px; font-weight: 500; }}
-        .section-title {{ font-family: 'Instrument Serif', serif; font-size: 38px; font-weight: 400; letter-spacing: -1px; margin-bottom: 12px; line-height: 1.2; display: inline-flex; align-items: center; gap: 12px; }}
+        .section-number {{ font-family: 'Bebas Neue', sans-serif; font-size: 18px; text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 16px; }}
+        .section-title {{ font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: 0; margin-bottom: 12px; line-height: 1.2; display: inline-flex; align-items: center; gap: 12px; text-transform: uppercase; }}
         .section-desc {{ font-size: 15px; color: var(--text-secondary); line-height: 1.7; }}
         
         .table-wrapper {{ background: var(--bg-secondary); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 4px 20px var(--shadow); margin-bottom: 48px; overflow-x: auto; -webkit-overflow-scrolling: touch; }}
@@ -636,6 +646,39 @@ def generate_html(config, posts, stories, interactions):
         .post-card-caption {{ font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; }}
         .post-card-hashtags {{ font-size: 13px; color: var(--accent-warm); font-weight: 500; }}
         .no-media {{ width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, var(--border-light) 0%, var(--border) 100%); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }}
+        
+        /* Video Placeholder Styles */
+        .video-placeholder {{ width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 50%, #3D3D3D 100%); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }}
+        .video-placeholder::before {{ content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%); pointer-events: none; }}
+        .video-placeholder:hover {{ background: linear-gradient(135deg, #2D2D2D 0%, #3D3D3D 50%, #4D4D4D 100%); transform: scale(1.02); }}
+        .video-placeholder-content {{ display: flex; flex-direction: column; align-items: center; gap: 16px; color: #fff; text-align: center; padding: 24px; z-index: 1; }}
+        .video-placeholder-content svg {{ color: var(--accent-warm); opacity: 0.9; transition: transform 0.3s ease; }}
+        .video-placeholder:hover .video-placeholder-content svg {{ transform: scale(1.1); }}
+        .video-placeholder-text {{ font-size: 14px; font-weight: 600; opacity: 0.9; }}
+        .video-placeholder-filename {{ font-size: 11px; color: rgba(255,255,255,0.5); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
+        
+        /* Video Player Styles - Instagram Style */
+        .video-player-container {{ position: relative; width: 100%; aspect-ratio: 1; background: #000; overflow: hidden; cursor: pointer; }}
+        .video-player {{ width: 100%; height: 100%; object-fit: cover; background: #000; }}
+        .video-fallback {{ display: none; position: absolute; inset: 0; background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 50%, #3D3D3D 100%); align-items: center; justify-content: center; cursor: pointer; }}
+        .video-player-container:has(.video-player[error]) .video-fallback {{ display: flex; }}
+        
+        /* Play/Pause Indicator */
+        .video-play-indicator {{ position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s ease, transform 0.2s ease; pointer-events: none; }}
+        .video-play-indicator svg {{ width: 28px; height: 28px; margin-left: 4px; }}
+        .video-player-container.playing .video-play-indicator {{ opacity: 0; transform: translate(-50%, -50%) scale(0.8); }}
+        .video-player-container.playing:hover .video-play-indicator {{ opacity: 0; }}
+        .video-player-container.show-pause .video-play-indicator {{ opacity: 1; transform: translate(-50%, -50%) scale(1); }}
+        .video-player-container.show-pause .video-play-indicator svg {{ margin-left: 0; }}
+        
+        /* Instagram-style Mute Button */
+        .video-mute-btn {{ position: absolute; bottom: 16px; right: 16px; width: 32px; height: 32px; background: rgba(0,0,0,0.6); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 10; }}
+        .video-mute-btn:hover {{ background: rgba(0,0,0,0.8); transform: scale(1.1); }}
+        .video-mute-btn svg {{ width: 16px; height: 16px; stroke: white; }}
+        .video-mute-btn .unmute-icon {{ display: none; }}
+        .video-mute-btn .mute-icon {{ display: block; }}
+        .video-player-container.unmuted .video-mute-btn .unmute-icon {{ display: block; }}
+        .video-player-container.unmuted .video-mute-btn .mute-icon {{ display: none; }}
         
         /* Carousel Styles */
         .carousel {{ position: relative; width: 100%; aspect-ratio: 1; background: var(--border-light); overflow: hidden; }}
@@ -729,7 +772,7 @@ def generate_html(config, posts, stories, interactions):
         
         /* Calendar Styles */
         .calendar-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }}
-        .calendar-title {{ font-family: 'Instrument Serif', serif; font-size: 32px; font-weight: 400; }}
+        .calendar-title {{ font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 900; text-transform: uppercase; }}
         .calendar-nav {{ display: flex; gap: 8px; }}
         .calendar-nav-btn {{ width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }}
         .calendar-nav-btn:hover {{ background: var(--bg-primary); }}
@@ -927,7 +970,7 @@ def generate_html(config, posts, stories, interactions):
             </header>
             <div class="title-content">
                 <div class="title-eyebrow">Social Media Strategy</div>
-                <h1 class="title-main">Content <em>Schedule</em> & Asset Review</h1>
+                <h1 class="title-main">Content Schedule & Asset Review</h1>
                 <p class="title-description">A comprehensive overview of planned content, posting schedule, and engagement strategy.</p>
             </div>
             <footer class="title-footer">
@@ -1264,8 +1307,8 @@ def generate_html(config, posts, stories, interactions):
                 let bVal = bCell.dataset.sort || bCell.textContent.trim();
                 
                 // Check if values look like dates (YYYY-MM-DD or HH:MM format)
-                const isDateFormat = /^\d{{4}}-\d{{2}}-\d{{2}}$/.test(aVal) || /^\d{{4}}-\d{{2}}-\d{{2}}$/.test(bVal);
-                const isTimeFormat = /^\d{{2}}:\d{{2}}$/.test(aVal) || /^\d{{2}}:\d{{2}}$/.test(bVal);
+                const isDateFormat = /^\\d{{4}}-\\d{{2}}-\\d{{2}}$/.test(aVal) || /^\\d{{4}}-\\d{{2}}-\\d{{2}}$/.test(bVal);
+                const isTimeFormat = /^\\d{{2}}:\\d{{2}}$/.test(aVal) || /^\\d{{2}}:\\d{{2}}$/.test(bVal);
                 
                 // Use string comparison for dates and times (ISO format sorts correctly as strings)
                 if (isDateFormat || isTimeFormat) {{
@@ -1363,6 +1406,45 @@ def generate_html(config, posts, stories, interactions):
                 }});
             }});
         }});
+        
+        // Instagram-style video controls
+        function toggleVideoPlay(container) {{
+            const video = container.querySelector('.video-player');
+            if (!video) return;
+            
+            if (video.paused) {{
+                video.play();
+                container.classList.add('playing');
+                container.classList.remove('show-pause');
+            }} else {{
+                video.pause();
+                container.classList.remove('playing');
+                container.classList.add('show-pause');
+                // Remove show-pause after a moment
+                setTimeout(() => container.classList.remove('show-pause'), 200);
+            }}
+        }}
+        
+        function toggleVideoMute(btn) {{
+            const container = btn.closest('.video-player-container');
+            const video = container.querySelector('.video-player');
+            if (!video) return;
+            
+            video.muted = !video.muted;
+            container.classList.toggle('unmuted', !video.muted);
+        }}
+        
+        // Handle video errors - show fallback
+        document.addEventListener('DOMContentLoaded', () => {{
+            document.querySelectorAll('.video-player').forEach(video => {{
+                video.addEventListener('error', () => {{
+                    const container = video.closest('.video-player-container');
+                    const fallback = container.querySelector('.video-fallback');
+                    if (fallback) fallback.style.display = 'flex';
+                    video.style.display = 'none';
+                }});
+            }});
+        }});
     </script>
 </body>
 </html>'''
@@ -1373,12 +1455,57 @@ def render_post_card(post, index):
     """Render a single post card with carousel support for multiple images."""
     media_field = post.get("MediaURL", "")
     
-    # Check for video first
-    is_video = any(x in media_field.lower() for x in ["youtube.com", "youtu.be", "vimeo.com"])
+    # Check for video first - includes YouTube, Vimeo, AND video file extensions
+    video_platforms = ["youtube.com", "youtu.be", "vimeo.com"]
+    video_extensions = [".mov", ".mp4", ".webm", ".avi", ".mkv", ".m4v"]
+    
+    is_platform_video = any(x in media_field.lower() for x in video_platforms)
+    is_file_video = any(media_field.lower().endswith(ext) or f"{ext}?" in media_field.lower() or f"{ext}&" in media_field.lower() for ext in video_extensions)
+    # Also check for Dropbox preview parameter with video files
+    is_dropbox_video = "dropbox.com" in media_field.lower() and "preview=" in media_field.lower() and any(ext in media_field.lower() for ext in video_extensions)
+    
+    is_video = is_platform_video or is_file_video or is_dropbox_video
     
     if is_video:
-        embed_url = get_embed_url(media_field)
-        media_html = f'<div class="post-card-media video-container"><iframe src="{embed_url}" allowfullscreen></iframe></div>'
+        if is_platform_video:
+            embed_url = get_embed_url(media_field)
+            media_html = f'<div class="post-card-media video-container"><iframe src="{embed_url}" allowfullscreen></iframe></div>'
+        else:
+            # For direct video files (Dropbox, etc.), use HTML5 video player
+            video_url = get_direct_video_url(media_field)
+            filename = extract_filename_from_url(media_field)
+            # Determine video type from extension
+            video_type = "video/mp4"  # Default
+            if ".mov" in media_field.lower():
+                video_type = "video/quicktime"
+            elif ".webm" in media_field.lower():
+                video_type = "video/webm"
+            elif ".avi" in media_field.lower():
+                video_type = "video/x-msvideo"
+            
+            media_html = f'''<div class="post-card-media video-player-container" onclick="toggleVideoPlay(this)">
+                <video class="video-player" playsinline preload="metadata" muted loop poster="">
+                    <source src="{video_url}" type="{video_type}">
+                    <source src="{video_url}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-play-indicator">
+                    <svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </div>
+                <button class="video-mute-btn" onclick="event.stopPropagation(); toggleVideoMute(this)">
+                    <svg class="mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                    <svg class="unmute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <div class="video-fallback" onclick="event.stopPropagation(); window.open('{media_field}', '_blank')">
+                    <div class="video-placeholder-content">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>
+                        </svg>
+                        <span class="video-placeholder-text">Click to open video</span>
+                        <span class="video-placeholder-filename">{filename}</span>
+                    </div>
+                </div>
+            </div>'''
     else:
         # Parse multiple URLs (carousel support)
         media_urls = parse_media_urls(media_field)
@@ -1819,6 +1946,120 @@ def convert_time_to_24hr(time_str):
         pass
     
     return time_str  # Return as-is if couldn't parse
+
+
+def get_direct_video_url(url):
+    """
+    Get a direct video URL for Dropbox and other hosts that can be used
+    with HTML5 <video> element.
+    
+    For Dropbox, converts to dl.dropboxusercontent.com with raw=1 for direct streaming.
+    """
+    if not url:
+        return url
+    
+    url = url.strip()
+    from urllib.parse import unquote
+    
+    # Handle Dropbox URLs - convert to direct streaming URL
+    if "dropbox.com" in url:
+        # Special handling for folder preview URLs (with preview= parameter)
+        # The filename is in the preview= parameter, not the path!
+        # We need to reconstruct the URL with the filename in the path
+        if "preview=" in url and "/scl/fo/" in url:
+            # Extract the preview filename
+            preview_match = re.search(r'preview=([^&]+)', url)
+            if preview_match:
+                preview_filename = unquote(preview_match.group(1).replace('+', ' '))
+                
+                # Extract the folder path (everything before the ?)
+                base_path = url.split('?')[0]
+                
+                # Extract rlkey parameter (needed for access)
+                rlkey_match = re.search(r'rlkey=([^&]+)', url)
+                rlkey = rlkey_match.group(1) if rlkey_match else ""
+                
+                # Construct new URL with filename appended to path
+                # Format: https://dl.dropboxusercontent.com/scl/fo/{folder}/{subfolder}/{filename}?rlkey=xxx&raw=1
+                new_url = base_path.rstrip('/')
+                # URL encode the filename for the path
+                from urllib.parse import quote
+                encoded_filename = quote(preview_filename)
+                new_url = f"{new_url}/{encoded_filename}"
+                
+                # Convert to direct download domain
+                new_url = new_url.replace("www.dropbox.com", "dl.dropboxusercontent.com")
+                new_url = new_url.replace("dropbox.com", "dl.dropboxusercontent.com")
+                
+                # Add required parameters
+                new_url = f"{new_url}?raw=1"
+                if rlkey:
+                    new_url = f"{new_url}&rlkey={rlkey}"
+                
+                return new_url
+        
+        # Standard file links (no preview parameter needed)
+        if "www.dropbox.com" in url:
+            url = url.replace("www.dropbox.com", "dl.dropboxusercontent.com")
+        elif "dl.dropboxusercontent.com" not in url:
+            url = url.replace("dropbox.com", "dl.dropboxusercontent.com")
+        
+        # Remove the session token (st=) which expires
+        url = re.sub(r'[&?]st=[^&]*', '', url)
+        url = url.replace('&&', '&').replace('?&', '?')
+        url = url.rstrip('&').rstrip('?')
+        
+        # Remove e= parameter 
+        url = re.sub(r'[&?]e=[^&]*', '', url)
+        url = url.replace('&&', '&').replace('?&', '?')
+        url = url.rstrip('&').rstrip('?')
+        
+        # Ensure raw=1 for direct streaming
+        if "dl=0" in url:
+            url = url.replace("dl=0", "raw=1")
+        elif "dl=1" in url:
+            url = url.replace("dl=1", "raw=1")
+        elif "raw=" not in url:
+            if "?" in url:
+                url = url + "&raw=1"
+            else:
+                url = url + "?raw=1"
+    
+    return url
+
+
+def extract_filename_from_url(url):
+    """
+    Extract filename from a URL, handling encoded characters.
+    """
+    if not url:
+        return "Video"
+    
+    try:
+        from urllib.parse import unquote
+        
+        # Look for filename in preview= parameter first (Dropbox)
+        if "preview=" in url:
+            preview_match = re.search(r'preview=([^&]+)', url)
+            if preview_match:
+                filename = unquote(preview_match.group(1).replace('+', ' '))
+                # Truncate if too long
+                if len(filename) > 40:
+                    filename = filename[:37] + "..."
+                return filename
+        
+        # Look for filename in path
+        path_parts = url.split('/')
+        for part in reversed(path_parts):
+            if part and '.' in part:
+                filename = unquote(part.split('?')[0].replace('+', ' '))
+                if len(filename) > 40:
+                    filename = filename[:37] + "..."
+                return filename
+        
+        return "Video"
+    except:
+        return "Video"
 
 
 def get_embed_url(url):

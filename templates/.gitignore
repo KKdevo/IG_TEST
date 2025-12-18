@@ -1,0 +1,15 @@
+# Brand Identity files (too large for GitHub)
+Brand Identity.zip
+Brand_Identity_Files/
+
+# Font zip files
+bebas.zip
+montserrat.zip
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db

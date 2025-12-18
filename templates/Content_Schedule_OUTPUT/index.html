@@ -6,7 +6,7 @@
     <title>Social Media Content Schedule - smoothiebarinfusions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #FAF9F7;
@@ -22,7 +22,7 @@
             --shadow-md: rgba(0,0,0,0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Manrope', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
+        body { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
         
         .nav { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 40px 24px; overflow-y: auto; z-index: 100; transition: transform 0.3s ease; }
         .nav-logo { width: 100%; max-width: 160px; margin: -55px auto -45px auto; display: block; }
@@ -43,7 +43,7 @@
         .nav-overlay.active { display: block; opacity: 1; pointer-events: auto; }
         .nav-subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 24px; text-align: center; margin-top: 0; }
         .nav-section:first-of-type { margin-top: 42px; }
-        .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 32px 0 12px; }
+        .nav-section { font-family: 'Bebas Neue', sans-serif; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin: 32px 0 12px; }
         .nav a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 0; font-size: 14px; transition: all 0.2s ease; }
         .nav a:hover { color: var(--text-primary); }
         .nav .sub-link { padding-left: 16px; font-size: 13px; color: var(--text-muted); }
@@ -60,9 +60,8 @@
         .title-badge span { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.7); font-weight: 500; }
         .title-date { font-size: 13px; color: rgba(255,255,255,0.5); }
         .title-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 64px; position: relative; z-index: 1; }
-        .title-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-warm); margin-bottom: 24px; font-weight: 600; }
-        .title-main { font-family: 'Instrument Serif', serif; font-size: clamp(48px, 8vw, 86px); font-weight: 400; color: #FFFFFF; line-height: 1.05; letter-spacing: -2px; margin-bottom: 24px; max-width: 800px; }
-        .title-main em { font-style: italic; color: var(--accent-warm); }
+        .title-eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 16px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-warm); margin-bottom: 24px; }
+        .title-main { font-family: 'Montserrat', sans-serif; font-size: clamp(48px, 8vw, 64px); font-weight: 900; color: #FFFFFF; line-height: 1.1; letter-spacing: 0; margin-bottom: 24px; max-width: 800px; text-transform: uppercase; }
         .title-description { font-size: 17px; color: rgba(255,255,255,0.5); max-width: 500px; line-height: 1.7; font-weight: 300; }
         .title-footer { padding: 48px 64px; display: flex; justify-content: space-between; align-items: flex-end; position: relative; z-index: 1; }
         .title-meta { display: flex; gap: 64px; }
@@ -74,8 +73,8 @@
         
         .content-section { padding: 80px 64px; border-bottom: 1px solid var(--border); }
         .section-header { margin-bottom: 48px; max-width: 600px; }
-        .section-number { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 16px; font-weight: 500; }
-        .section-title { font-family: 'Instrument Serif', serif; font-size: 38px; font-weight: 400; letter-spacing: -1px; margin-bottom: 12px; line-height: 1.2; display: inline-flex; align-items: center; gap: 12px; }
+        .section-number { font-family: 'Bebas Neue', sans-serif; font-size: 18px; text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 16px; }
+        .section-title { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: 0; margin-bottom: 12px; line-height: 1.2; display: inline-flex; align-items: center; gap: 12px; text-transform: uppercase; }
         .section-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.7; }
         
         .table-wrapper { background: var(--bg-secondary); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 4px 20px var(--shadow); margin-bottom: 48px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -120,6 +119,39 @@
         .post-card-caption { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; }
         .post-card-hashtags { font-size: 13px; color: var(--accent-warm); font-weight: 500; }
         .no-media { width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, var(--border-light) 0%, var(--border) 100%); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }
+        
+        /* Video Placeholder Styles */
+        .video-placeholder { width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 50%, #3D3D3D 100%); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .video-placeholder::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%); pointer-events: none; }
+        .video-placeholder:hover { background: linear-gradient(135deg, #2D2D2D 0%, #3D3D3D 50%, #4D4D4D 100%); transform: scale(1.02); }
+        .video-placeholder-content { display: flex; flex-direction: column; align-items: center; gap: 16px; color: #fff; text-align: center; padding: 24px; z-index: 1; }
+        .video-placeholder-content svg { color: var(--accent-warm); opacity: 0.9; transition: transform 0.3s ease; }
+        .video-placeholder:hover .video-placeholder-content svg { transform: scale(1.1); }
+        .video-placeholder-text { font-size: 14px; font-weight: 600; opacity: 0.9; }
+        .video-placeholder-filename { font-size: 11px; color: rgba(255,255,255,0.5); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        /* Video Player Styles - Instagram Style */
+        .video-player-container { position: relative; width: 100%; aspect-ratio: 1; background: #000; overflow: hidden; cursor: pointer; }
+        .video-player { width: 100%; height: 100%; object-fit: cover; background: #000; }
+        .video-fallback { display: none; position: absolute; inset: 0; background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 50%, #3D3D3D 100%); align-items: center; justify-content: center; cursor: pointer; }
+        .video-player-container:has(.video-player[error]) .video-fallback { display: flex; }
+        
+        /* Play/Pause Indicator */
+        .video-play-indicator { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s ease, transform 0.2s ease; pointer-events: none; }
+        .video-play-indicator svg { width: 28px; height: 28px; margin-left: 4px; }
+        .video-player-container.playing .video-play-indicator { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        .video-player-container.playing:hover .video-play-indicator { opacity: 0; }
+        .video-player-container.show-pause .video-play-indicator { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .video-player-container.show-pause .video-play-indicator svg { margin-left: 0; }
+        
+        /* Instagram-style Mute Button */
+        .video-mute-btn { position: absolute; bottom: 16px; right: 16px; width: 32px; height: 32px; background: rgba(0,0,0,0.6); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
+        .video-mute-btn:hover { background: rgba(0,0,0,0.8); transform: scale(1.1); }
+        .video-mute-btn svg { width: 16px; height: 16px; stroke: white; }
+        .video-mute-btn .unmute-icon { display: none; }
+        .video-mute-btn .mute-icon { display: block; }
+        .video-player-container.unmuted .video-mute-btn .unmute-icon { display: block; }
+        .video-player-container.unmuted .video-mute-btn .mute-icon { display: none; }
         
         /* Carousel Styles */
         .carousel { position: relative; width: 100%; aspect-ratio: 1; background: var(--border-light); overflow: hidden; }
@@ -213,7 +245,7 @@
         
         /* Calendar Styles */
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
-        .calendar-title { font-family: 'Instrument Serif', serif; font-size: 32px; font-weight: 400; }
+        .calendar-title { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 900; text-transform: uppercase; }
         .calendar-nav { display: flex; gap: 8px; }
         .calendar-nav-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }
         .calendar-nav-btn:hover { background: var(--bg-primary); }
@@ -407,11 +439,11 @@
             <img class="title-brand-image" src="Smoothie-Bar---Logo-Assets--Branding-Assets---11.21.25.png" alt="Smoothie Bar">
             <div class="title-decoration"></div>
             <header class="title-header">
-                <div class="title-date">Tuesday, December 16, 2025</div>
+                <div class="title-date">Wednesday, December 17, 2025</div>
             </header>
             <div class="title-content">
                 <div class="title-eyebrow">Social Media Strategy</div>
-                <h1 class="title-main">Content <em>Schedule</em> & Asset Review</h1>
+                <h1 class="title-main">Content Schedule & Asset Review</h1>
                 <p class="title-description">A comprehensive overview of planned content, posting schedule, and engagement strategy.</p>
             </div>
             <footer class="title-footer">
@@ -516,17 +548,17 @@
                 <div class="calendar-day-posts" data-count="0"></div>
             </div><div class="calendar-day" data-day="13">
                 <div class="calendar-day-number">13</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend: Sour </div><div class="calendar-post-indicator type-story">Educational</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Educational</div></div>
             </div><div class="calendar-day" data-day="14">
                 <div class="calendar-day-number">14</div>
                 <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-reel">BLEND Society: The S</div><div class="calendar-post-indicator type-story">Behind Scenes</div></div>
             </div><div class="calendar-day" data-day="15">
                 <div class="calendar-day-number">15</div>
                 <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Render Spotlight</div></div>
-            </div><div class="calendar-day today" data-day="16">
+            </div><div class="calendar-day" data-day="16">
                 <div class="calendar-day-number">16</div>
                 <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Product Demo</div></div>
-            </div><div class="calendar-day" data-day="17">
+            </div><div class="calendar-day today" data-day="17">
                 <div class="calendar-day-number">17</div>
                 <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Pier Photoshoot #2</div><div class="calendar-post-indicator type-story">Poll</div></div>
             </div><div class="calendar-day" data-day="18">
@@ -534,45 +566,45 @@
                 <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Fun Facts</div></div>
             </div><div class="calendar-day" data-day="19">
                 <div class="calendar-day-number">19</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">SmoothiEdu:
-Genetics</div><div class="calendar-post-indicator type-story">Q&A</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend: Sour </div><div class="calendar-post-indicator type-story">Q&A</div></div>
             </div><div class="calendar-day" data-day="20">
                 <div class="calendar-day-number">20</div>
                 <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Render Spotlight</div></div>
             </div><div class="calendar-day" data-day="21">
                 <div class="calendar-day-number">21</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Lifestyle</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-reel">BLEND Society: The B</div><div class="calendar-post-indicator type-story">Lifestyle</div></div>
             </div><div class="calendar-day" data-day="22">
                 <div class="calendar-day-number">22</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend: Cherr</div><div class="calendar-post-indicator type-story">Educational</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Educational</div></div>
             </div><div class="calendar-day" data-day="23">
                 <div class="calendar-day-number">23</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Poll</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">SmoothiEdu:
+Genetics</div><div class="calendar-post-indicator type-story">Poll</div></div>
             </div><div class="calendar-day" data-day="24">
                 <div class="calendar-day-number">24</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-reel">BLEND Society: The B</div><div class="calendar-post-indicator type-story">Xmas Lifestyle</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Xmas Lifestyle</div></div>
             </div><div class="calendar-day" data-day="25">
                 <div class="calendar-day-number">25</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Pier Photoshoot #3</div><div class="calendar-post-indicator type-story">Xmas Post</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Xmas Post</div></div>
             </div><div class="calendar-day" data-day="26">
                 <div class="calendar-day-number">26</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Behind Scenes</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend: Cherr</div><div class="calendar-post-indicator type-story">Behind Scenes</div></div>
             </div><div class="calendar-day" data-day="27">
                 <div class="calendar-day-number">27</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Q&A</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Pier Photoshoot #3</div><div class="calendar-post-indicator type-story">Q&A</div></div>
             </div><div class="calendar-day" data-day="28">
                 <div class="calendar-day-number">28</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Poll</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">SmoothiEdu – The Che</div><div class="calendar-post-indicator type-story">Poll</div></div>
             </div><div class="calendar-day" data-day="29">
                 <div class="calendar-day-number">29</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">SmoothiEdu – The Che</div><div class="calendar-post-indicator type-story">Educational</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Educational</div></div>
             </div><div class="calendar-day" data-day="30">
                 <div class="calendar-day-number">30</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Poll</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend:
+Lava </div><div class="calendar-post-indicator type-story">Poll</div></div>
             </div><div class="calendar-day" data-day="31">
                 <div class="calendar-day-number">31</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend:
-Lava </div><div class="calendar-post-indicator type-story">New Year Lifestyle</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">New Year Lifestyle</div></div>
             </div><div class="calendar-day other-month"></div><div class="calendar-day other-month"></div><div class="calendar-day other-month"></div>
     </div>
             </div>
@@ -585,9 +617,9 @@ Lava </div><div class="calendar-post-indicator type-story">New Year Lifestyle</d
                     <span class="week-detail-range">Dec 7-13</span>
                 </div>
                 <div class="week-detail-stats">
-                    <span class="week-stat"><strong>1</strong> posts</span>
+                    <span class="week-stat"><strong>0</strong> posts</span>
                     <span class="week-stat"><strong>1</strong> stories</span>
-                    <span class="week-stat-total"><strong>2</strong> total</span>
+                    <span class="week-stat-total"><strong>1</strong> total</span>
                 </div>
             </div>
             <div class="week-detail-table">
@@ -601,13 +633,6 @@ Lava </div><div class="calendar-post-indicator type-story">New Year Lifestyle</d
                 </div>
                 <div class="week-detail-row">
                 <div class="week-detail-day">Sat 13</div>
-                <div class="week-detail-time">11:00am</div>
-                <div class="week-detail-title">Will It Blend: Sour Lemon x Pineapple Jack</div>
-                <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
-                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
-                <div class="week-detail-notes"></div>
-            </div><div class="week-detail-row">
-                <div class="week-detail-day"></div>
                 <div class="week-detail-time">8:00am</div>
                 <div class="week-detail-title">Educational</div>
                 <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
@@ -687,9 +712,8 @@ Lava </div><div class="calendar-post-indicator type-story">New Year Lifestyle</d
                 <div class="week-detail-notes">unique combos</div>
             </div><div class="week-detail-row">
                 <div class="week-detail-day">Fri 19</div>
-                <div class="week-detail-time">1:00pm</div>
-                <div class="week-detail-title">SmoothiEdu:
-Genetics & Flavor</div>
+                <div class="week-detail-time">11:00am</div>
+                <div class="week-detail-title">Will It Blend: Sour Lemon x Pineapple Jack</div>
                 <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
                 <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
                 <div class="week-detail-notes"></div>
@@ -716,9 +740,9 @@ Genetics & Flavor</div>
                     <span class="week-detail-range">Dec 21-27</span>
                 </div>
                 <div class="week-detail-stats">
-                    <span class="week-stat"><strong>3</strong> posts</span>
+                    <span class="week-stat"><strong>4</strong> posts</span>
                     <span class="week-stat"><strong>7</strong> stories</span>
-                    <span class="week-stat-total"><strong>10</strong> total</span>
+                    <span class="week-stat-total"><strong>11</strong> total</span>
                 </div>
             </div>
             <div class="week-detail-table">
@@ -738,14 +762,14 @@ Genetics & Flavor</div>
                 <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
                 <div class="week-detail-notes">Day in the life, pier shot</div>
             </div><div class="week-detail-row">
-                <div class="week-detail-day">Mon 22</div>
-                <div class="week-detail-time">12:00pm</div>
-                <div class="week-detail-title">Will It Blend: Cherry Limeade x Zeven Up</div>
-                <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
+                <div class="week-detail-day"></div>
+                <div class="week-detail-time">9:00am</div>
+                <div class="week-detail-title">BLEND Society: The Baller</div>
+                <div class="week-detail-type"><span class="type-badge type-reel">reel</span></div>
                 <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
                 <div class="week-detail-notes"></div>
             </div><div class="week-detail-row">
-                <div class="week-detail-day"></div>
+                <div class="week-detail-day">Mon 22</div>
                 <div class="week-detail-time">8:00am</div>
                 <div class="week-detail-title">Educational</div>
                 <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
@@ -753,6 +777,14 @@ Genetics & Flavor</div>
                 <div class="week-detail-notes">Reassures product is safe, easy caption</div>
             </div><div class="week-detail-row">
                 <div class="week-detail-day">Tue 23</div>
+                <div class="week-detail-time">1:00pm</div>
+                <div class="week-detail-title">SmoothiEdu:
+Genetics & Flavor</div>
+                <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
+                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
+                <div class="week-detail-notes"></div>
+            </div><div class="week-detail-row">
+                <div class="week-detail-day"></div>
                 <div class="week-detail-time">8:00am</div>
                 <div class="week-detail-title">Poll</div>
                 <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
@@ -766,21 +798,7 @@ Genetics & Flavor</div>
                 <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
                 <div class="week-detail-notes">Twas the night before Xmas</div>
             </div><div class="week-detail-row">
-                <div class="week-detail-day"></div>
-                <div class="week-detail-time">9:00am</div>
-                <div class="week-detail-title">BLEND Society: The Baller</div>
-                <div class="week-detail-type"><span class="type-badge type-reel">reel</span></div>
-                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
-                <div class="week-detail-notes"></div>
-            </div><div class="week-detail-row">
                 <div class="week-detail-day">Thu 25</div>
-                <div class="week-detail-time">11:00am</div>
-                <div class="week-detail-title">Pier Photoshoot #3</div>
-                <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
-                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
-                <div class="week-detail-notes"></div>
-            </div><div class="week-detail-row">
-                <div class="week-detail-day"></div>
                 <div class="week-detail-time">8:00am</div>
                 <div class="week-detail-title">Xmas Post</div>
                 <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
@@ -788,6 +806,13 @@ Genetics & Flavor</div>
                 <div class="week-detail-notes">Green bouquet render</div>
             </div><div class="week-detail-row">
                 <div class="week-detail-day">Fri 26</div>
+                <div class="week-detail-time">12:00pm</div>
+                <div class="week-detail-title">Will It Blend: Cherry Limeade x Zeven Up</div>
+                <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
+                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
+                <div class="week-detail-notes"></div>
+            </div><div class="week-detail-row">
+                <div class="week-detail-day"></div>
                 <div class="week-detail-time">8:00am</div>
                 <div class="week-detail-title">Behind Scenes</div>
                 <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
@@ -795,6 +820,13 @@ Genetics & Flavor</div>
                 <div class="week-detail-notes">Interesting shot of process</div>
             </div><div class="week-detail-row">
                 <div class="week-detail-day">Sat 27</div>
+                <div class="week-detail-time">11:00am</div>
+                <div class="week-detail-title">Pier Photoshoot #3</div>
+                <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
+                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
+                <div class="week-detail-notes"></div>
+            </div><div class="week-detail-row">
+                <div class="week-detail-day"></div>
                 <div class="week-detail-time">8:00am</div>
                 <div class="week-detail-title">Q&A</div>
                 <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
@@ -825,13 +857,6 @@ Genetics & Flavor</div>
                 </div>
                 <div class="week-detail-row">
                 <div class="week-detail-day">Sun 28</div>
-                <div class="week-detail-time">8:00am</div>
-                <div class="week-detail-title">Poll</div>
-                <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
-                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
-                <div class="week-detail-notes">Which passion of yours calls for a sesh?</div>
-            </div><div class="week-detail-row">
-                <div class="week-detail-day">Mon 29</div>
                 <div class="week-detail-time">5:00pm</div>
                 <div class="week-detail-title">SmoothiEdu – The Chemistry of the Cure</div>
                 <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
@@ -840,19 +865,19 @@ Genetics & Flavor</div>
             </div><div class="week-detail-row">
                 <div class="week-detail-day"></div>
                 <div class="week-detail-time">8:00am</div>
+                <div class="week-detail-title">Poll</div>
+                <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
+                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
+                <div class="week-detail-notes">Which passion of yours calls for a sesh?</div>
+            </div><div class="week-detail-row">
+                <div class="week-detail-day">Mon 29</div>
+                <div class="week-detail-time">8:00am</div>
                 <div class="week-detail-title">Educational</div>
                 <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
                 <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
                 <div class="week-detail-notes">Fact about dual tank to customer</div>
             </div><div class="week-detail-row">
                 <div class="week-detail-day">Tue 30</div>
-                <div class="week-detail-time">8:00am</div>
-                <div class="week-detail-title">Poll</div>
-                <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
-                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
-                <div class="week-detail-notes">Favorite blend product of the year</div>
-            </div><div class="week-detail-row">
-                <div class="week-detail-day">Wed 31</div>
                 <div class="week-detail-time">10:00am</div>
                 <div class="week-detail-title">Will It Blend:
 Lava Cake x Sour Diesel</div>
@@ -861,6 +886,13 @@ Lava Cake x Sour Diesel</div>
                 <div class="week-detail-notes"></div>
             </div><div class="week-detail-row">
                 <div class="week-detail-day"></div>
+                <div class="week-detail-time">8:00am</div>
+                <div class="week-detail-title">Poll</div>
+                <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
+                <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
+                <div class="week-detail-notes">Favorite blend product of the year</div>
+            </div><div class="week-detail-row">
+                <div class="week-detail-day">Wed 31</div>
                 <div class="week-detail-time">8:00am</div>
                 <div class="week-detail-title">New Year Lifestyle</div>
                 <div class="week-detail-type"><span class="type-badge type-story">story</span></div>
@@ -912,14 +944,6 @@ Lava Cake x Sour Diesel</div>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Will It Blend: Sour Lemon x Pineapple Jack</strong></td>
-                            <td data-sort="2025-12-13">12/13</td>
-                            <td data-sort="11:00">11:00am</td>
-                            <td data-sort="post"><span class="type-badge type-post">post</span></td>
-                            <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
-                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</td>
-                            <td style="max-width: 180px; font-size: 13px;"></td>
-                        </tr><tr>
                             <td><strong>BLEND Society: The Student</strong></td>
                             <td data-sort="2025-12-14">12/14</td>
                             <td data-sort="09:00">9:00am</td>
@@ -936,9 +960,25 @@ Lava Cake x Sour Diesel</div>
                             <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</td>
                             <td style="max-width: 180px; font-size: 13px;"></td>
                         </tr><tr>
+                            <td><strong>Will It Blend: Sour Lemon x Pineapple Jack</strong></td>
+                            <td data-sort="2025-12-19">12/19</td>
+                            <td data-sort="11:00">11:00am</td>
+                            <td data-sort="post"><span class="type-badge type-post">post</span></td>
+                            <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</td>
+                            <td style="max-width: 180px; font-size: 13px;"></td>
+                        </tr><tr>
+                            <td><strong>BLEND Society: The Baller</strong></td>
+                            <td data-sort="2025-12-21">12/21</td>
+                            <td data-sort="09:00">9:00am</td>
+                            <td data-sort="reel"><span class="type-badge type-reel">reel</span></td>
+                            <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
+                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend</td>
+                            <td style="max-width: 180px; font-size: 13px;"></td>
+                        </tr><tr>
                             <td><strong>SmoothiEdu:
 Genetics & Flavor</strong></td>
-                            <td data-sort="2025-12-19">12/19</td>
+                            <td data-sort="2025-12-23">12/23</td>
                             <td data-sort="13:00">1:00pm</td>
                             <td data-sort="post"><span class="type-badge type-post">post</span></td>
                             <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
@@ -946,23 +986,15 @@ Genetics & Flavor</strong></td>
                             <td style="max-width: 180px; font-size: 13px;"></td>
                         </tr><tr>
                             <td><strong>Will It Blend: Cherry Limeade x Zeven Up</strong></td>
-                            <td data-sort="2025-12-22">12/22</td>
+                            <td data-sort="2025-12-26">12/26</td>
                             <td data-sort="12:00">12:00pm</td>
                             <td data-sort="post"><span class="type-badge type-post">post</span></td>
                             <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
                             <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#WillItBlend</td>
                             <td style="max-width: 180px; font-size: 13px;"></td>
                         </tr><tr>
-                            <td><strong>BLEND Society: The Baller</strong></td>
-                            <td data-sort="2025-12-24">12/24</td>
-                            <td data-sort="09:00">9:00am</td>
-                            <td data-sort="reel"><span class="type-badge type-reel">reel</span></td>
-                            <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
-                            <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#smoothiebar #blend2 #whatsyourblend</td>
-                            <td style="max-width: 180px; font-size: 13px;"></td>
-                        </tr><tr>
                             <td><strong>Pier Photoshoot #3</strong></td>
-                            <td data-sort="2025-12-25">12/25</td>
+                            <td data-sort="2025-12-27">12/27</td>
                             <td data-sort="11:00">11:00am</td>
                             <td data-sort="post"><span class="type-badge type-post">post</span></td>
                             <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
@@ -970,7 +1002,7 @@ Genetics & Flavor</strong></td>
                             <td style="max-width: 180px; font-size: 13px;"></td>
                         </tr><tr>
                             <td><strong>SmoothiEdu – The Chemistry of the Cure</strong></td>
-                            <td data-sort="2025-12-29">12/29</td>
+                            <td data-sort="2025-12-28">12/28</td>
                             <td data-sort="17:00">5:00pm</td>
                             <td data-sort="post"><span class="type-badge type-post">post</span></td>
                             <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
@@ -979,7 +1011,7 @@ Genetics & Flavor</strong></td>
                         </tr><tr>
                             <td><strong>Will It Blend:
 Lava Cake x Sour Diesel</strong></td>
-                            <td data-sort="2025-12-31">12/31</td>
+                            <td data-sort="2025-12-30">12/30</td>
                             <td data-sort="10:00">10:00am</td>
                             <td data-sort="post"><span class="type-badge type-post">post</span></td>
                             <td data-sort="Draft"><span class="status status-draft">Draft</span></td>
@@ -1018,19 +1050,8 @@ Lava Cake x Sour Diesel</strong></td>
                 </summary>
                 <div class="subsection-content">
                     <div class="posts-grid">
-                        <div class="post-card" id="post-0">
-        <div class="no-media">No media uploaded</div>
-        <div class="post-card-body">
-            <div class="post-card-header">
-                <span class="post-card-title">Will It Blend: Sour Lemon x Pineapple Jack</span>
-                <span class="type-badge type-post">post</span>
-            </div>
-            <div class="post-card-date">12/13 • 11:00am</div>
-            <p class="post-card-caption">Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in a way that feels intentional...because it is.</p>
-            <div class="post-card-hashtags">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</div>
-        </div>
-    </div><div class="post-card" id="post-2">
-        <div class="carousel" data-card="2">
+                        <div class="post-card" id="post-1">
+        <div class="carousel" data-card="1">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
                 <img src="https://dl.dropboxusercontent.com/scl/fo/ydhk0p1v3fkl6dxmfczj2/AO4KKfqx1KHbDvh37t5Igrk/DSC01581.jpg?rlkey=3ikkjyt6xech88p6unan4ndsw&raw=1" alt="Pier Photoshoot #2 - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
@@ -1056,7 +1077,36 @@ Lava Cake x Sour Diesel</strong></td>
             <p class="post-card-caption">We don't pass judgement, just the vape. 💯</p>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
-    </div><div class="post-card" id="post-3">
+    </div><div class="post-card" id="post-2">
+        <div class="carousel" data-card="2">
+                <div class="carousel-container">
+                    <div class="carousel-slide" data-index="0">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/kd342ncdr36zyt7zoejqj/WIB_SOURLEMONOG_PINEAPPLEJACK_1.png?rlkey=uceu4awzewaan1omfcqrfk0r9&raw=1" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="1">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/yrn37390r43y5y39f42by/WIB_SOURLEMONOG_PINEAPPLEJACK_2.png?rlkey=5dq95mr98gnnssl4bs7p1iuev&raw=1" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="2">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/1bx26qo2k59dha9ibytfo/WIB_SOURLEMONOG_PINEAPPLEJACK_3.png?rlkey=5mjquoszvx3oi4esnvcdrc2ym&raw=1" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="3">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/prq1cpmsxszxmzbul561e/WIB_SOURLEMONOG_PINEAPPLEJACK_4.png?rlkey=x0x4q4kp43qye2vj9tegeodxi&raw=1" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div>
+                </div>
+                <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
+                <button class="carousel-btn carousel-next" onclick="nextSlide(this)">›</button>
+                <div class="carousel-indicators">
+                    <span class="carousel-dot active" data-index="0" onclick="goToSlide(this, 0)"></span><span class="carousel-dot" data-index="1" onclick="goToSlide(this, 1)"></span><span class="carousel-dot" data-index="2" onclick="goToSlide(this, 2)"></span><span class="carousel-dot" data-index="3" onclick="goToSlide(this, 3)"></span>
+                    <span class="carousel-counter">1 / 4</span>
+                </div>
+            </div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Will It Blend: Sour Lemon x Pineapple Jack</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <div class="post-card-date">12/19 • 11:00am</div>
+            <p class="post-card-caption">Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in a way that feels intentional...because it is.</p>
+            <div class="post-card-hashtags">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</div>
+        </div>
+    </div><div class="post-card" id="post-4">
         <div class="no-media">No media uploaded</div>
         <div class="post-card-body">
             <div class="post-card-header">
@@ -1064,20 +1114,38 @@ Lava Cake x Sour Diesel</strong></td>
 Genetics & Flavor</span>
                 <span class="type-badge type-post">post</span>
             </div>
-            <div class="post-card-date">12/19 • 1:00pm</div>
+            <div class="post-card-date">12/23 • 1:00pm</div>
             <p class="post-card-caption">Flavor runs in the family. 🍓🍋
 
 What you taste starts with genetics. Let’s break down how lineage influences your experience. 🌱</p>
             <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
         </div>
-    </div><div class="post-card" id="post-4">
-        <div class="no-media">No media uploaded</div>
+    </div><div class="post-card" id="post-5">
+        <div class="carousel" data-card="5">
+                <div class="carousel-container">
+                    <div class="carousel-slide" data-index="0">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/yyjiwyj9cajljwdpyjub3/WIB_CHERRYLIMEADE_ZEVENUP_1.png?rlkey=dwxe3giovwuj9vkr67irhjj8a&raw=1" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="1">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/rimz3qiz82ffyeiog6lsc/WIB_CHERRYLIMEADE_ZEVENUP_2.png?rlkey=xdgh2pam6tu0na827jz80jg33&raw=1" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="2">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/hgmszmzmulx0uz2uc3xni/WIB_CHERRYLIMEADE_ZEVENUP_3.png?rlkey=n02l9ra3n1426x352vhnqju9n&raw=1" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="3">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/6yv8ozqdznltlbxhi1qy3/WIB_CHERRYLIMEADE_ZEVENUP_4.png?rlkey=kl7ud3lx18lsipl49sx79oo0m&raw=1" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div>
+                </div>
+                <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
+                <button class="carousel-btn carousel-next" onclick="nextSlide(this)">›</button>
+                <div class="carousel-indicators">
+                    <span class="carousel-dot active" data-index="0" onclick="goToSlide(this, 0)"></span><span class="carousel-dot" data-index="1" onclick="goToSlide(this, 1)"></span><span class="carousel-dot" data-index="2" onclick="goToSlide(this, 2)"></span><span class="carousel-dot" data-index="3" onclick="goToSlide(this, 3)"></span>
+                    <span class="carousel-counter">1 / 4</span>
+                </div>
+            </div>
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">Will It Blend: Cherry Limeade x Zeven Up</span>
                 <span class="type-badge type-post">post</span>
             </div>
-            <div class="post-card-date">12/22 • 12:00pm</div>
+            <div class="post-card-date">12/26 • 12:00pm</div>
             <p class="post-card-caption">Cherry fizz meets soda clarity. Built to feel bubbly, refreshing, and layered.</p>
             <div class="post-card-hashtags">#WillItBlend</div>
         </div>
@@ -1104,7 +1172,7 @@ What you taste starts with genetics. Let’s break down how lineage influences y
                 <span class="post-card-title">Pier Photoshoot #3</span>
                 <span class="type-badge type-post">post</span>
             </div>
-            <div class="post-card-date">12/25 • 11:00am</div>
+            <div class="post-card-date">12/27 • 11:00am</div>
             <p class="post-card-caption">The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊</p>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
@@ -1115,7 +1183,7 @@ What you taste starts with genetics. Let’s break down how lineage influences y
                 <span class="post-card-title">SmoothiEdu – The Chemistry of the Cure</span>
                 <span class="type-badge type-post">post</span>
             </div>
-            <div class="post-card-date">12/29 • 5:00pm</div>
+            <div class="post-card-date">12/28 • 5:00pm</div>
             <p class="post-card-caption">Moisture content, time, and temperature; what’s really happening on a chemical level?</p>
             <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
         </div>
@@ -1127,7 +1195,7 @@ What you taste starts with genetics. Let’s break down how lineage influences y
 Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-post">post</span>
             </div>
-            <div class="post-card-date">12/31 • 10:00am</div>
+            <div class="post-card-date">12/30 • 10:00am</div>
             <p class="post-card-caption">Sweet, earthy cocoa meets citrus sharpness. A crossover that pushes the limits of contrast.</p>
             <div class="post-card-hashtags">#WillItBlend</div>
         </div>
@@ -1146,8 +1214,30 @@ Lava Cake x Sour Diesel</span>
                 </summary>
                 <div class="subsection-content">
                     <div class="posts-grid">
-                        <div class="post-card" id="post-1">
-        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/9ck6akw51x7l3c9wfh65j/Q-A.png?rlkey=ptorueeerjlikxwuvqwifvy1n&raw=1" alt="BLEND Society: The Student" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+                        <div class="post-card" id="post-0">
+        <div class="post-card-media video-player-container" onclick="toggleVideoPlay(this)">
+                <video class="video-player" playsinline preload="metadata" muted loop poster="">
+                    <source src="https://dl.dropboxusercontent.com/scl/fo/cao52vdbkwrgpjlxp0im1/AMQSck_f0A9Q4_E8otUWjFA/Smoothie%20Bar_15%20Second%20Lifestyle_Video_Student_090825.MOV?rlkey=l19t7mix81zymwyugfuc7ahom&raw=1" type="video/quicktime">
+                    <source src="https://dl.dropboxusercontent.com/scl/fo/cao52vdbkwrgpjlxp0im1/AMQSck_f0A9Q4_E8otUWjFA/Smoothie%20Bar_15%20Second%20Lifestyle_Video_Student_090825.MOV?rlkey=l19t7mix81zymwyugfuc7ahom&raw=1" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-play-indicator">
+                    <svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </div>
+                <button class="video-mute-btn" onclick="event.stopPropagation(); toggleVideoMute(this)">
+                    <svg class="mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                    <svg class="unmute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <div class="video-fallback" onclick="event.stopPropagation(); window.open('https://www.dropbox.com/scl/fo/cao52vdbkwrgpjlxp0im1/AMQSck_f0A9Q4_E8otUWjFA/Smoothie%20Bar_15%20Second%20Lifestyle_Video_Student_090825.MOV?rlkey=l19t7mix81zymwyugfuc7ahom&e=2&dl=0', '_blank')">
+                    <div class="video-placeholder-content">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>
+                        </svg>
+                        <span class="video-placeholder-text">Click to open video</span>
+                        <span class="video-placeholder-filename">Smoothie Bar_15 Second Lifestyle_Vide...</span>
+                    </div>
+                </div>
+            </div>
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">BLEND Society: The Student</span>
@@ -1157,14 +1247,36 @@ Lava Cake x Sour Diesel</span>
             <p class="post-card-caption">Learning is a lifelong process, enjoy a blend while you do it!</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
-    </div><div class="post-card" id="post-5">
-        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/1bi5u83ck7jggg74ne0r5/Dunk.png?rlkey=f6rcqyhv36vwsybbn40gynt6s&raw=1" alt="BLEND Society: The Baller" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+    </div><div class="post-card" id="post-3">
+        <div class="post-card-media video-player-container" onclick="toggleVideoPlay(this)">
+                <video class="video-player" playsinline preload="metadata" muted loop poster="">
+                    <source src="https://dl.dropboxusercontent.com/scl/fi/dvwk1hepak3t9y6y3mogy/Smoothie-Bar_15-Second-Lifestyle_Video_Basketball_091025.MOV?rlkey=96s1axp6669ij9mrn7y2irbcn&raw=1" type="video/quicktime">
+                    <source src="https://dl.dropboxusercontent.com/scl/fi/dvwk1hepak3t9y6y3mogy/Smoothie-Bar_15-Second-Lifestyle_Video_Basketball_091025.MOV?rlkey=96s1axp6669ij9mrn7y2irbcn&raw=1" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-play-indicator">
+                    <svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </div>
+                <button class="video-mute-btn" onclick="event.stopPropagation(); toggleVideoMute(this)">
+                    <svg class="mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                    <svg class="unmute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <div class="video-fallback" onclick="event.stopPropagation(); window.open('https://www.dropbox.com/scl/fi/dvwk1hepak3t9y6y3mogy/Smoothie-Bar_15-Second-Lifestyle_Video_Basketball_091025.MOV?rlkey=96s1axp6669ij9mrn7y2irbcn&st=6h19r5ac&dl=0', '_blank')">
+                    <div class="video-placeholder-content">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>
+                        </svg>
+                        <span class="video-placeholder-text">Click to open video</span>
+                        <span class="video-placeholder-filename">Smoothie-Bar_15-Second-Lifestyle_Vide...</span>
+                    </div>
+                </div>
+            </div>
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">BLEND Society: The Baller</span>
                 <span class="type-badge type-reel">reel</span>
             </div>
-            <div class="post-card-date">12/24 • 9:00am</div>
+            <div class="post-card-date">12/21 • 9:00am</div>
             <p class="post-card-caption">The sky is the limit. Smoothie Bar will always take you higher!</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
@@ -1192,30 +1304,6 @@ Lava Cake x Sour Diesel</span>
             <div id="drafts-by-week" class="drafts-view" style="display: none;">
                 <div class="week-posts-section">
             <div class="week-posts-header">
-                <span class="week-posts-label">Week 2</span>
-                <span class="week-posts-range">Dec 7-13</span>
-                <span class="week-posts-count">1 posts</span>
-            </div>
-            <div class="week-posts-carousel-wrapper">
-                <button class="week-posts-nav prev" onclick="scrollWeekCarousel(this, -1)">‹</button>
-                <div class="week-posts-carousel">
-                    <div class="post-card" id="post-0">
-        <div class="no-media">No media uploaded</div>
-        <div class="post-card-body">
-            <div class="post-card-header">
-                <span class="post-card-title">Will It Blend: Sour Lemon x Pineapple Jack</span>
-                <span class="type-badge type-post">post</span>
-            </div>
-            <div class="post-card-date">12/13 • 11:00am</div>
-            <p class="post-card-caption">Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in a way that feels intentional...because it is.</p>
-            <div class="post-card-hashtags">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</div>
-        </div>
-    </div>
-                </div>
-                <button class="week-posts-nav next" onclick="scrollWeekCarousel(this, 1)">›</button>
-            </div>
-        </div><div class="week-posts-section">
-            <div class="week-posts-header">
                 <span class="week-posts-label">Week 3</span>
                 <span class="week-posts-range">Dec 14-20</span>
                 <span class="week-posts-count">3 posts</span>
@@ -1223,8 +1311,30 @@ Lava Cake x Sour Diesel</span>
             <div class="week-posts-carousel-wrapper">
                 <button class="week-posts-nav prev" onclick="scrollWeekCarousel(this, -1)">‹</button>
                 <div class="week-posts-carousel">
-                    <div class="post-card" id="post-1">
-        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/9ck6akw51x7l3c9wfh65j/Q-A.png?rlkey=ptorueeerjlikxwuvqwifvy1n&raw=1" alt="BLEND Society: The Student" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+                    <div class="post-card" id="post-0">
+        <div class="post-card-media video-player-container" onclick="toggleVideoPlay(this)">
+                <video class="video-player" playsinline preload="metadata" muted loop poster="">
+                    <source src="https://dl.dropboxusercontent.com/scl/fo/cao52vdbkwrgpjlxp0im1/AMQSck_f0A9Q4_E8otUWjFA/Smoothie%20Bar_15%20Second%20Lifestyle_Video_Student_090825.MOV?rlkey=l19t7mix81zymwyugfuc7ahom&raw=1" type="video/quicktime">
+                    <source src="https://dl.dropboxusercontent.com/scl/fo/cao52vdbkwrgpjlxp0im1/AMQSck_f0A9Q4_E8otUWjFA/Smoothie%20Bar_15%20Second%20Lifestyle_Video_Student_090825.MOV?rlkey=l19t7mix81zymwyugfuc7ahom&raw=1" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-play-indicator">
+                    <svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </div>
+                <button class="video-mute-btn" onclick="event.stopPropagation(); toggleVideoMute(this)">
+                    <svg class="mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                    <svg class="unmute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <div class="video-fallback" onclick="event.stopPropagation(); window.open('https://www.dropbox.com/scl/fo/cao52vdbkwrgpjlxp0im1/AMQSck_f0A9Q4_E8otUWjFA/Smoothie%20Bar_15%20Second%20Lifestyle_Video_Student_090825.MOV?rlkey=l19t7mix81zymwyugfuc7ahom&e=2&dl=0', '_blank')">
+                    <div class="video-placeholder-content">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>
+                        </svg>
+                        <span class="video-placeholder-text">Click to open video</span>
+                        <span class="video-placeholder-filename">Smoothie Bar_15 Second Lifestyle_Vide...</span>
+                    </div>
+                </div>
+            </div>
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">BLEND Society: The Student</span>
@@ -1234,8 +1344,8 @@ Lava Cake x Sour Diesel</span>
             <p class="post-card-caption">Learning is a lifelong process, enjoy a blend while you do it!</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
-    </div><div class="post-card" id="post-2">
-        <div class="carousel" data-card="2">
+    </div><div class="post-card" id="post-1">
+        <div class="carousel" data-card="1">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
                 <img src="https://dl.dropboxusercontent.com/scl/fo/ydhk0p1v3fkl6dxmfczj2/AO4KKfqx1KHbDvh37t5Igrk/DSC01581.jpg?rlkey=3ikkjyt6xech88p6unan4ndsw&raw=1" alt="Pier Photoshoot #2 - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
@@ -1261,19 +1371,34 @@ Lava Cake x Sour Diesel</span>
             <p class="post-card-caption">We don't pass judgement, just the vape. 💯</p>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
-    </div><div class="post-card" id="post-3">
-        <div class="no-media">No media uploaded</div>
+    </div><div class="post-card" id="post-2">
+        <div class="carousel" data-card="2">
+                <div class="carousel-container">
+                    <div class="carousel-slide" data-index="0">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/kd342ncdr36zyt7zoejqj/WIB_SOURLEMONOG_PINEAPPLEJACK_1.png?rlkey=uceu4awzewaan1omfcqrfk0r9&raw=1" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="1">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/yrn37390r43y5y39f42by/WIB_SOURLEMONOG_PINEAPPLEJACK_2.png?rlkey=5dq95mr98gnnssl4bs7p1iuev&raw=1" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="2">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/1bx26qo2k59dha9ibytfo/WIB_SOURLEMONOG_PINEAPPLEJACK_3.png?rlkey=5mjquoszvx3oi4esnvcdrc2ym&raw=1" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="3">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/prq1cpmsxszxmzbul561e/WIB_SOURLEMONOG_PINEAPPLEJACK_4.png?rlkey=x0x4q4kp43qye2vj9tegeodxi&raw=1" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div>
+                </div>
+                <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
+                <button class="carousel-btn carousel-next" onclick="nextSlide(this)">›</button>
+                <div class="carousel-indicators">
+                    <span class="carousel-dot active" data-index="0" onclick="goToSlide(this, 0)"></span><span class="carousel-dot" data-index="1" onclick="goToSlide(this, 1)"></span><span class="carousel-dot" data-index="2" onclick="goToSlide(this, 2)"></span><span class="carousel-dot" data-index="3" onclick="goToSlide(this, 3)"></span>
+                    <span class="carousel-counter">1 / 4</span>
+                </div>
+            </div>
         <div class="post-card-body">
             <div class="post-card-header">
-                <span class="post-card-title">SmoothiEdu:
-Genetics & Flavor</span>
+                <span class="post-card-title">Will It Blend: Sour Lemon x Pineapple Jack</span>
                 <span class="type-badge type-post">post</span>
             </div>
-            <div class="post-card-date">12/19 • 1:00pm</div>
-            <p class="post-card-caption">Flavor runs in the family. 🍓🍋
-
-What you taste starts with genetics. Let’s break down how lineage influences your experience. 🌱</p>
-            <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
+            <div class="post-card-date">12/19 • 11:00am</div>
+            <p class="post-card-caption">Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in a way that feels intentional...because it is.</p>
+            <div class="post-card-hashtags">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</div>
         </div>
     </div>
                 </div>
@@ -1283,32 +1408,86 @@ What you taste starts with genetics. Let’s break down how lineage influences y
             <div class="week-posts-header">
                 <span class="week-posts-label">Week 4</span>
                 <span class="week-posts-range">Dec 21-27</span>
-                <span class="week-posts-count">3 posts</span>
+                <span class="week-posts-count">4 posts</span>
             </div>
             <div class="week-posts-carousel-wrapper">
                 <button class="week-posts-nav prev" onclick="scrollWeekCarousel(this, -1)">‹</button>
                 <div class="week-posts-carousel">
-                    <div class="post-card" id="post-4">
-        <div class="no-media">No media uploaded</div>
-        <div class="post-card-body">
-            <div class="post-card-header">
-                <span class="post-card-title">Will It Blend: Cherry Limeade x Zeven Up</span>
-                <span class="type-badge type-post">post</span>
+                    <div class="post-card" id="post-3">
+        <div class="post-card-media video-player-container" onclick="toggleVideoPlay(this)">
+                <video class="video-player" playsinline preload="metadata" muted loop poster="">
+                    <source src="https://dl.dropboxusercontent.com/scl/fi/dvwk1hepak3t9y6y3mogy/Smoothie-Bar_15-Second-Lifestyle_Video_Basketball_091025.MOV?rlkey=96s1axp6669ij9mrn7y2irbcn&raw=1" type="video/quicktime">
+                    <source src="https://dl.dropboxusercontent.com/scl/fi/dvwk1hepak3t9y6y3mogy/Smoothie-Bar_15-Second-Lifestyle_Video_Basketball_091025.MOV?rlkey=96s1axp6669ij9mrn7y2irbcn&raw=1" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-play-indicator">
+                    <svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </div>
+                <button class="video-mute-btn" onclick="event.stopPropagation(); toggleVideoMute(this)">
+                    <svg class="mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                    <svg class="unmute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <div class="video-fallback" onclick="event.stopPropagation(); window.open('https://www.dropbox.com/scl/fi/dvwk1hepak3t9y6y3mogy/Smoothie-Bar_15-Second-Lifestyle_Video_Basketball_091025.MOV?rlkey=96s1axp6669ij9mrn7y2irbcn&st=6h19r5ac&dl=0', '_blank')">
+                    <div class="video-placeholder-content">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>
+                        </svg>
+                        <span class="video-placeholder-text">Click to open video</span>
+                        <span class="video-placeholder-filename">Smoothie-Bar_15-Second-Lifestyle_Vide...</span>
+                    </div>
+                </div>
             </div>
-            <div class="post-card-date">12/22 • 12:00pm</div>
-            <p class="post-card-caption">Cherry fizz meets soda clarity. Built to feel bubbly, refreshing, and layered.</p>
-            <div class="post-card-hashtags">#WillItBlend</div>
-        </div>
-    </div><div class="post-card" id="post-5">
-        <img class="post-card-media" src="https://dl.dropboxusercontent.com/scl/fi/1bi5u83ck7jggg74ne0r5/Dunk.png?rlkey=f6rcqyhv36vwsybbn40gynt6s&raw=1" alt="BLEND Society: The Baller" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">BLEND Society: The Baller</span>
                 <span class="type-badge type-reel">reel</span>
             </div>
-            <div class="post-card-date">12/24 • 9:00am</div>
+            <div class="post-card-date">12/21 • 9:00am</div>
             <p class="post-card-caption">The sky is the limit. Smoothie Bar will always take you higher!</p>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-4">
+        <div class="no-media">No media uploaded</div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">SmoothiEdu:
+Genetics & Flavor</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <div class="post-card-date">12/23 • 1:00pm</div>
+            <p class="post-card-caption">Flavor runs in the family. 🍓🍋
+
+What you taste starts with genetics. Let’s break down how lineage influences your experience. 🌱</p>
+            <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
+        </div>
+    </div><div class="post-card" id="post-5">
+        <div class="carousel" data-card="5">
+                <div class="carousel-container">
+                    <div class="carousel-slide" data-index="0">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/yyjiwyj9cajljwdpyjub3/WIB_CHERRYLIMEADE_ZEVENUP_1.png?rlkey=dwxe3giovwuj9vkr67irhjj8a&raw=1" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="1">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/rimz3qiz82ffyeiog6lsc/WIB_CHERRYLIMEADE_ZEVENUP_2.png?rlkey=xdgh2pam6tu0na827jz80jg33&raw=1" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="2">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/hgmszmzmulx0uz2uc3xni/WIB_CHERRYLIMEADE_ZEVENUP_3.png?rlkey=n02l9ra3n1426x352vhnqju9n&raw=1" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="3">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/6yv8ozqdznltlbxhi1qy3/WIB_CHERRYLIMEADE_ZEVENUP_4.png?rlkey=kl7ud3lx18lsipl49sx79oo0m&raw=1" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div>
+                </div>
+                <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
+                <button class="carousel-btn carousel-next" onclick="nextSlide(this)">›</button>
+                <div class="carousel-indicators">
+                    <span class="carousel-dot active" data-index="0" onclick="goToSlide(this, 0)"></span><span class="carousel-dot" data-index="1" onclick="goToSlide(this, 1)"></span><span class="carousel-dot" data-index="2" onclick="goToSlide(this, 2)"></span><span class="carousel-dot" data-index="3" onclick="goToSlide(this, 3)"></span>
+                    <span class="carousel-counter">1 / 4</span>
+                </div>
+            </div>
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Will It Blend: Cherry Limeade x Zeven Up</span>
+                <span class="type-badge type-post">post</span>
+            </div>
+            <div class="post-card-date">12/26 • 12:00pm</div>
+            <p class="post-card-caption">Cherry fizz meets soda clarity. Built to feel bubbly, refreshing, and layered.</p>
+            <div class="post-card-hashtags">#WillItBlend</div>
         </div>
     </div><div class="post-card" id="post-6">
         <div class="carousel" data-card="6">
@@ -1333,7 +1512,7 @@ What you taste starts with genetics. Let’s break down how lineage influences y
                 <span class="post-card-title">Pier Photoshoot #3</span>
                 <span class="type-badge type-post">post</span>
             </div>
-            <div class="post-card-date">12/25 • 11:00am</div>
+            <div class="post-card-date">12/27 • 11:00am</div>
             <p class="post-card-caption">The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊</p>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
@@ -1357,7 +1536,7 @@ What you taste starts with genetics. Let’s break down how lineage influences y
                 <span class="post-card-title">SmoothiEdu – The Chemistry of the Cure</span>
                 <span class="type-badge type-post">post</span>
             </div>
-            <div class="post-card-date">12/29 • 5:00pm</div>
+            <div class="post-card-date">12/28 • 5:00pm</div>
             <p class="post-card-caption">Moisture content, time, and temperature; what’s really happening on a chemical level?</p>
             <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
         </div>
@@ -1369,7 +1548,7 @@ What you taste starts with genetics. Let’s break down how lineage influences y
 Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-post">post</span>
             </div>
-            <div class="post-card-date">12/31 • 10:00am</div>
+            <div class="post-card-date">12/30 • 10:00am</div>
             <p class="post-card-caption">Sweet, earthy cocoa meets citrus sharpness. A crossover that pushes the limits of contrast.</p>
             <div class="post-card-hashtags">#WillItBlend</div>
         </div>
@@ -2045,6 +2224,45 @@ Lava Cake x Sour Diesel</span>
                             prevSlide(carousel.querySelector('.carousel-prev'));
                         }
                     }
+                });
+            });
+        });
+        
+        // Instagram-style video controls
+        function toggleVideoPlay(container) {
+            const video = container.querySelector('.video-player');
+            if (!video) return;
+            
+            if (video.paused) {
+                video.play();
+                container.classList.add('playing');
+                container.classList.remove('show-pause');
+            } else {
+                video.pause();
+                container.classList.remove('playing');
+                container.classList.add('show-pause');
+                // Remove show-pause after a moment
+                setTimeout(() => container.classList.remove('show-pause'), 200);
+            }
+        }
+        
+        function toggleVideoMute(btn) {
+            const container = btn.closest('.video-player-container');
+            const video = container.querySelector('.video-player');
+            if (!video) return;
+            
+            video.muted = !video.muted;
+            container.classList.toggle('unmuted', !video.muted);
+        }
+        
+        // Handle video errors - show fallback
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.video-player').forEach(video => {
+                video.addEventListener('error', () => {
+                    const container = video.closest('.video-player-container');
+                    const fallback = container.querySelector('.video-fallback');
+                    if (fallback) fallback.style.display = 'flex';
+                    video.style.display = 'none';
                 });
             });
         });
