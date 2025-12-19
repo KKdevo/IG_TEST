@@ -429,6 +429,49 @@
             .section-collapsible[open] .section-header { margin-bottom: 24px; }
             .section-title { font-size: 28px; }
         }
+        
+        /* Instagram Grid Preview Styles */
+        .ig-grid-container { padding: 20px 0; }
+        .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 900px; margin: 0 auto; }
+        .ig-grid-item { position: relative; aspect-ratio: 1; cursor: pointer; overflow: hidden; background: #1A1A1A; }
+        .ig-grid-item:hover .ig-grid-overlay { opacity: 1; }
+        .ig-grid-thumb { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .ig-grid-item:hover .ig-grid-thumb { transform: scale(1.05); }
+        .ig-video-thumb { position: relative; width: 100%; height: 100%; background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); }
+        .ig-thumb-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--accent-warm); }
+        .ig-thumb-canvas { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s ease; }
+        .ig-thumb-error .ig-thumb-loading { display: flex; }
+        .ig-no-media { display: flex; align-items: center; justify-content: center; background: var(--bg-primary); color: var(--text-muted); font-size: 12px; }
+        .ig-type-icon { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)); }
+        .ig-grid-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; padding: 12px; text-align: center; }
+        .ig-grid-title { color: #fff; font-size: 13px; font-weight: 600; margin-bottom: 4px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ig-grid-date { color: rgba(255,255,255,0.7); font-size: 11px; }
+        
+        /* Instagram Grid Modal */
+        .ig-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .ig-modal.active { opacity: 1; visibility: visible; }
+        .ig-modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; }
+        .ig-modal-close:hover { background: rgba(255,255,255,0.2); }
+        .ig-modal-content { display: flex; max-width: 1000px; max-height: 90vh; width: 90%; background: var(--bg-secondary); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .ig-modal-media { flex: 1; min-width: 0; background: #000; display: flex; align-items: center; justify-content: center; }
+        .ig-modal-image { max-width: 100%; max-height: 80vh; object-fit: contain; }
+        .ig-modal-video { width: 100%; height: 100%; }
+        .ig-modal-video video { width: 100%; height: 100%; max-height: 80vh; object-fit: contain; }
+        .ig-modal-no-media { color: var(--text-muted); padding: 40px; }
+        .ig-modal-details { width: 340px; flex-shrink: 0; padding: 24px; overflow-y: auto; max-height: 80vh; }
+        .ig-modal-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+        .ig-modal-header h3 { font-size: 18px; font-weight: 600; margin: 0; line-height: 1.3; }
+        .ig-modal-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+        .ig-modal-caption { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; white-space: pre-line; }
+        .ig-modal-hashtags { font-size: 13px; color: var(--accent-warm); }
+        
+        @media (max-width: 768px) {
+            .ig-grid { gap: 2px; }
+            .ig-modal-content { flex-direction: column; max-height: 95vh; }
+            .ig-modal-media { max-height: 50vh; }
+            .ig-modal-details { width: 100%; max-height: 45vh; }
+            .ig-type-icon { width: 16px; height: 16px; top: 4px; right: 4px; }
+        }
     </style>
 </head>
 <body>
@@ -1055,6 +1098,7 @@ Lava Cake x Sour Diesel</strong></td>
             <div class="view-toggle">
                 <button class="view-toggle-btn active" onclick="showDraftsView('type')">By Type</button>
                 <button class="view-toggle-btn" onclick="showDraftsView('week')">By Week</button>
+                <button class="view-toggle-btn" onclick="showDraftsView('grid')">Grid Preview</button>
             </div>
             
             <div id="drafts-by-type" class="drafts-view">
@@ -2025,6 +2069,189 @@ Maybe the blend is starting to hit, but all that talk about cake made me hungry!
                 <button class="week-posts-nav next" onclick="scrollWeekCarousel(this, 1)">›</button>
             </div>
         </div>
+            </div>
+            
+            <div id="drafts-by-grid" class="drafts-view" style="display: none;">
+                <div class="ig-grid-container">
+        <div class="ig-grid">
+            <div class="ig-grid-item" data-post-index="0" onclick="openGridPost(0)">
+            <div class="ig-grid-thumb" style="position: relative;">
+                        <img src="images/BLEND_Society_The_Student_thumb_27ec6109ce58.jpg" alt="BLEND Society: The Student" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:rgba(0,0,0,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </div>
+                    </div>
+            <svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M12 2.5v6.25l3.75-3.75 1.5 1.5L12 11.75 6.75 6.5l1.5-1.5L12 8.75V2.5zM10 14.5v5h4v-5h-4zm-8 0v5h4v-5H2zm16 0v5h4v-5h-4z"/></svg>
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">BLEND Society: The Student</div>
+                <div class="ig-grid-date">12/14</div>
+            </div>
+        </div><div class="ig-grid-item" data-post-index="1" onclick="openGridPost(1)">
+            <img class="ig-grid-thumb" src="images/Pier_Photoshoot_2_0_33b696fd34af.jpg" alt="Pier Photoshoot #2" loading="lazy">
+            <svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M8 4h8v2H8V4zm0 14h8v2H8v-2zM4 8h2v8H4V8zm14 0h2v8h-2V8z"/></svg>
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">Pier Photoshoot #2</div>
+                <div class="ig-grid-date">12/17</div>
+            </div>
+        </div><div class="ig-grid-item" data-post-index="2" onclick="openGridPost(2)">
+            <img class="ig-grid-thumb" src="images/Will_It_Blend_Sour_Lemon_x_Pin_0_f5ed44ae0b20.png" alt="Will It Blend: Sour Lemon x Pineapple Jack" loading="lazy">
+            <svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M8 4h8v2H8V4zm0 14h8v2H8v-2zM4 8h2v8H4V8zm14 0h2v8h-2V8z"/></svg>
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">Will It Blend: Sour Lemon x Pineapple Jack</div>
+                <div class="ig-grid-date">12/19</div>
+            </div>
+        </div><div class="ig-grid-item" data-post-index="3" onclick="openGridPost(3)">
+            <div class="ig-grid-thumb" style="position: relative;">
+                        <img src="images/BLEND_Society_The_Baller_thumb_59f0a7a5e733.jpg" alt="BLEND Society: The Baller" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:rgba(0,0,0,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </div>
+                    </div>
+            <svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M12 2.5v6.25l3.75-3.75 1.5 1.5L12 11.75 6.75 6.5l1.5-1.5L12 8.75V2.5zM10 14.5v5h4v-5h-4zm-8 0v5h4v-5H2zm16 0v5h4v-5h-4z"/></svg>
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">BLEND Society: The Baller</div>
+                <div class="ig-grid-date">12/21</div>
+            </div>
+        </div><div class="ig-grid-item" data-post-index="4" onclick="openGridPost(4)">
+            <img class="ig-grid-thumb" src="images/SmoothiEdu_Vaporizer_Safety_Bu_0_f04f93179179.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality" loading="lazy">
+            <svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M8 4h8v2H8V4zm0 14h8v2H8v-2zM4 8h2v8H4V8zm14 0h2v8h-2V8z"/></svg>
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">SmoothiEdu:
+Vaporizer Safety & Build Quality</div>
+                <div class="ig-grid-date">12/23</div>
+            </div>
+        </div><div class="ig-grid-item" data-post-index="5" onclick="openGridPost(5)">
+            <img class="ig-grid-thumb" src="images/Will_It_Blend_Cherry_Limeade_x_0_51016133d5a4.png" alt="Will It Blend: Cherry Limeade x Zeven Up" loading="lazy">
+            <svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M8 4h8v2H8V4zm0 14h8v2H8v-2zM4 8h2v8H4V8zm14 0h2v8h-2V8z"/></svg>
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">Will It Blend: Cherry Limeade x Zeven Up</div>
+                <div class="ig-grid-date">12/26</div>
+            </div>
+        </div><div class="ig-grid-item" data-post-index="6" onclick="openGridPost(6)">
+            <img class="ig-grid-thumb" src="images/Pier_Photoshoot_3_0_d119271222f8.png" alt="Pier Photoshoot #3" loading="lazy">
+            <svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M8 4h8v2H8V4zm0 14h8v2H8v-2zM4 8h2v8H4V8zm14 0h2v8h-2V8z"/></svg>
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">Pier Photoshoot #3</div>
+                <div class="ig-grid-date">12/27</div>
+            </div>
+        </div><div class="ig-grid-item" data-post-index="7" onclick="openGridPost(7)">
+            <img class="ig-grid-thumb" src="images/SmoothiEdu_Proper_Wicking_Whil_0_8c51b1ca02b6.png" alt="SmoothiEdu – Proper Wicking While Vaping" loading="lazy">
+            <svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M8 4h8v2H8V4zm0 14h8v2H8v-2zM4 8h2v8H4V8zm14 0h2v8h-2V8z"/></svg>
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">SmoothiEdu – Proper Wicking While Vaping</div>
+                <div class="ig-grid-date">12/28</div>
+            </div>
+        </div><div class="ig-grid-item" data-post-index="8" onclick="openGridPost(8)">
+            <img class="ig-grid-thumb" src="images/Will_It_Blend_Lava_Cake_x_Sour_0_2661e40d8aa1.png" alt="Will It Blend:
+Lava Cake x Sour Diesel" loading="lazy">
+            <svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M8 4h8v2H8V4zm0 14h8v2H8v-2zM4 8h2v8H4V8zm14 0h2v8h-2V8z"/></svg>
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">Will It Blend:
+Lava Cake x Sour Diesel</div>
+                <div class="ig-grid-date">12/30</div>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+    <!-- Modal for viewing full post -->
+    <div id="ig-post-modal" class="ig-modal" onclick="if(event.target===this)closeGridPost()">
+        <button class="ig-modal-close" onclick="closeGridPost()">&times;</button>
+        <div class="ig-modal-content" id="ig-modal-content"></div>
+    </div>
+    
+    <script>
+        // Store post data for modal
+        const gridPosts = [{'index': 0, 'title': 'BLEND Society: The Student', 'type': 'reel', 'date': '12/14', 'time': '9:00am', 'caption': 'Learning is a lifelong process, enjoy a blend while you do it!', 'hashtags': '#smoothiebar #blend2 #whatsyourblend', 'status': 'Draft', 'media': ['images/BLEND_Society_The_Student_thumb_27ec6109ce58.jpg'], 'isVideo': True, 'videoUrl': 'https://dl.dropboxusercontent.com/scl/fo/cao52vdbkwrgpjlxp0im1/AMQSck_f0A9Q4_E8otUWjFA/Smoothie%20Bar_15%20Second%20Lifestyle_Video_Student_090825.MOV?rlkey=l19t7mix81zymwyugfuc7ahom&raw=1'}, {'index': 1, 'title': 'Pier Photoshoot #2', 'type': 'post', 'date': '12/17', 'time': '10:00am', 'caption': "We don't pass judgement, just the vape. 💯", 'hashtags': '#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier', 'status': 'Draft', 'media': ['images/Pier_Photoshoot_2_0_33b696fd34af.jpg', 'images/Pier_Photoshoot_2_1_09ac29be2604.jpg', 'images/Pier_Photoshoot_2_2_8bf3a101c724.jpg'], 'isVideo': False, 'videoUrl': ''}, {'index': 2, 'title': 'Will It Blend: Sour Lemon x Pineapple Jack', 'type': 'post', 'date': '12/19', 'time': '11:00am', 'caption': 'Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in an intentional way.\n\nTHE BACKSTORY:\n\nSour Lemon OG traces back to California’s love for sharp, sativa-leaning citrus strains. It became known for its clean lemon-zest bite and uplifting aromatic profile. Pineapple Jack, a descendant of Jack Herer lineages, brought a tropical twist to the citrus category of pineapple sweetness, energetic aroma, and a signature sunny character. Both strains represent California’s citrus wave era, where growers experimented with high-terpene, fruit-forward genetics.\n\nFLAVOR PROFILE:\n\nSour Lemon OG brings zesty lemon peel, tangy acidity, and a crisp herbal edge. Pineapple Jack adds pineapple sweetness, bright tropical aromatics, and that signature Jack-style “electric” freshness. Together, you get a layered citrus experience: the sharpness of lemon lifted by a sweeter tropical top note.\xa0\n\nWILL IT BLEND?:\nThis combo works because the strains complement rather than compete. Sour Lemon OG brings the tart backbone, while Pineapple Jack has a sweet, aromatic finish. The contrast between tangy lemon and juicy pineapple creates a dynamic profile with each pull.\nCULTURE CHECK:\xa0\n\xa0LA has a long history with citrus-heavy strains; what’s your favorite lemon or tropical strain that actually surprised you?\nHashtags:\n#WillItBlend #SourLemonOG #PineappleJack #SmoothieBar #DualTank #CannabisEducation #FlavorSpotlight #StrainPairing #CitrusStrains #LACannabis', 'hashtags': '#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight', 'status': 'Draft', 'media': ['images/Will_It_Blend_Sour_Lemon_x_Pin_0_f5ed44ae0b20.png', 'images/Will_It_Blend_Sour_Lemon_x_Pin_1_eb1eaf725a3e.png', 'images/Will_It_Blend_Sour_Lemon_x_Pin_2_d6d809595e79.png', 'images/Will_It_Blend_Sour_Lemon_x_Pin_3_b4a12b43963e.png'], 'isVideo': False, 'videoUrl': ''}, {'index': 3, 'title': 'BLEND Society: The Baller', 'type': 'reel', 'date': '12/21', 'time': '9:00am', 'caption': 'The sky is the limit. Smoothie Bar will always take you higher!', 'hashtags': '#smoothiebar #blend2 #whatsyourblend', 'status': 'Draft', 'media': ['images/BLEND_Society_The_Baller_thumb_59f0a7a5e733.jpg'], 'isVideo': True, 'videoUrl': 'https://dl.dropboxusercontent.com/scl/fi/dvwk1hepak3t9y6y3mogy/Smoothie-Bar_15-Second-Lifestyle_Video_Basketball_091025.MOV?rlkey=96s1axp6669ij9mrn7y2irbcn&raw=1'}, {'index': 4, 'title': 'SmoothiEdu:\nVaporizer Safety & Build Quality', 'type': 'post', 'date': '12/23', 'time': '1:00pm', 'caption': 'The quality of a vape is about how it’s made just as much as how well it hits. Every component, such as the wick, coil, tank, and gaskets, interacts differently with heat and cannabis compounds. Educating yourself on what’s inside your vape will help you vape safely, so you can savor the flavor.\xa0\nVaporizer Materials Intro\xa0\nA vaporizer device might seem simple at first, especially with the convenience of all-in-one technology, but vaporizers are made from several different materials. The best vaporizer technology differentiates itself, in part, by the quality and usage of these materials, so let’s go through the basics. \n\nGlass: Glass is often used in vaporizer tanks. Some feature a non-reactive containment which helps preserve flavor and prevent chemical leaching. Although they do have a high tolerance to heat they can be extremely fragile, and breaks can be dangerous and messy\nCeramic: Ceramic is often seen in wicks and coils. Due to its ability to distribute and retain heat evenly , it can offer smooth vapor while protecting terpene profiles. Ceramic strikes a balance between flavor preservation, smoothness, and durability. These characteristics make it a popular choice for high-end cartridges focused on taste and experience. Smoothie Bar coils are made from high-quality, treated ceramic.\nStainless Steel: Stainless steel is a durable material that is resistant to corrosion. It is a common material used for coil housing, posts, and structural parts. However, metal can heat unevenly, potentially detracting from the experience, and some alloys have the tendency to corrode more when overheated, corrosion can lead to leeching and other inconsistencies in the product quality.\nPlastics: Plastics are used in tanks, gaskets and mouthpieces. High-grade, food-safe plastics preserve and withstand heat quite well. Cheaper plastics on the other hand, are prone to degradation which can affect both taste and safety.\nSafety Regulations:\nAll vape cartridges in the United States must include overcharge or overcurrent protection. It functions as a safety mechanism that prevents excessive voltage. This helps to lessen the chances of damaging the battery or coil, and also helps to reduce the risk of incidents such as overheating or device failure. Smoothie Bar cartridges are an example of a product which includes this mandatory feature, as we are dedicated to ensuring your sessions are safe and reliable.\nConcluding Thoughts\nAt Smoothie Bar, we consider consumer safety a top priority. We carefully select cartridge materials to balance durability, and flavor integrity designed with safety in mind. We test the materials that go into our vapes through rigorous trials to ensure their performance. We manufacture a high quality product with the finest materials design to ensure\xa0 you get the cleanest, most consistent experience possible.\nHave you noticed differences in durability or flavor based on the materials used in your cartridges? Tell us your experience!\xa0\n#Smoothiebar #CannabisEducation #CartridgeSafety #MaterialMatters #smoothiEDU #WhatsYourBlend', 'hashtags': '#Smoothiebar #blend2 #CannabisEducation #whatsyourblend', 'status': 'Draft', 'media': ['images/SmoothiEdu_Vaporizer_Safety_Bu_0_f04f93179179.png', 'images/SmoothiEdu_Vaporizer_Safety_Bu_1_7753a96532ba.png', 'images/SmoothiEdu_Vaporizer_Safety_Bu_2_353a7b1a4111.png', 'images/SmoothiEdu_Vaporizer_Safety_Bu_3_d9c2da759f04.png', 'images/SmoothiEdu_Vaporizer_Safety_Bu_4_a989ae3daf98.png', 'images/SmoothiEdu_Vaporizer_Safety_Bu_5_d28aaae7d68a.png', 'images/SmoothiEdu_Vaporizer_Safety_Bu_6_861886edd988.png', 'images/SmoothiEdu_Vaporizer_Safety_Bu_7_4c7bc8d2c4f9.png'], 'isVideo': False, 'videoUrl': ''}, {'index': 5, 'title': 'Will It Blend: Cherry Limeade x Zeven Up', 'type': 'post', 'date': '12/26', 'time': '12:00pm', 'caption': 'Cherry fizz meets soda clarity. This one’s exactly what it sounds like: a soda-shop mashup that’s citrus-bright and cherry-juicy at the same time. Built to feel bubbly, refreshing, and layered.\n\nTHE BACKSTORY:\nCherry Limeade came up in craft circles for that obvious tart-cherry top note balanced with lime tension. Zeven Up is engineered to pop, with its serene lemon-lime aromatics that finish with a snap.\n\nFLAVOR PROFILE:\nThe cherry undertone gives the blend a body and sweetness, while Zeven Up supplies carbonation-like clarity that keeps the profile lively. Imagine a chilled cherry-lime soda where the cherry sits center stage and the citrus keeps it from feeling sticky.\n\nWILL IT BLEND?\nCherry Limeade provides the juicy backbone while Zeven Up brings the crisp, soda-pop lift. The contrast is cooperative, not combative; rich cherry meets a clean soda pop, finished with lively sparkle.\n\nCULTURE CHECK:\nIf this blend were a drink, what would it be? A cherry-lime spritzer? A street-cart refresher? Drop your pick below!', 'hashtags': '#WillItBlend', 'status': 'Draft', 'media': ['images/Will_It_Blend_Cherry_Limeade_x_0_51016133d5a4.png', 'images/Will_It_Blend_Cherry_Limeade_x_1_3e19840870ce.png', 'images/Will_It_Blend_Cherry_Limeade_x_2_7d42841a5573.png', 'images/Will_It_Blend_Cherry_Limeade_x_3_1704cef8f28d.png'], 'isVideo': False, 'videoUrl': ''}, {'index': 6, 'title': 'Pier Photoshoot #3', 'type': 'post', 'date': '12/27', 'time': '11:00am', 'caption': "The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊", 'hashtags': '#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier', 'status': 'Draft', 'media': ['images/Pier_Photoshoot_3_0_d119271222f8.png', 'images/Pier_Photoshoot_3_1_32a66a0d5c00.png', 'images/Pier_Photoshoot_3_2_745ad8345d6e.png'], 'isVideo': False, 'videoUrl': ''}, {'index': 7, 'title': 'SmoothiEdu – Proper Wicking While Vaping', 'type': 'post', 'date': '12/28', 'time': '5:00pm', 'caption': 'Wicking: The Flow Factor\nThe ideal vapor experience starts long before the first pull. Some of the most common issues we see with vaporizers are due to poor wicking, including clogging, harsh hits, or uneven vapor. In this SmoothiEDU breakdown, we’re going to discuss how wicking, alongside oil formulation, terpenes, and heat work together to produce a smooth experience.\n\nFrom Tank to Coil:\nThe term “wicking” refers to the process that draws oil from the tank into the coil. When flow is properly balanced, the coil stays evenly saturated, delivering smooth vapor and clean flavor. However, if that balance is disrupted, coils can overheat, terpenes may degrade, and overall performance can suffer. Some brands utilize diluents in order to help oil flow more consistently, but this is not a consistent or health-conscious way of maintaining a properly wicked coil.Specifically, overused or poorly matched diluents can affect flavor and vapor consistency, making balance especially important. An important factor is also keeping the device upright and fully charged whenever possible. Maximizing the exposure of the oil to the tank will maximize your vaping experience. When fully charged, the vaporizer delivers the optimal level of power to the coil, making sure the wicking continues consistently while hit, and the coil stays charged with oil.\n\nHow Heat Affects Wicking:\n. Since oil behaves differently as temperature rises, as the device warms, viscosity drops and flow increases. Hardware that is well designed. enables wicking to keep pace with heat, which helps to prevent dry hits and clogging from start to finish. Smoothe Bar’s oil formulation is tested specifically for variables like viscosity to make sure each hit is working hand-in-hand with the ceramic coil.\n\nConcluding Thoughts:\nAll in all, proper wicking depends on the balance between oil formulation, heat, and hardware design. When these elements align, vapor stays smooth, flavor holds true, and performance remains consistent. At Smoothie Bar, we design with intent so every pull feels just right.\n\nWhat is the deciding factor that makes a vape feel “just right” to you?\n\n#Smoothiebar #smoothiEDU #CannabisEducation #VapeScience #WhatsYourBlend', 'hashtags': '#Smoothiebar #blend2 #CannabisEducation #whatsyourblend', 'status': 'Draft', 'media': ['images/SmoothiEdu_Proper_Wicking_Whil_0_8c51b1ca02b6.png', 'images/SmoothiEdu_Proper_Wicking_Whil_1_5938489c904a.png', 'images/SmoothiEdu_Proper_Wicking_Whil_2_cce8094420e3.png', 'images/SmoothiEdu_Proper_Wicking_Whil_3_4af51e7311c9.png', 'images/SmoothiEdu_Proper_Wicking_Whil_4_19e2ca74ebd1.png', 'images/SmoothiEdu_Proper_Wicking_Whil_5_86ff5e42fc0b.png'], 'isVideo': False, 'videoUrl': ''}, {'index': 8, 'title': 'Will It Blend:\nLava Cake x Sour Diesel', 'type': 'post', 'date': '12/30', 'time': '10:00am', 'caption': 'LAVA CAKE × SOUR DIESEL:\xa0\nThis blend features a bold fusion where sweetness and citrus intertwine, creating a layered flavor profile that is unmistakable. Sour Diesel; a notoriously influential strain known for its pungent aroma delivers an uplifting, energetic effect and is famous for driving creative inspiration. On the other hand, Lava Cake is a product of modern cannabis genetics. It delivers a subtle sweetness with an aroma of vanilla, mint, and chocolate. These two strains are representative of the polarity and evolution of cannabis culture by combining modern cannabis genetics with a cultural significance that few strains are able to boast.\n\nTHE BACKSTORY:\nLava Cake has gained recognition for its dessert like sweetness and smooth, mellow effects. At the same time, Sour Diesel shines through with its distinct sharpness, zesty profile and cerebral effects. If you’ve ever done consumer research on cannabis products, then probably heard the name Sour Diesel. It is a strain that carries a legacy; its nose curling aroma has defined an era in Cannabis culture and is a known favorite of many musical artists. .\xa0\n\nFLAVOR PROFILE:\nThis is a heavenly blend that combines the undertones of cocoa and vanilla cream with a sour zest. This duo may sound like a bold contrast of flavors, and it certainly is. With an intentionally provocative, yet dynamic flavor that coats your palate, this is a blend that will push your taste buds to their limit. An experience akin to indulging in a thick slice of rich chocolate cake, with a hint of lemon zest…be prepared for a flavor sensation that will have you begging for more!.\n\nWILL IT BLEND?\nAs we’ve already explained, these two strains are quite polar in their nature. Together, however, they form a symbiotic relationship that delivers the perfect mix of sweet and sour. While Lava Cake provides the decadent foundation, Sour Diesel brings the citrus gassy undertones. The outcome of combining these two strains is a complementary blend where sweet cake and sour gas work together in perfect harmony.\n\nCULTURE CHECK:\nMaybe the blend is starting to hit, but all that talk about cake made me hungry! What are your go-to munchies after a sesh? Let us know your pick below!', 'hashtags': '#WillItBlend', 'status': 'Draft', 'media': ['images/Will_It_Blend_Lava_Cake_x_Sour_0_2661e40d8aa1.png', 'images/Will_It_Blend_Lava_Cake_x_Sour_1_9ca703f74b86.png', 'images/Will_It_Blend_Lava_Cake_x_Sour_2_88426d8436b9.png', 'images/Will_It_Blend_Lava_Cake_x_Sour_3_ac4be47f2287.png'], 'isVideo': False, 'videoUrl': ''}];
+        
+        function openGridPost(index) {
+            const post = gridPosts[index];
+            const modal = document.getElementById('ig-post-modal');
+            const content = document.getElementById('ig-modal-content');
+            
+            let mediaHtml;
+            if (post.isVideo && post.videoUrl) {
+                mediaHtml = `<div class="ig-modal-video">
+                    <video controls autoplay muted playsinline>
+                        <source src="${post.videoUrl}" type="video/mp4">
+                    </video>
+                </div>`;
+            } else if (post.media && post.media.length > 0) {
+                mediaHtml = `<img class="ig-modal-image" src="${post.media[0]}" alt="${post.title}">`;
+            } else {
+                mediaHtml = '<div class="ig-modal-no-media">No media</div>';
+            }
+            
+            content.innerHTML = `
+                <div class="ig-modal-media">${mediaHtml}</div>
+                <div class="ig-modal-details">
+                    <div class="ig-modal-header">
+                        <h3>${post.title}</h3>
+                        <span class="type-badge type-${post.type.toLowerCase()}">${post.type}</span>
+                    </div>
+                    <div class="ig-modal-meta">${post.date} ${post.time ? '• ' + post.time : ''}</div>
+                    <div class="ig-modal-caption">${post.caption || 'No caption'}</div>
+                    <div class="ig-modal-hashtags">${post.hashtags || ''}</div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeGridPost() {
+            const modal = document.getElementById('ig-post-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Stop any playing videos
+            const video = modal.querySelector('video');
+            if (video) video.pause();
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeGridPost();
+        });
+        
+        // Generate video thumbnails
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.ig-video-thumb').forEach(thumb => {
+                const videoUrl = thumb.dataset.videoUrl;
+                const canvas = thumb.querySelector('.ig-thumb-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const video = document.createElement('video');
+                video.crossOrigin = 'anonymous';
+                video.muted = true;
+                video.preload = 'metadata';
+                
+                video.addEventListener('loadeddata', () => {
+                    video.currentTime = 0.5; // Seek to 0.5 seconds for thumbnail
+                });
+                
+                video.addEventListener('seeked', () => {
+                    // Draw frame to canvas
+                    const size = Math.min(video.videoWidth, video.videoHeight);
+                    const sx = (video.videoWidth - size) / 2;
+                    const sy = (video.videoHeight - size) / 2;
+                    ctx.drawImage(video, sx, sy, size, size, 0, 0, 300, 300);
+                    
+                    // Show canvas, hide loading
+                    canvas.style.opacity = '1';
+                    thumb.querySelector('.ig-thumb-loading').style.display = 'none';
+                });
+                
+                video.addEventListener('error', () => {
+                    // Keep showing the play icon on error
+                    thumb.classList.add('ig-thumb-error');
+                });
+                
+                video.src = videoUrl;
+            });
+        });
+    </script>
             </div>
             
             <script>

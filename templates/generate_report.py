@@ -25,6 +25,93 @@ DOWNLOAD_IMAGES = True  # Set to False to use Dropbox URLs instead
 IMAGE_FOLDER = "images"  # Subfolder for downloaded images
 DOWNLOADED_IMAGES = {}  # Cache: url -> local_path
 
+# Video thumbnail extraction
+def extract_video_thumbnail(video_url, output_path, frame_time=0.5):
+    """
+    Download a video and extract a thumbnail frame.
+    Uses imageio with bundled ffmpeg.
+    
+    Args:
+        video_url: URL to video file (Dropbox, etc.)
+        output_path: Path to save the thumbnail image
+        frame_time: Time in seconds to extract frame from (default 0.5s)
+    
+    Returns:
+        True if successful, False otherwise
+    """
+    import tempfile
+    try:
+        import imageio.v3 as iio
+        from PIL import Image
+        
+        # Get direct video URL
+        direct_url = get_direct_video_url(video_url)
+        
+        print(f"   🎬 Extracting thumbnail...", end=" ", flush=True)
+        
+        # Download video to temp file first (needed for seeking)
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Accept': '*/*',
+        }
+        
+        request = urllib.request.Request(direct_url, headers=headers)
+        
+        with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as tmp_file:
+            tmp_path = tmp_file.name
+            with urllib.request.urlopen(request, timeout=60, context=ctx) as response:
+                tmp_file.write(response.read())
+        
+        try:
+            # Read video metadata to get duration
+            meta = iio.immeta(tmp_path, plugin='pyav')
+            duration = meta.get('duration', 1.0)
+            
+            # Calculate frame to extract (0.5s or 10% into video, whichever is smaller)
+            target_time = min(frame_time, duration * 0.1)
+            fps = meta.get('fps', 30)
+            target_frame = int(target_time * fps)
+            
+            # Read the specific frame
+            frame = iio.imread(tmp_path, index=target_frame, plugin='pyav')
+            
+            # Convert to PIL for processing
+            img = Image.fromarray(frame)
+            
+            # Crop to square (center crop)
+            width, height = img.size
+            size = min(width, height)
+            left = (width - size) // 2
+            top = (height - size) // 2
+            img = img.crop((left, top, left + size, top + size))
+            
+            # Resize to reasonable thumbnail size
+            img = img.resize((600, 600), Image.Resampling.LANCZOS)
+            
+            # Save as JPEG
+            img.save(output_path, 'JPEG', quality=85)
+            
+            print(f"✓")
+            return True
+            
+        finally:
+            # Clean up temp file
+            try:
+                os.unlink(tmp_path)
+            except:
+                pass
+                
+    except ImportError:
+        print(f"⚠️ imageio not installed - using placeholder")
+        return False
+    except Exception as e:
+        print(f"❌ {str(e)[:40]}")
+        return False
+
 def download_image(url, output_dir, index=0, post_title=""):
     """
     Download an image from URL and save to local images folder.
@@ -136,6 +223,9 @@ def download_all_images(posts, stories, output_dir):
     total_images = 0
     downloaded = 0
     
+    # Video extensions for detection
+    video_extensions = [".mov", ".mp4", ".webm", ".avi", ".mkv", ".m4v"]
+    
     # Process posts
     for post in posts:
         media_field = post.get("MediaURL", "")
@@ -145,13 +235,49 @@ def download_all_images(posts, stories, output_dir):
         title = post.get("Title", "")
         urls = parse_media_urls_raw(media_field)  # Get raw URLs without conversion
         
+        # Check if this is a video post
+        is_video = any(ext in media_field.lower() for ext in video_extensions)
+        
         new_urls = []
         for i, url in enumerate(urls):
             total_images += 1
-            local_path = download_image(url, output_dir, i, title)
-            if not local_path.startswith("http"):
-                downloaded += 1
-            new_urls.append(local_path)
+            
+            # For videos, try to extract a thumbnail
+            if is_video and i == 0:  # Only for first URL (the video)
+                # Generate thumbnail filename
+                url_hash = hashlib.md5(url.encode()).hexdigest()[:12]
+                safe_title = re.sub(r'\s+', '_', title)
+                safe_title = re.sub(r'[<>:"/\\|?*]', '', safe_title)
+                safe_title = re.sub(r'[^\w\-]', '', safe_title)
+                safe_title = re.sub(r'_+', '_', safe_title)[:30].strip('_')
+                thumb_filename = f"{safe_title}_thumb_{url_hash}.jpg" if safe_title else f"thumb_{url_hash}.jpg"
+                thumb_path = os.path.join(output_dir, IMAGE_FOLDER, thumb_filename)
+                thumb_relative = f"{IMAGE_FOLDER}/{thumb_filename}"
+                
+                # Create images dir
+                os.makedirs(os.path.join(output_dir, IMAGE_FOLDER), exist_ok=True)
+                
+                # Try to extract thumbnail if not already exists
+                if os.path.exists(thumb_path):
+                    print(f"   📹 Video thumbnail exists: {thumb_filename}")
+                    new_urls.append(thumb_relative)
+                    downloaded += 1
+                    post["_video_thumbnail"] = thumb_relative
+                elif extract_video_thumbnail(url, thumb_path):
+                    new_urls.append(thumb_relative)
+                    downloaded += 1
+                    post["_video_thumbnail"] = thumb_relative
+                else:
+                    # Fall back to URL if thumbnail extraction fails
+                    local_path = download_image(url, output_dir, i, title)
+                    if not local_path.startswith("http"):
+                        downloaded += 1
+                    new_urls.append(local_path)
+            else:
+                local_path = download_image(url, output_dir, i, title)
+                if not local_path.startswith("http"):
+                    downloaded += 1
+                new_urls.append(local_path)
         
         # Update post with local paths
         post["_local_media_urls"] = new_urls
@@ -1137,6 +1263,49 @@ def generate_html(config, posts, stories, interactions):
             .section-collapsible[open] .section-header {{ margin-bottom: 24px; }}
             .section-title {{ font-size: 28px; }}
         }}
+        
+        /* Instagram Grid Preview Styles */
+        .ig-grid-container {{ padding: 20px 0; }}
+        .ig-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 900px; margin: 0 auto; }}
+        .ig-grid-item {{ position: relative; aspect-ratio: 1; cursor: pointer; overflow: hidden; background: #1A1A1A; }}
+        .ig-grid-item:hover .ig-grid-overlay {{ opacity: 1; }}
+        .ig-grid-thumb {{ width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }}
+        .ig-grid-item:hover .ig-grid-thumb {{ transform: scale(1.05); }}
+        .ig-video-thumb {{ position: relative; width: 100%; height: 100%; background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); }}
+        .ig-thumb-loading {{ position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--accent-warm); }}
+        .ig-thumb-canvas {{ width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s ease; }}
+        .ig-thumb-error .ig-thumb-loading {{ display: flex; }}
+        .ig-no-media {{ display: flex; align-items: center; justify-content: center; background: var(--bg-primary); color: var(--text-muted); font-size: 12px; }}
+        .ig-type-icon {{ position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)); }}
+        .ig-grid-overlay {{ position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; padding: 12px; text-align: center; }}
+        .ig-grid-title {{ color: #fff; font-size: 13px; font-weight: 600; margin-bottom: 4px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
+        .ig-grid-date {{ color: rgba(255,255,255,0.7); font-size: 11px; }}
+        
+        /* Instagram Grid Modal */
+        .ig-modal {{ position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }}
+        .ig-modal.active {{ opacity: 1; visibility: visible; }}
+        .ig-modal-close {{ position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; }}
+        .ig-modal-close:hover {{ background: rgba(255,255,255,0.2); }}
+        .ig-modal-content {{ display: flex; max-width: 1000px; max-height: 90vh; width: 90%; background: var(--bg-secondary); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }}
+        .ig-modal-media {{ flex: 1; min-width: 0; background: #000; display: flex; align-items: center; justify-content: center; }}
+        .ig-modal-image {{ max-width: 100%; max-height: 80vh; object-fit: contain; }}
+        .ig-modal-video {{ width: 100%; height: 100%; }}
+        .ig-modal-video video {{ width: 100%; height: 100%; max-height: 80vh; object-fit: contain; }}
+        .ig-modal-no-media {{ color: var(--text-muted); padding: 40px; }}
+        .ig-modal-details {{ width: 340px; flex-shrink: 0; padding: 24px; overflow-y: auto; max-height: 80vh; }}
+        .ig-modal-header {{ display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }}
+        .ig-modal-header h3 {{ font-size: 18px; font-weight: 600; margin: 0; line-height: 1.3; }}
+        .ig-modal-meta {{ font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }}
+        .ig-modal-caption {{ font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; white-space: pre-line; }}
+        .ig-modal-hashtags {{ font-size: 13px; color: var(--accent-warm); }}
+        
+        @media (max-width: 768px) {{
+            .ig-grid {{ gap: 2px; }}
+            .ig-modal-content {{ flex-direction: column; max-height: 95vh; }}
+            .ig-modal-media {{ max-height: 50vh; }}
+            .ig-modal-details {{ width: 100%; max-height: 45vh; }}
+            .ig-type-icon {{ width: 16px; height: 16px; top: 4px; right: 4px; }}
+        }}
     </style>
 </head>
 <body>
@@ -1280,6 +1449,7 @@ def generate_html(config, posts, stories, interactions):
             <div class="view-toggle">
                 <button class="view-toggle-btn active" onclick="showDraftsView('type')">By Type</button>
                 <button class="view-toggle-btn" onclick="showDraftsView('week')">By Week</button>
+                <button class="view-toggle-btn" onclick="showDraftsView('grid')">Grid Preview</button>
             </div>
             
             <div id="drafts-by-type" class="drafts-view">
@@ -1331,6 +1501,10 @@ def generate_html(config, posts, stories, interactions):
             
             <div id="drafts-by-week" class="drafts-view" style="display: none;">
                 {render_posts_by_week_carousel(posts, month, year)}
+            </div>
+            
+            <div id="drafts-by-grid" class="drafts-view" style="display: none;">
+                {render_instagram_grid(posts, year)}
             </div>
             
             <script>
@@ -2247,6 +2421,189 @@ def render_stories_by_week(stories, month, year):
         </div>'''
     
     return weeks_html
+
+
+def render_instagram_grid(posts, year):
+    """
+    Render an Instagram-style 3-column grid preview.
+    Posts are ordered by schedule date, with video thumbnails generated via JavaScript.
+    """
+    if not posts:
+        return '<div class="empty-state">No posts to display</div>'
+    
+    # Sort posts by date
+    sorted_posts = sorted(posts, key=lambda p: convert_date_to_sortable(p.get("PostDate", ""), year))
+    
+    grid_items = []
+    for i, post in enumerate(sorted_posts):
+        post_type = post.get("Type", "post").lower()
+        title = post.get("Title", "Untitled")
+        post_date = post.get("PostDate", "")
+        
+        # Get media URL
+        media_field = post.get("MediaURL", "")
+        media_urls = parse_media_urls(media_field, post)
+        
+        # Check if this is a video
+        video_extensions = [".mov", ".mp4", ".webm", ".avi", ".mkv", ".m4v"]
+        is_video = any(ext in media_field.lower() for ext in video_extensions) or post_type == "reel"
+        
+        if media_urls:
+            first_url = media_urls[0]
+            if is_video:
+                # Use extracted video thumbnail if available, otherwise show play icon
+                video_thumb = post.get("_video_thumbnail")
+                if video_thumb:
+                    # Use the extracted thumbnail image
+                    thumbnail_html = f'''<div class="ig-grid-thumb" style="position: relative;">
+                        <img src="{video_thumb}" alt="{title}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:rgba(0,0,0,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </div>
+                    </div>'''
+                else:
+                    # Fallback: show play icon placeholder
+                    thumbnail_html = '''<div class="ig-grid-thumb ig-no-media" style="background:linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C4A484" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3" fill="#C4A484"/></svg>
+                    </div>'''
+            else:
+                # Image thumbnail
+                thumbnail_html = f'<img class="ig-grid-thumb" src="{first_url}" alt="{title}" loading="lazy">'
+        else:
+            thumbnail_html = '<div class="ig-grid-thumb ig-no-media"><span>No media</span></div>'
+        
+        # Type indicator icon
+        if post_type == "reel":
+            type_icon = '<svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M12 2.5v6.25l3.75-3.75 1.5 1.5L12 11.75 6.75 6.5l1.5-1.5L12 8.75V2.5zM10 14.5v5h4v-5h-4zm-8 0v5h4v-5H2zm16 0v5h4v-5h-4z"/></svg>'
+        elif len(media_urls) > 1:
+            type_icon = '<svg class="ig-type-icon" viewBox="0 0 24 24" fill="white"><path d="M8 4h8v2H8V4zm0 14h8v2H8v-2zM4 8h2v8H4V8zm14 0h2v8h-2V8z"/></svg>'
+        else:
+            type_icon = ''
+        
+        grid_items.append(f'''<div class="ig-grid-item" data-post-index="{i}" onclick="openGridPost({i})">
+            {thumbnail_html}
+            {type_icon}
+            <div class="ig-grid-overlay">
+                <div class="ig-grid-title">{title}</div>
+                <div class="ig-grid-date">{post_date}</div>
+            </div>
+        </div>''')
+    
+    return f'''<div class="ig-grid-container">
+        <div class="ig-grid">
+            {"".join(grid_items)}
+        </div>
+    </div>
+    
+    <!-- Modal for viewing full post -->
+    <div id="ig-post-modal" class="ig-modal" onclick="if(event.target===this)closeGridPost()">
+        <button class="ig-modal-close" onclick="closeGridPost()">&times;</button>
+        <div class="ig-modal-content" id="ig-modal-content"></div>
+    </div>
+    
+    <script>
+        // Store post data for modal
+        const gridPosts = {repr([{
+            'index': i,
+            'title': p.get('Title', ''),
+            'type': p.get('Type', 'post'),
+            'date': p.get('PostDate', ''),
+            'time': p.get('Time', ''),
+            'caption': p.get('Caption', ''),
+            'hashtags': p.get('Hashtags', ''),
+            'status': p.get('Status', 'Draft'),
+            'media': parse_media_urls(p.get('MediaURL', ''), p),
+            'isVideo': any(ext in p.get('MediaURL', '').lower() for ext in ['.mov', '.mp4', '.webm', '.avi', '.mkv', '.m4v']) or p.get('Type', '').lower() == 'reel',
+            'videoUrl': get_direct_video_url(p.get('MediaURL', '')) if any(ext in p.get('MediaURL', '').lower() for ext in ['.mov', '.mp4', '.webm', '.avi', '.mkv', '.m4v']) else ''
+        } for i, p in enumerate(sorted_posts)])};
+        
+        function openGridPost(index) {{
+            const post = gridPosts[index];
+            const modal = document.getElementById('ig-post-modal');
+            const content = document.getElementById('ig-modal-content');
+            
+            let mediaHtml;
+            if (post.isVideo && post.videoUrl) {{
+                mediaHtml = `<div class="ig-modal-video">
+                    <video controls autoplay muted playsinline>
+                        <source src="${{post.videoUrl}}" type="video/mp4">
+                    </video>
+                </div>`;
+            }} else if (post.media && post.media.length > 0) {{
+                mediaHtml = `<img class="ig-modal-image" src="${{post.media[0]}}" alt="${{post.title}}">`;
+            }} else {{
+                mediaHtml = '<div class="ig-modal-no-media">No media</div>';
+            }}
+            
+            content.innerHTML = `
+                <div class="ig-modal-media">${{mediaHtml}}</div>
+                <div class="ig-modal-details">
+                    <div class="ig-modal-header">
+                        <h3>${{post.title}}</h3>
+                        <span class="type-badge type-${{post.type.toLowerCase()}}">${{post.type}}</span>
+                    </div>
+                    <div class="ig-modal-meta">${{post.date}} ${{post.time ? '• ' + post.time : ''}}</div>
+                    <div class="ig-modal-caption">${{post.caption || 'No caption'}}</div>
+                    <div class="ig-modal-hashtags">${{post.hashtags || ''}}</div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }}
+        
+        function closeGridPost() {{
+            const modal = document.getElementById('ig-post-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Stop any playing videos
+            const video = modal.querySelector('video');
+            if (video) video.pause();
+        }}
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {{
+            if (e.key === 'Escape') closeGridPost();
+        }});
+        
+        // Generate video thumbnails
+        document.addEventListener('DOMContentLoaded', () => {{
+            document.querySelectorAll('.ig-video-thumb').forEach(thumb => {{
+                const videoUrl = thumb.dataset.videoUrl;
+                const canvas = thumb.querySelector('.ig-thumb-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const video = document.createElement('video');
+                video.crossOrigin = 'anonymous';
+                video.muted = true;
+                video.preload = 'metadata';
+                
+                video.addEventListener('loadeddata', () => {{
+                    video.currentTime = 0.5; // Seek to 0.5 seconds for thumbnail
+                }});
+                
+                video.addEventListener('seeked', () => {{
+                    // Draw frame to canvas
+                    const size = Math.min(video.videoWidth, video.videoHeight);
+                    const sx = (video.videoWidth - size) / 2;
+                    const sy = (video.videoHeight - size) / 2;
+                    ctx.drawImage(video, sx, sy, size, size, 0, 0, 300, 300);
+                    
+                    // Show canvas, hide loading
+                    canvas.style.opacity = '1';
+                    thumb.querySelector('.ig-thumb-loading').style.display = 'none';
+                }});
+                
+                video.addEventListener('error', () => {{
+                    // Keep showing the play icon on error
+                    thumb.classList.add('ig-thumb-error');
+                }});
+                
+                video.src = videoUrl;
+            }});
+        }});
+    </script>'''
 
 
 def convert_date_to_sortable(date_str, year=None):
