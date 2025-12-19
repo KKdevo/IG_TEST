@@ -54,8 +54,18 @@ def download_image(url, output_dir, index=0, post_title=""):
             ext = test_ext
             break
     
-    # Clean post title for filename
-    safe_title = re.sub(r'[^\w\s-]', '', post_title)[:30].strip().replace(' ', '_') if post_title else ""
+    # Clean post title for filename - handle newlines, tabs, and invalid characters
+    if post_title:
+        # Replace ALL whitespace (newlines, tabs, carriage returns, spaces) with underscore
+        safe_title = re.sub(r'\s+', '_', post_title)
+        # Remove Windows reserved characters: < > : " / \ | ? *
+        safe_title = re.sub(r'[<>:"/\\|?*]', '', safe_title)
+        # Keep only alphanumeric, underscore, hyphen
+        safe_title = re.sub(r'[^\w\-]', '', safe_title)
+        # Collapse multiple underscores and truncate
+        safe_title = re.sub(r'_+', '_', safe_title)[:30].strip('_')
+    else:
+        safe_title = ""
     filename = f"{safe_title}_{index}_{url_hash}{ext}" if safe_title else f"img_{index}_{url_hash}{ext}"
     local_path = os.path.join(images_dir, filename)
     relative_path = f"{IMAGE_FOLDER}/{filename}"
@@ -807,14 +817,18 @@ def generate_html(config, posts, stories, interactions):
         .posts-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 32px; margin-bottom: 48px; }}
         .post-card {{ background: var(--bg-secondary); border-radius: 20px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 8px 32px var(--shadow); transition: all 0.3s ease; }}
         .post-card:hover {{ transform: translateY(-4px); box-shadow: 0 4px 12px var(--shadow-md), 0 16px 48px var(--shadow-md); }}
-        .post-card-media {{ width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--border-light); }}
+        .post-card-media {{ width: 100%; aspect-ratio: 4/5; object-fit: contain; background: #1A1A1A; }}
         .post-card-media.video-container {{ position: relative; background: #000; }}
         .post-card-media iframe {{ width: 100%; height: 100%; border: none; }}
         .post-card-body {{ padding: 24px; }}
         .post-card-header {{ display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; gap: 12px; }}
         .post-card-title {{ font-size: 17px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }}
         .post-card-date {{ font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; }}
-        .post-card-caption {{ font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; }}
+        .post-card-caption {{ font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; white-space: pre-line; }}
+        .post-card-caption.truncated {{ display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line; }}
+        .post-card-caption.expanded {{ display: block; white-space: pre-line; }}
+        .caption-more {{ background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; margin-top: 4px; font-family: inherit; }}
+        .caption-more:hover {{ color: var(--text-primary); }}
         .post-card-hashtags {{ font-size: 13px; color: var(--accent-warm); font-weight: 500; }}
         .no-media {{ width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, var(--border-light) 0%, var(--border) 100%); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }}
         
@@ -852,10 +866,10 @@ def generate_html(config, posts, stories, interactions):
         .video-player-container.unmuted .video-mute-btn .mute-icon {{ display: none; }}
         
         /* Carousel Styles */
-        .carousel {{ position: relative; width: 100%; aspect-ratio: 1; background: var(--border-light); overflow: hidden; }}
+        .carousel {{ position: relative; width: 100%; aspect-ratio: 4/5; background: #1A1A1A; overflow: hidden; }}
         .carousel-container {{ display: flex; width: 100%; height: 100%; transition: transform 0.3s ease; }}
-        .carousel-slide {{ flex-shrink: 0; width: 100%; height: 100%; }}
-        .carousel-slide img {{ width: 100%; height: 100%; object-fit: cover; max-width: 100%; }}
+        .carousel-slide {{ flex-shrink: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }}
+        .carousel-slide img {{ width: 100%; height: 100%; object-fit: contain; max-width: 100%; }}
         .carousel-btn {{ position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.9); border: none; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }}
         .carousel:hover .carousel-btn {{ opacity: 1; }}
         .carousel-prev {{ left: 12px; }}
@@ -1081,11 +1095,25 @@ def generate_html(config, posts, stories, interactions):
             .day-date {{ width: auto; display: flex; gap: 8px; align-items: baseline; }}
         }}
         @media (max-width: 640px) {{
-            .calendar-day {{ min-height: 60px; }}
-            .calendar-day-number {{ font-size: 12px; }}
+            .calendar-grid {{ border-radius: 12px; }}
+            .calendar-day {{ min-height: 50px; padding: 6px 4px; }}
+            .calendar-day-number {{ font-size: 11px; margin-bottom: 4px; }}
+            .calendar-day-header {{ padding: 8px 4px; font-size: 9px; }}
             .calendar-post-indicator {{ display: none; }}
-            .calendar-day-posts {{ display: flex; flex-direction: row; gap: 2px; }}
-            .calendar-day-posts::after {{ content: attr(data-count); font-size: 10px; color: var(--text-muted); }}
+            .calendar-day-posts {{ display: flex; flex-direction: row; flex-wrap: wrap; gap: 2px; justify-content: center; align-items: center; }}
+            .calendar-day-icons {{ display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }}
+            .calendar-day-icon {{ width: 14px; height: 14px; border-radius: 3px; display: flex; align-items: center; justify-content: center; }}
+            .calendar-day-icon svg {{ width: 8px; height: 8px; }}
+            .calendar-day-icon.type-post {{ background: #F3F4F6; color: #374151; }}
+            .calendar-day-icon.type-reel {{ background: #FDF2F8; color: #BE185D; }}
+            .calendar-day-icon.type-story {{ background: #EDE9FE; color: #7C3AED; }}
+            .calendar-day-icon.type-highlight {{ background: #FEF3C7; color: #B45309; }}
+            .calendar-more-badge {{ font-size: 8px; color: var(--text-muted); padding: 1px 3px; background: var(--bg-primary); border-radius: 3px; }}
+            .calendar-legend {{ padding: 12px; gap: 12px; }}
+            .calendar-legend-item {{ font-size: 11px; }}
+            .calendar-legend-icon {{ width: 16px; height: 16px; }}
+            .calendar-header {{ margin-bottom: 16px; }}
+            .calendar-title {{ font-size: 22px; }}
             
             /* Mobile image fixes */
             .posts-grid {{ gap: 20px; }}
@@ -1328,51 +1356,11 @@ def generate_html(config, posts, stories, interactions):
                 <div class="section-header">
                     <div class="section-number">04</div>
                     <h2 class="section-title"><span class="collapse-icon"></span> Stories Schedule</h2>
-                    <p class="section-desc">Ephemeral content planned for the period.</p>
+                    <p class="section-desc">Ephemeral content planned for the period - organized by week.</p>
                 </div>
             </summary>
             <div class="section-content">
-            <div class="table-controls">
-                <div class="search-box">
-                    <input type="text" id="stories-search" placeholder="Search stories..." onkeyup="filterTable('stories-table', this.value)">
-                </div>
-                <span class="sort-info">Click column headers to sort</span>
-            </div>
-            <div class="table-wrapper">
-                <table id="stories-table">
-                    <thead>
-                        <tr>
-                            <th class="sortable" onclick="sortTable('stories-table', 0)">Title</th>
-                            <th class="sortable" onclick="sortTable('stories-table', 1)">Date</th>
-                            <th class="sortable" onclick="sortTable('stories-table', 2)">Time</th>
-                            <th>Interactive Elements</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {"".join(f'''<tr>
-                            <td><strong>{s.get("Title", "")}</strong></td>
-                            <td data-sort="{convert_date_to_sortable(s.get("PostDate", ""))}">{s.get("PostDate", "")}</td>
-                            <td data-sort="{convert_time_to_24hr(s.get("Time", ""))}">{s.get("Time", "")}</td>
-                            <td>{s.get("InteractiveElements", "")}</td>
-                            <td>{s.get("Notes", "")}</td>
-                        </tr>''' for s in stories) if stories else '<tr><td colspan="5" class="empty-state">No stories scheduled</td></tr>'}
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="type-section-header" style="margin-top: 48px;">
-                <div class="type-section-title">Story Assets</div>
-            </div>
-            <div class="stories-strip">
-                {"".join(f'''<div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="{get_direct_image_url(s.get("MediaURL", ""))}" alt="{s.get("Title", "")}" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">{s.get("Title", "")}</div>
-                    <div class="story-date">{s.get("PostDate", "")}</div>
-                </div>''' for s in stories if s.get("MediaURL")) or '<div class="empty-state" style="width: 100%;">No story assets uploaded</div>'}
-            </div>
+                {render_stories_by_week(stories, month, year)}
             </div>
         </details>
 
@@ -1616,6 +1604,40 @@ def generate_html(config, posts, stories, interactions):
                 }});
             }});
         }});
+        
+        // Caption expand/collapse (Instagram-style "more" button)
+        function toggleCaption(btn) {{
+            const wrapper = btn.closest('.caption-wrapper');
+            const caption = wrapper.querySelector('.post-card-caption');
+            const isExpanded = caption.classList.contains('expanded');
+            
+            if (isExpanded) {{
+                caption.classList.remove('expanded');
+                caption.classList.add('truncated');
+                btn.textContent = 'more';
+            }} else {{
+                caption.classList.remove('truncated');
+                caption.classList.add('expanded');
+                btn.textContent = 'less';
+            }}
+        }}
+        
+        // Initialize "more" buttons - only show if caption is truncated
+        document.addEventListener('DOMContentLoaded', () => {{
+            document.querySelectorAll('.caption-wrapper').forEach(wrapper => {{
+                const caption = wrapper.querySelector('.post-card-caption');
+                const btn = wrapper.querySelector('.caption-more');
+                if (!caption || !btn) return;
+                
+                // Check if text is actually truncated (scrollHeight > clientHeight)
+                // Need a small delay for layout calculation
+                setTimeout(() => {{
+                    if (caption.scrollHeight > caption.clientHeight + 2) {{
+                        btn.style.display = 'inline';
+                    }}
+                }}, 100);
+            }});
+        }});
     </script>
 </body>
 </html>'''
@@ -1624,6 +1646,10 @@ def generate_html(config, posts, stories, interactions):
 
 def render_post_card(post, index):
     """Render a single post card with carousel support for multiple images."""
+    # Clean title for use in alt attributes (remove newlines which break HTML on mobile)
+    post_title_clean = post.get("Title", "").replace('\n', ' ').replace('\r', ' ').strip()
+    post_title_clean = ' '.join(post_title_clean.split())  # Collapse multiple spaces
+    
     media_field = post.get("MediaURL", "")
     
     # Check for video first - includes YouTube, Vimeo, AND video file extensions
@@ -1682,9 +1708,9 @@ def render_post_card(post, index):
         media_urls = parse_media_urls(media_field, post)
         
         if len(media_urls) > 1:
-            # Carousel with multiple images - add referrerpolicy for mobile Dropbox support
+            # Carousel with multiple images - use cleaned title for alt attribute
             slides_html = ''.join(f'''<div class="carousel-slide" data-index="{i}">
-                <img src="{url}" alt="{post.get("Title", "")} - Image {i+1}" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\\'no-media\\'>Image not available</div>'">
+                <img src="{url}" alt="{post_title_clean} - Image {i+1}" onerror="this.parentElement.innerHTML='<div class=\\'no-media\\'>Image not available</div>'">
             </div>''' for i, url in enumerate(media_urls))
             
             dots_html = ''.join(f'<span class="carousel-dot{" active" if i == 0 else ""}" data-index="{i}" onclick="goToSlide(this, {i})"></span>' for i in range(len(media_urls)))
@@ -1702,7 +1728,7 @@ def render_post_card(post, index):
             </div>'''
         elif len(media_urls) == 1:
             # Single image - add referrerpolicy for better mobile Dropbox support
-            media_html = f'<img class="post-card-media" src="{media_urls[0]}" alt="{post.get("Title", "")}" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.outerHTML=\'<div class=\\\'no-media\\\'>Image not available</div>\'">'
+            media_html = f'<img class="post-card-media" src="{media_urls[0]}" alt="{post.get("Title", "")}" onerror="this.outerHTML=\'<div class=\\\'no-media\\\'>Image not available</div>\'">'
         else:
             media_html = '<div class="no-media">No media uploaded</div>'
     
@@ -1719,7 +1745,10 @@ def render_post_card(post, index):
                 <span class="type-badge type-{post.get("Type", "post").lower()}">{post.get("Type", "post")}</span>
             </div>
             {f'<div class="post-card-date">{date_display}</div>' if date_display else ''}
-            <p class="post-card-caption">{post.get("Caption", "No caption provided")}</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="{post.get("Caption", "No caption provided").replace('"', '&quot;')}">{post.get("Caption", "No caption provided")}</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">{post.get("Hashtags", "")}</div>
         </div>
     </div>'''
@@ -1795,6 +1824,14 @@ def render_monthly_calendar(posts, stories, month, year):
     day_headers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     headers_html = ''.join(f'<div class="calendar-day-header">{d}</div>' for d in day_headers)
     
+    # SVG icons for mobile view (small versions)
+    icon_svgs = {
+        'post': '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg>',
+        'reel': '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>',
+        'story': '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>',
+        'highlight': '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9" fill="currentColor"/></svg>'
+    }
+    
     # Calendar days
     days_html = ''
     for day in cal.itermonthdays(year, month):
@@ -1805,6 +1842,7 @@ def render_monthly_calendar(posts, stories, month, year):
             today_class = ' today' if is_today else ''
             day_items = items_by_day.get(day, [])
             
+            # Desktop text indicators (hidden on mobile)
             posts_indicators = ''
             for p in day_items[:3]:  # Show max 3 indicators
                 post_type = p.get("Type", "post").lower()
@@ -1814,9 +1852,21 @@ def render_monthly_calendar(posts, stories, month, year):
             if len(day_items) > 3:
                 posts_indicators += f'<div class="calendar-post-indicator" style="background: var(--bg-primary); color: var(--text-muted);">+{len(day_items) - 3} more</div>'
             
+            # Mobile icon indicators (shown only on mobile via CSS)
+            mobile_icons = ''
+            if day_items:
+                mobile_icons = '<div class="calendar-day-icons">'
+                for p in day_items[:4]:  # Show max 4 icons on mobile
+                    post_type = p.get("Type", "post").lower()
+                    icon_svg = icon_svgs.get(post_type, icon_svgs['post'])
+                    mobile_icons += f'<div class="calendar-day-icon type-{post_type}">{icon_svg}</div>'
+                if len(day_items) > 4:
+                    mobile_icons += f'<span class="calendar-more-badge">+{len(day_items) - 4}</span>'
+                mobile_icons += '</div>'
+            
             days_html += f'''<div class="calendar-day{today_class}" data-day="{day}">
                 <div class="calendar-day-number">{day}</div>
-                <div class="calendar-day-posts" data-count="{len(day_items)}">{posts_indicators}</div>
+                <div class="calendar-day-posts" data-count="{len(day_items)}">{posts_indicators}{mobile_icons}</div>
             </div>'''
     
     return f'''<div class="calendar-legend">
@@ -2070,6 +2120,129 @@ def render_posts_by_week_carousel(posts, month, year):
                     {cards_html}
                 </div>
                 <button class="week-posts-nav next" onclick="scrollWeekCarousel(this, 1)">›</button>
+            </div>
+        </div>'''
+    
+    return weeks_html
+
+
+def render_story_card(story, index):
+    """Render a single story card with full-size image (like posts)."""
+    media_url = story.get("_local_media_url") or get_direct_image_url(story.get("MediaURL", ""))
+    title = story.get("Title", "Untitled")
+    post_date = story.get("PostDate", "")
+    post_time = story.get("Time", "")
+    interactive = story.get("InteractiveElements", "")
+    notes = story.get("Notes", "")
+    
+    date_display = f"{post_date} • {post_time}" if post_date and post_time else post_date or post_time or ""
+    
+    if media_url:
+        media_html = f'<img class="post-card-media" src="{media_url}" alt="{title}" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML=\'<div class=\\\'no-media\\\'>Image not available</div>\'">'
+    else:
+        media_html = '<div class="no-media" style="aspect-ratio: 9/16;">No media uploaded</div>'
+    
+    return f'''<div class="post-card" id="story-{index}">
+        {media_html}
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">{title}</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            {f'<div class="post-card-date">{date_display}</div>' if date_display else ''}
+            {f'<p class="post-card-caption">{interactive}</p>' if interactive else ''}
+            {f'<div class="post-card-hashtags" style="color: var(--text-muted);">{notes}</div>' if notes else ''}
+        </div>
+    </div>'''
+
+
+def render_stories_by_week(stories, month, year):
+    """Render stories grouped by week with carousel + table for each week."""
+    stories_by_day = {}
+    for i, story in enumerate(stories):
+        story_date = parse_date(story.get("PostDate", ""), year)
+        if story_date and story_date.month == month and story_date.year == year:
+            day = story_date.day
+            if day not in stories_by_day:
+                stories_by_day[day] = []
+            stories_by_day[day].append((i, story))
+    
+    for day in stories_by_day:
+        stories_by_day[day].sort(key=lambda x: x[1].get("Time", "99:99"))
+    
+    if not stories_by_day:
+        return '<div class="empty-state">No stories scheduled for this month</div>'
+    
+    cal = calendar.Calendar(firstweekday=6)
+    month_days = list(cal.itermonthdays(year, month))
+    day_names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    
+    weeks_html = ''
+    week_num = 0
+    
+    i = 0
+    while i < len(month_days):
+        week_days = month_days[i:i+7]
+        i += 7
+        
+        if all(d == 0 for d in week_days):
+            continue
+        
+        week_num += 1
+        valid_days = [d for d in week_days if d > 0]
+        if not valid_days:
+            continue
+        
+        start_day = min(valid_days)
+        end_day = max(valid_days)
+        month_abbr = calendar.month_abbr[month]
+        date_range = f"{month_abbr} {start_day}-{end_day}"
+        
+        week_stories = []
+        for day in week_days:
+            if day > 0 and day in stories_by_day:
+                for idx, story in stories_by_day[day]:
+                    week_stories.append((day, idx, story))
+        
+        if not week_stories:
+            continue
+        
+        week_stories.sort(key=lambda x: (x[0], x[2].get("Time", "99:99")))
+        
+        # Build story cards carousel
+        cards_html = ''.join(render_story_card(s, idx) for _, idx, s in week_stories)
+        
+        # Build table rows
+        table_rows = ''
+        for day, idx, s in week_stories:
+            day_idx = week_days.index(day) if day in week_days else 0
+            weekday = day_names[day_idx] if day_idx < 7 else ''
+            table_rows += f'''<tr>
+                <td><strong>{s.get("Title", "")}</strong></td>
+                <td>{weekday} {day}</td>
+                <td>{s.get("Time", "")}</td>
+                <td>{s.get("InteractiveElements", "")}</td>
+                <td>{s.get("Notes", "")}</td>
+            </tr>'''
+        
+        weeks_html += f'''<div class="week-posts-section">
+            <div class="week-posts-header">
+                <span class="week-posts-label">Week {week_num}</span>
+                <span class="week-posts-range">{date_range}</span>
+                <span class="week-posts-count">{len(week_stories)} stories</span>
+            </div>
+            <div class="week-posts-carousel-wrapper">
+                <button class="week-posts-nav prev" onclick="scrollWeekCarousel(this, -1)">‹</button>
+                <div class="week-posts-carousel">{cards_html}</div>
+                <button class="week-posts-nav next" onclick="scrollWeekCarousel(this, 1)">›</button>
+            </div>
+            <div class="table-wrapper" style="margin: 0; border-radius: 0 0 16px 16px; box-shadow: none;">
+                <table>
+                    <thead><tr>
+                        <th>Title</th><th>Date</th><th>Time</th><th>Interactive</th><th>Notes</th>
+                    </tr></thead>
+                    <tbody>{table_rows}</tbody>
+                </table>
             </div>
         </div>'''
     
