@@ -109,14 +109,18 @@
         .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 32px; margin-bottom: 48px; }
         .post-card { background: var(--bg-secondary); border-radius: 20px; overflow: hidden; box-shadow: 0 1px 3px var(--shadow), 0 8px 32px var(--shadow); transition: all 0.3s ease; }
         .post-card:hover { transform: translateY(-4px); box-shadow: 0 4px 12px var(--shadow-md), 0 16px 48px var(--shadow-md); }
-        .post-card-media { width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--border-light); }
+        .post-card-media { width: 100%; aspect-ratio: 4/5; object-fit: contain; background: #1A1A1A; }
         .post-card-media.video-container { position: relative; background: #000; }
         .post-card-media iframe { width: 100%; height: 100%; border: none; }
         .post-card-body { padding: 24px; }
         .post-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; gap: 12px; }
         .post-card-title { font-size: 17px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
         .post-card-date { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; }
-        .post-card-caption { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; }
+        .post-card-caption { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; white-space: pre-line; }
+        .post-card-caption.truncated { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line; }
+        .post-card-caption.expanded { display: block; white-space: pre-line; }
+        .caption-more { background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; margin-top: 4px; font-family: inherit; }
+        .caption-more:hover { color: var(--text-primary); }
         .post-card-hashtags { font-size: 13px; color: var(--accent-warm); font-weight: 500; }
         .no-media { width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, var(--border-light) 0%, var(--border) 100%); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }
         
@@ -154,10 +158,10 @@
         .video-player-container.unmuted .video-mute-btn .mute-icon { display: none; }
         
         /* Carousel Styles */
-        .carousel { position: relative; width: 100%; aspect-ratio: 1; background: var(--border-light); overflow: hidden; }
+        .carousel { position: relative; width: 100%; aspect-ratio: 4/5; background: #1A1A1A; overflow: hidden; }
         .carousel-container { display: flex; width: 100%; height: 100%; transition: transform 0.3s ease; }
-        .carousel-slide { flex-shrink: 0; width: 100%; height: 100%; }
-        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; max-width: 100%; }
+        .carousel-slide { flex-shrink: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+        .carousel-slide img { width: 100%; height: 100%; object-fit: contain; max-width: 100%; }
         .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.9); border: none; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
         .carousel:hover .carousel-btn { opacity: 1; }
         .carousel-prev { left: 12px; }
@@ -383,11 +387,25 @@
             .day-date { width: auto; display: flex; gap: 8px; align-items: baseline; }
         }
         @media (max-width: 640px) {
-            .calendar-day { min-height: 60px; }
-            .calendar-day-number { font-size: 12px; }
+            .calendar-grid { border-radius: 12px; }
+            .calendar-day { min-height: 50px; padding: 6px 4px; }
+            .calendar-day-number { font-size: 11px; margin-bottom: 4px; }
+            .calendar-day-header { padding: 8px 4px; font-size: 9px; }
             .calendar-post-indicator { display: none; }
-            .calendar-day-posts { display: flex; flex-direction: row; gap: 2px; }
-            .calendar-day-posts::after { content: attr(data-count); font-size: 10px; color: var(--text-muted); }
+            .calendar-day-posts { display: flex; flex-direction: row; flex-wrap: wrap; gap: 2px; justify-content: center; align-items: center; }
+            .calendar-day-icons { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }
+            .calendar-day-icon { width: 14px; height: 14px; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
+            .calendar-day-icon svg { width: 8px; height: 8px; }
+            .calendar-day-icon.type-post { background: #F3F4F6; color: #374151; }
+            .calendar-day-icon.type-reel { background: #FDF2F8; color: #BE185D; }
+            .calendar-day-icon.type-story { background: #EDE9FE; color: #7C3AED; }
+            .calendar-day-icon.type-highlight { background: #FEF3C7; color: #B45309; }
+            .calendar-more-badge { font-size: 8px; color: var(--text-muted); padding: 1px 3px; background: var(--bg-primary); border-radius: 3px; }
+            .calendar-legend { padding: 12px; gap: 12px; }
+            .calendar-legend-item { font-size: 11px; }
+            .calendar-legend-icon { width: 16px; height: 16px; }
+            .calendar-header { margin-bottom: 16px; }
+            .calendar-title { font-size: 22px; }
             
             /* Mobile image fixes */
             .posts-grid { gap: 20px; }
@@ -439,7 +457,7 @@
             <img class="title-brand-image" src="Smoothie-Bar---Logo-Assets--Branding-Assets---11.21.25.png" alt="Smoothie Bar">
             <div class="title-decoration"></div>
             <header class="title-header">
-                <div class="title-date">Wednesday, December 17, 2025</div>
+                <div class="title-date">Thursday, December 18, 2025</div>
             </header>
             <div class="title-content">
                 <div class="title-eyebrow">Social Media Strategy</div>
@@ -548,63 +566,63 @@
                 <div class="calendar-day-posts" data-count="0"></div>
             </div><div class="calendar-day" data-day="13">
                 <div class="calendar-day-number">13</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Educational</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Educational</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="14">
                 <div class="calendar-day-number">14</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-reel">BLEND Society: The S</div><div class="calendar-post-indicator type-story">Behind Scenes</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-reel">BLEND Society: The S</div><div class="calendar-post-indicator type-story">Behind Scenes</div><div class="calendar-day-icons"><div class="calendar-day-icon type-reel"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg></div><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="15">
                 <div class="calendar-day-number">15</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Render Spotlight</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Render Spotlight</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="16">
                 <div class="calendar-day-number">16</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Product Demo</div></div>
-            </div><div class="calendar-day today" data-day="17">
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Product Demo</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
+            </div><div class="calendar-day" data-day="17">
                 <div class="calendar-day-number">17</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Pier Photoshoot #2</div><div class="calendar-post-indicator type-story">Poll</div></div>
-            </div><div class="calendar-day" data-day="18">
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Pier Photoshoot #2</div><div class="calendar-post-indicator type-story">Poll</div><div class="calendar-day-icons"><div class="calendar-day-icon type-post"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
+            </div><div class="calendar-day today" data-day="18">
                 <div class="calendar-day-number">18</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Fun Facts</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Fun Facts</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="19">
                 <div class="calendar-day-number">19</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend: Sour </div><div class="calendar-post-indicator type-story">Q&A</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend: Sour </div><div class="calendar-post-indicator type-story">Q&A</div><div class="calendar-day-icons"><div class="calendar-day-icon type-post"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="20">
                 <div class="calendar-day-number">20</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Render Spotlight</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Render Spotlight</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="21">
                 <div class="calendar-day-number">21</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-reel">BLEND Society: The B</div><div class="calendar-post-indicator type-story">Lifestyle</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-reel">BLEND Society: The B</div><div class="calendar-post-indicator type-story">Lifestyle</div><div class="calendar-day-icons"><div class="calendar-day-icon type-reel"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg></div><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="22">
                 <div class="calendar-day-number">22</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Educational</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Educational</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="23">
                 <div class="calendar-day-number">23</div>
                 <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">SmoothiEdu:
-Genetics</div><div class="calendar-post-indicator type-story">Poll</div></div>
+Vaporize</div><div class="calendar-post-indicator type-story">Poll</div><div class="calendar-day-icons"><div class="calendar-day-icon type-post"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="24">
                 <div class="calendar-day-number">24</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Xmas Lifestyle</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Xmas Lifestyle</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="25">
                 <div class="calendar-day-number">25</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Xmas Post</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Xmas Post</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="26">
                 <div class="calendar-day-number">26</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend: Cherr</div><div class="calendar-post-indicator type-story">Behind Scenes</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend: Cherr</div><div class="calendar-post-indicator type-story">Behind Scenes</div><div class="calendar-day-icons"><div class="calendar-day-icon type-post"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="27">
                 <div class="calendar-day-number">27</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Pier Photoshoot #3</div><div class="calendar-post-indicator type-story">Q&A</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Pier Photoshoot #3</div><div class="calendar-post-indicator type-story">Q&A</div><div class="calendar-day-icons"><div class="calendar-day-icon type-post"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="28">
                 <div class="calendar-day-number">28</div>
-                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">SmoothiEdu – The Che</div><div class="calendar-post-indicator type-story">Poll</div></div>
+                <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">SmoothiEdu – Proper </div><div class="calendar-post-indicator type-story">Poll</div><div class="calendar-day-icons"><div class="calendar-day-icon type-post"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="29">
                 <div class="calendar-day-number">29</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Educational</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">Educational</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="30">
                 <div class="calendar-day-number">30</div>
                 <div class="calendar-day-posts" data-count="2"><div class="calendar-post-indicator type-post">Will It Blend:
-Lava </div><div class="calendar-post-indicator type-story">Poll</div></div>
+Lava </div><div class="calendar-post-indicator type-story">Poll</div><div class="calendar-day-icons"><div class="calendar-day-icon type-post"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day" data-day="31">
                 <div class="calendar-day-number">31</div>
-                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">New Year Lifestyle</div></div>
+                <div class="calendar-day-posts" data-count="1"><div class="calendar-post-indicator type-story">New Year Lifestyle</div><div class="calendar-day-icons"><div class="calendar-day-icon type-story"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg></div></div></div>
             </div><div class="calendar-day other-month"></div><div class="calendar-day other-month"></div><div class="calendar-day other-month"></div>
     </div>
             </div>
@@ -779,7 +797,7 @@ Lava </div><div class="calendar-post-indicator type-story">Poll</div></div>
                 <div class="week-detail-day">Tue 23</div>
                 <div class="week-detail-time">1:00pm</div>
                 <div class="week-detail-title">SmoothiEdu:
-Genetics & Flavor</div>
+Vaporizer Safety & Build Quality</div>
                 <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
                 <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
                 <div class="week-detail-notes"></div>
@@ -858,7 +876,7 @@ Genetics & Flavor</div>
                 <div class="week-detail-row">
                 <div class="week-detail-day">Sun 28</div>
                 <div class="week-detail-time">5:00pm</div>
-                <div class="week-detail-title">SmoothiEdu – The Chemistry of the Cure</div>
+                <div class="week-detail-title">SmoothiEdu – Proper Wicking While Vaping</div>
                 <div class="week-detail-type"><span class="type-badge type-post">post</span></div>
                 <div class="week-detail-status"><span class="status status-draft">Draft</span></div>
                 <div class="week-detail-notes"></div>
@@ -977,7 +995,7 @@ Lava Cake x Sour Diesel</div>
                             <td style="max-width: 180px; font-size: 13px;"></td>
                         </tr><tr>
                             <td><strong>SmoothiEdu:
-Genetics & Flavor</strong></td>
+Vaporizer Safety & Build Quality</strong></td>
                             <td data-sort="2025-12-23">12/23</td>
                             <td data-sort="13:00">1:00pm</td>
                             <td data-sort="post"><span class="type-badge type-post">post</span></td>
@@ -1001,7 +1019,7 @@ Genetics & Flavor</strong></td>
                             <td style="max-width: 200px; font-size: 13px; color: var(--text-muted);">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</td>
                             <td style="max-width: 180px; font-size: 13px;"></td>
                         </tr><tr>
-                            <td><strong>SmoothiEdu – The Chemistry of the Cure</strong></td>
+                            <td><strong>SmoothiEdu – Proper Wicking While Vaping</strong></td>
                             <td data-sort="2025-12-28">12/28</td>
                             <td data-sort="17:00">5:00pm</td>
                             <td data-sort="post"><span class="type-badge type-post">post</span></td>
@@ -1054,11 +1072,11 @@ Lava Cake x Sour Diesel</strong></td>
         <div class="carousel" data-card="1">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
-                <img src="images/Pier_Photoshoot_2_0_33b696fd34af.jpg" alt="Pier Photoshoot #2 - Image 1" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_2_0_33b696fd34af.jpg" alt="Pier Photoshoot #2 - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="1">
-                <img src="images/Pier_Photoshoot_2_1_09ac29be2604.jpg" alt="Pier Photoshoot #2 - Image 2" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_2_1_09ac29be2604.jpg" alt="Pier Photoshoot #2 - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="2">
-                <img src="images/Pier_Photoshoot_2_2_8bf3a101c724.jpg" alt="Pier Photoshoot #2 - Image 3" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_2_2_8bf3a101c724.jpg" alt="Pier Photoshoot #2 - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div>
                 </div>
                 <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
@@ -1074,20 +1092,23 @@ Lava Cake x Sour Diesel</strong></td>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/17 • 10:00am</div>
-            <p class="post-card-caption">We don't pass judgement, just the vape. 💯</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="We don't pass judgement, just the vape. 💯">We don't pass judgement, just the vape. 💯</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
     </div><div class="post-card" id="post-2">
         <div class="carousel" data-card="2">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
-                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_0_f5ed44ae0b20.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 1" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_0_f5ed44ae0b20.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="1">
-                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_1_eb1eaf725a3e.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 2" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_1_eb1eaf725a3e.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="2">
-                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_2_d6d809595e79.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 3" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_2_d6d809595e79.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="3">
-                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_3_b4a12b43963e.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 4" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_3_b4a12b43963e.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div>
                 </div>
                 <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
@@ -1103,34 +1124,128 @@ Lava Cake x Sour Diesel</strong></td>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/19 • 11:00am</div>
-            <p class="post-card-caption">Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in a way that feels intentional...because it is.</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in an intentional way.
+
+THE BACKSTORY:
+
+Sour Lemon OG traces back to California’s love for sharp, sativa-leaning citrus strains. It became known for its clean lemon-zest bite and uplifting aromatic profile. Pineapple Jack, a descendant of Jack Herer lineages, brought a tropical twist to the citrus category of pineapple sweetness, energetic aroma, and a signature sunny character. Both strains represent California’s citrus wave era, where growers experimented with high-terpene, fruit-forward genetics.
+
+FLAVOR PROFILE:
+
+Sour Lemon OG brings zesty lemon peel, tangy acidity, and a crisp herbal edge. Pineapple Jack adds pineapple sweetness, bright tropical aromatics, and that signature Jack-style “electric” freshness. Together, you get a layered citrus experience: the sharpness of lemon lifted by a sweeter tropical top note. 
+
+WILL IT BLEND?:
+This combo works because the strains complement rather than compete. Sour Lemon OG brings the tart backbone, while Pineapple Jack has a sweet, aromatic finish. The contrast between tangy lemon and juicy pineapple creates a dynamic profile with each pull.
+CULTURE CHECK: 
+ LA has a long history with citrus-heavy strains; what’s your favorite lemon or tropical strain that actually surprised you?
+Hashtags:
+#WillItBlend #SourLemonOG #PineappleJack #SmoothieBar #DualTank #CannabisEducation #FlavorSpotlight #StrainPairing #CitrusStrains #LACannabis">Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in an intentional way.
+
+THE BACKSTORY:
+
+Sour Lemon OG traces back to California’s love for sharp, sativa-leaning citrus strains. It became known for its clean lemon-zest bite and uplifting aromatic profile. Pineapple Jack, a descendant of Jack Herer lineages, brought a tropical twist to the citrus category of pineapple sweetness, energetic aroma, and a signature sunny character. Both strains represent California’s citrus wave era, where growers experimented with high-terpene, fruit-forward genetics.
+
+FLAVOR PROFILE:
+
+Sour Lemon OG brings zesty lemon peel, tangy acidity, and a crisp herbal edge. Pineapple Jack adds pineapple sweetness, bright tropical aromatics, and that signature Jack-style “electric” freshness. Together, you get a layered citrus experience: the sharpness of lemon lifted by a sweeter tropical top note. 
+
+WILL IT BLEND?:
+This combo works because the strains complement rather than compete. Sour Lemon OG brings the tart backbone, while Pineapple Jack has a sweet, aromatic finish. The contrast between tangy lemon and juicy pineapple creates a dynamic profile with each pull.
+CULTURE CHECK: 
+ LA has a long history with citrus-heavy strains; what’s your favorite lemon or tropical strain that actually surprised you?
+Hashtags:
+#WillItBlend #SourLemonOG #PineappleJack #SmoothieBar #DualTank #CannabisEducation #FlavorSpotlight #StrainPairing #CitrusStrains #LACannabis</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</div>
         </div>
     </div><div class="post-card" id="post-4">
-        <div class="no-media">No media uploaded</div>
+        <div class="carousel" data-card="4">
+                <div class="carousel-container">
+                    <div class="carousel-slide" data-index="0">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_0_f04f93179179.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="1">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_1_7753a96532ba.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="2">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_2_353a7b1a4111.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="3">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_3_d9c2da759f04.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="4">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_4_a989ae3daf98.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 5" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="5">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_5_d28aaae7d68a.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 6" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="6">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_6_861886edd988.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 7" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="7">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_7_4c7bc8d2c4f9.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 8" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div>
+                </div>
+                <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
+                <button class="carousel-btn carousel-next" onclick="nextSlide(this)">›</button>
+                <div class="carousel-indicators">
+                    <span class="carousel-dot active" data-index="0" onclick="goToSlide(this, 0)"></span><span class="carousel-dot" data-index="1" onclick="goToSlide(this, 1)"></span><span class="carousel-dot" data-index="2" onclick="goToSlide(this, 2)"></span><span class="carousel-dot" data-index="3" onclick="goToSlide(this, 3)"></span><span class="carousel-dot" data-index="4" onclick="goToSlide(this, 4)"></span><span class="carousel-dot" data-index="5" onclick="goToSlide(this, 5)"></span><span class="carousel-dot" data-index="6" onclick="goToSlide(this, 6)"></span><span class="carousel-dot" data-index="7" onclick="goToSlide(this, 7)"></span>
+                    <span class="carousel-counter">1 / 8</span>
+                </div>
+            </div>
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">SmoothiEdu:
-Genetics & Flavor</span>
+Vaporizer Safety & Build Quality</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/23 • 1:00pm</div>
-            <p class="post-card-caption">Flavor runs in the family. 🍓🍋
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="The quality of a vape is about how it’s made just as much as how well it hits. Every component, such as the wick, coil, tank, and gaskets, interacts differently with heat and cannabis compounds. Educating yourself on what’s inside your vape will help you vape safely, so you can savor the flavor. 
+Vaporizer Materials Intro 
+A vaporizer device might seem simple at first, especially with the convenience of all-in-one technology, but vaporizers are made from several different materials. The best vaporizer technology differentiates itself, in part, by the quality and usage of these materials, so let’s go through the basics. 
 
-What you taste starts with genetics. Let’s break down how lineage influences your experience. 🌱</p>
+Glass: Glass is often used in vaporizer tanks. Some feature a non-reactive containment which helps preserve flavor and prevent chemical leaching. Although they do have a high tolerance to heat they can be extremely fragile, and breaks can be dangerous and messy
+Ceramic: Ceramic is often seen in wicks and coils. Due to its ability to distribute and retain heat evenly , it can offer smooth vapor while protecting terpene profiles. Ceramic strikes a balance between flavor preservation, smoothness, and durability. These characteristics make it a popular choice for high-end cartridges focused on taste and experience. Smoothie Bar coils are made from high-quality, treated ceramic.
+Stainless Steel: Stainless steel is a durable material that is resistant to corrosion. It is a common material used for coil housing, posts, and structural parts. However, metal can heat unevenly, potentially detracting from the experience, and some alloys have the tendency to corrode more when overheated, corrosion can lead to leeching and other inconsistencies in the product quality.
+Plastics: Plastics are used in tanks, gaskets and mouthpieces. High-grade, food-safe plastics preserve and withstand heat quite well. Cheaper plastics on the other hand, are prone to degradation which can affect both taste and safety.
+Safety Regulations:
+All vape cartridges in the United States must include overcharge or overcurrent protection. It functions as a safety mechanism that prevents excessive voltage. This helps to lessen the chances of damaging the battery or coil, and also helps to reduce the risk of incidents such as overheating or device failure. Smoothie Bar cartridges are an example of a product which includes this mandatory feature, as we are dedicated to ensuring your sessions are safe and reliable.
+Concluding Thoughts
+At Smoothie Bar, we consider consumer safety a top priority. We carefully select cartridge materials to balance durability, and flavor integrity designed with safety in mind. We test the materials that go into our vapes through rigorous trials to ensure their performance. We manufacture a high quality product with the finest materials design to ensure  you get the cleanest, most consistent experience possible.
+Have you noticed differences in durability or flavor based on the materials used in your cartridges? Tell us your experience! 
+#Smoothiebar #CannabisEducation #CartridgeSafety #MaterialMatters #smoothiEDU #WhatsYourBlend">The quality of a vape is about how it’s made just as much as how well it hits. Every component, such as the wick, coil, tank, and gaskets, interacts differently with heat and cannabis compounds. Educating yourself on what’s inside your vape will help you vape safely, so you can savor the flavor. 
+Vaporizer Materials Intro 
+A vaporizer device might seem simple at first, especially with the convenience of all-in-one technology, but vaporizers are made from several different materials. The best vaporizer technology differentiates itself, in part, by the quality and usage of these materials, so let’s go through the basics. 
+
+Glass: Glass is often used in vaporizer tanks. Some feature a non-reactive containment which helps preserve flavor and prevent chemical leaching. Although they do have a high tolerance to heat they can be extremely fragile, and breaks can be dangerous and messy
+Ceramic: Ceramic is often seen in wicks and coils. Due to its ability to distribute and retain heat evenly , it can offer smooth vapor while protecting terpene profiles. Ceramic strikes a balance between flavor preservation, smoothness, and durability. These characteristics make it a popular choice for high-end cartridges focused on taste and experience. Smoothie Bar coils are made from high-quality, treated ceramic.
+Stainless Steel: Stainless steel is a durable material that is resistant to corrosion. It is a common material used for coil housing, posts, and structural parts. However, metal can heat unevenly, potentially detracting from the experience, and some alloys have the tendency to corrode more when overheated, corrosion can lead to leeching and other inconsistencies in the product quality.
+Plastics: Plastics are used in tanks, gaskets and mouthpieces. High-grade, food-safe plastics preserve and withstand heat quite well. Cheaper plastics on the other hand, are prone to degradation which can affect both taste and safety.
+Safety Regulations:
+All vape cartridges in the United States must include overcharge or overcurrent protection. It functions as a safety mechanism that prevents excessive voltage. This helps to lessen the chances of damaging the battery or coil, and also helps to reduce the risk of incidents such as overheating or device failure. Smoothie Bar cartridges are an example of a product which includes this mandatory feature, as we are dedicated to ensuring your sessions are safe and reliable.
+Concluding Thoughts
+At Smoothie Bar, we consider consumer safety a top priority. We carefully select cartridge materials to balance durability, and flavor integrity designed with safety in mind. We test the materials that go into our vapes through rigorous trials to ensure their performance. We manufacture a high quality product with the finest materials design to ensure  you get the cleanest, most consistent experience possible.
+Have you noticed differences in durability or flavor based on the materials used in your cartridges? Tell us your experience! 
+#Smoothiebar #CannabisEducation #CartridgeSafety #MaterialMatters #smoothiEDU #WhatsYourBlend</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-5">
         <div class="carousel" data-card="5">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
-                <img src="images/Will_It_Blend_Cherry_Limeade_x_0_51016133d5a4.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 1" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Cherry_Limeade_x_0_51016133d5a4.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="1">
-                <img src="images/Will_It_Blend_Cherry_Limeade_x_1_3e19840870ce.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 2" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Cherry_Limeade_x_1_3e19840870ce.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="2">
-                <img src="images/Will_It_Blend_Cherry_Limeade_x_2_7d42841a5573.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 3" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Cherry_Limeade_x_2_7d42841a5573.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="3">
-                <img src="images/Will_It_Blend_Cherry_Limeade_x_3_1704cef8f28d.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 4" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Cherry_Limeade_x_3_1704cef8f28d.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div>
                 </div>
                 <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
@@ -1146,18 +1261,45 @@ What you taste starts with genetics. Let’s break down how lineage influences y
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/26 • 12:00pm</div>
-            <p class="post-card-caption">Cherry fizz meets soda clarity. Built to feel bubbly, refreshing, and layered.</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="Cherry fizz meets soda clarity. This one’s exactly what it sounds like: a soda-shop mashup that’s citrus-bright and cherry-juicy at the same time. Built to feel bubbly, refreshing, and layered.
+
+THE BACKSTORY:
+Cherry Limeade came up in craft circles for that obvious tart-cherry top note balanced with lime tension. Zeven Up is engineered to pop, with its serene lemon-lime aromatics that finish with a snap.
+
+FLAVOR PROFILE:
+The cherry undertone gives the blend a body and sweetness, while Zeven Up supplies carbonation-like clarity that keeps the profile lively. Imagine a chilled cherry-lime soda where the cherry sits center stage and the citrus keeps it from feeling sticky.
+
+WILL IT BLEND?
+Cherry Limeade provides the juicy backbone while Zeven Up brings the crisp, soda-pop lift. The contrast is cooperative, not combative; rich cherry meets a clean soda pop, finished with lively sparkle.
+
+CULTURE CHECK:
+If this blend were a drink, what would it be? A cherry-lime spritzer? A street-cart refresher? Drop your pick below!">Cherry fizz meets soda clarity. This one’s exactly what it sounds like: a soda-shop mashup that’s citrus-bright and cherry-juicy at the same time. Built to feel bubbly, refreshing, and layered.
+
+THE BACKSTORY:
+Cherry Limeade came up in craft circles for that obvious tart-cherry top note balanced with lime tension. Zeven Up is engineered to pop, with its serene lemon-lime aromatics that finish with a snap.
+
+FLAVOR PROFILE:
+The cherry undertone gives the blend a body and sweetness, while Zeven Up supplies carbonation-like clarity that keeps the profile lively. Imagine a chilled cherry-lime soda where the cherry sits center stage and the citrus keeps it from feeling sticky.
+
+WILL IT BLEND?
+Cherry Limeade provides the juicy backbone while Zeven Up brings the crisp, soda-pop lift. The contrast is cooperative, not combative; rich cherry meets a clean soda pop, finished with lively sparkle.
+
+CULTURE CHECK:
+If this blend were a drink, what would it be? A cherry-lime spritzer? A street-cart refresher? Drop your pick below!</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#WillItBlend</div>
         </div>
     </div><div class="post-card" id="post-6">
         <div class="carousel" data-card="6">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
-                <img src="images/Pier_Photoshoot_3_0_d119271222f8.png" alt="Pier Photoshoot #3 - Image 1" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_3_0_d119271222f8.png" alt="Pier Photoshoot #3 - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="1">
-                <img src="images/Pier_Photoshoot_3_1_32a66a0d5c00.png" alt="Pier Photoshoot #3 - Image 2" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_3_1_32a66a0d5c00.png" alt="Pier Photoshoot #3 - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="2">
-                <img src="images/Pier_Photoshoot_3_2_745ad8345d6e.png" alt="Pier Photoshoot #3 - Image 3" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_3_2_745ad8345d6e.png" alt="Pier Photoshoot #3 - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div>
                 </div>
                 <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
@@ -1173,18 +1315,52 @@ What you taste starts with genetics. Let’s break down how lineage influences y
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/27 • 11:00am</div>
-            <p class="post-card-caption">The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊">The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
     </div><div class="post-card" id="post-7">
         <div class="no-media">No media uploaded</div>
         <div class="post-card-body">
             <div class="post-card-header">
-                <span class="post-card-title">SmoothiEdu – The Chemistry of the Cure</span>
+                <span class="post-card-title">SmoothiEdu – Proper Wicking While Vaping</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/28 • 5:00pm</div>
-            <p class="post-card-caption">Moisture content, time, and temperature; what’s really happening on a chemical level?</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="Wicking: The Flow Factor
+The ideal vapor experience starts long before the first pull. Some of the most common issues we see with vaporizers are due to poor wicking, including clogging, harsh hits, or uneven vapor. In this SmoothiEDU breakdown, we’re going to discuss how wicking, alongside oil formulation, terpenes, and heat work together to produce a smooth experience.
+
+From Tank to Coil:
+The term “wicking” refers to the process that draws oil from the tank into the coil. When flow is properly balanced, the coil stays evenly saturated, delivering smooth vapor and clean flavor. However, if that balance is disrupted, coils can overheat, terpenes may degrade, and overall performance can suffer. Some brands utilize diluents in order to help oil flow more consistently, but this is not a consistent or health-conscious way of maintaining a properly wicked coil.Specifically, overused or poorly matched diluents can affect flavor and vapor consistency, making balance especially important. An important factor is also keeping the device upright and fully charged whenever possible. Maximizing the exposure of the oil to the tank will maximize your vaping experience. When fully charged, the vaporizer delivers the optimal level of power to the coil, making sure the wicking continues consistently while hit, and the coil stays charged with oil.
+
+How Heat Affects Wicking:
+. Since oil behaves differently as temperature rises, as the device warms, viscosity drops and flow increases. Hardware that is well designed. enables wicking to keep pace with heat, which helps to prevent dry hits and clogging from start to finish. Smoothe Bar’s oil formulation is tested specifically for variables like viscosity to make sure each hit is working hand-in-hand with the ceramic coil.
+
+Concluding Thoughts:
+All in all, proper wicking depends on the balance between oil formulation, heat, and hardware design. When these elements align, vapor stays smooth, flavor holds true, and performance remains consistent. At Smoothie Bar, we design with intent so every pull feels just right.
+
+What is the deciding factor that makes a vape feel “just right” to you?
+
+#Smoothiebar #smoothiEDU #CannabisEducation #VapeScience #WhatsYourBlend">Wicking: The Flow Factor
+The ideal vapor experience starts long before the first pull. Some of the most common issues we see with vaporizers are due to poor wicking, including clogging, harsh hits, or uneven vapor. In this SmoothiEDU breakdown, we’re going to discuss how wicking, alongside oil formulation, terpenes, and heat work together to produce a smooth experience.
+
+From Tank to Coil:
+The term “wicking” refers to the process that draws oil from the tank into the coil. When flow is properly balanced, the coil stays evenly saturated, delivering smooth vapor and clean flavor. However, if that balance is disrupted, coils can overheat, terpenes may degrade, and overall performance can suffer. Some brands utilize diluents in order to help oil flow more consistently, but this is not a consistent or health-conscious way of maintaining a properly wicked coil.Specifically, overused or poorly matched diluents can affect flavor and vapor consistency, making balance especially important. An important factor is also keeping the device upright and fully charged whenever possible. Maximizing the exposure of the oil to the tank will maximize your vaping experience. When fully charged, the vaporizer delivers the optimal level of power to the coil, making sure the wicking continues consistently while hit, and the coil stays charged with oil.
+
+How Heat Affects Wicking:
+. Since oil behaves differently as temperature rises, as the device warms, viscosity drops and flow increases. Hardware that is well designed. enables wicking to keep pace with heat, which helps to prevent dry hits and clogging from start to finish. Smoothe Bar’s oil formulation is tested specifically for variables like viscosity to make sure each hit is working hand-in-hand with the ceramic coil.
+
+Concluding Thoughts:
+All in all, proper wicking depends on the balance between oil formulation, heat, and hardware design. When these elements align, vapor stays smooth, flavor holds true, and performance remains consistent. At Smoothie Bar, we design with intent so every pull feels just right.
+
+What is the deciding factor that makes a vape feel “just right” to you?
+
+#Smoothiebar #smoothiEDU #CannabisEducation #VapeScience #WhatsYourBlend</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-8">
@@ -1196,7 +1372,36 @@ Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/30 • 10:00am</div>
-            <p class="post-card-caption">Sweet, earthy cocoa meets citrus sharpness. A crossover that pushes the limits of contrast.</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="LAVA CAKE × SOUR DIESEL: 
+This blend features a bold fusion where sweetness and citrus intertwine, creating a layered flavor profile that is unmistakable. Sour Diesel; a notoriously influential strain known for its pungent aroma delivers an uplifting, energetic effect and is famous for driving creative inspiration. On the other hand, Lava Cake is a product of modern cannabis genetics. It delivers a subtle sweetness with an aroma of vanilla, mint, and chocolate. These two strains are representative of the polarity and evolution of cannabis culture by combining modern cannabis genetics with a cultural significance that few strains are able to boast.
+
+THE BACKSTORY:
+Lava Cake has gained recognition for its dessert like sweetness and smooth, mellow effects. At the same time, Sour Diesel shines through with its distinct sharpness, zesty profile and cerebral effects. If you’ve ever done consumer research on cannabis products, then probably heard the name Sour Diesel. It is a strain that carries a legacy; its nose curling aroma has defined an era in Cannabis culture and is a known favorite of many musical artists. . 
+
+FLAVOR PROFILE:
+This is a heavenly blend that combines the undertones of cocoa and vanilla cream with a sour zest. This duo may sound like a bold contrast of flavors, and it certainly is. With an intentionally provocative, yet dynamic flavor that coats your palate, this is a blend that will push your taste buds to their limit. An experience akin to indulging in a thick slice of rich chocolate cake, with a hint of lemon zest…be prepared for a flavor sensation that will have you begging for more!.
+
+WILL IT BLEND?
+As we’ve already explained, these two strains are quite polar in their nature. Together, however, they form a symbiotic relationship that delivers the perfect mix of sweet and sour. While Lava Cake provides the decadent foundation, Sour Diesel brings the citrus gassy undertones. The outcome of combining these two strains is a complementary blend where sweet cake and sour gas work together in perfect harmony.
+
+CULTURE CHECK:
+Maybe the blend is starting to hit, but all that talk about cake made me hungry! What are your go-to munchies after a sesh? Let us know your pick below!">LAVA CAKE × SOUR DIESEL: 
+This blend features a bold fusion where sweetness and citrus intertwine, creating a layered flavor profile that is unmistakable. Sour Diesel; a notoriously influential strain known for its pungent aroma delivers an uplifting, energetic effect and is famous for driving creative inspiration. On the other hand, Lava Cake is a product of modern cannabis genetics. It delivers a subtle sweetness with an aroma of vanilla, mint, and chocolate. These two strains are representative of the polarity and evolution of cannabis culture by combining modern cannabis genetics with a cultural significance that few strains are able to boast.
+
+THE BACKSTORY:
+Lava Cake has gained recognition for its dessert like sweetness and smooth, mellow effects. At the same time, Sour Diesel shines through with its distinct sharpness, zesty profile and cerebral effects. If you’ve ever done consumer research on cannabis products, then probably heard the name Sour Diesel. It is a strain that carries a legacy; its nose curling aroma has defined an era in Cannabis culture and is a known favorite of many musical artists. . 
+
+FLAVOR PROFILE:
+This is a heavenly blend that combines the undertones of cocoa and vanilla cream with a sour zest. This duo may sound like a bold contrast of flavors, and it certainly is. With an intentionally provocative, yet dynamic flavor that coats your palate, this is a blend that will push your taste buds to their limit. An experience akin to indulging in a thick slice of rich chocolate cake, with a hint of lemon zest…be prepared for a flavor sensation that will have you begging for more!.
+
+WILL IT BLEND?
+As we’ve already explained, these two strains are quite polar in their nature. Together, however, they form a symbiotic relationship that delivers the perfect mix of sweet and sour. While Lava Cake provides the decadent foundation, Sour Diesel brings the citrus gassy undertones. The outcome of combining these two strains is a complementary blend where sweet cake and sour gas work together in perfect harmony.
+
+CULTURE CHECK:
+Maybe the blend is starting to hit, but all that talk about cake made me hungry! What are your go-to munchies after a sesh? Let us know your pick below!</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#WillItBlend</div>
         </div>
     </div>
@@ -1244,7 +1449,10 @@ Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-reel">reel</span>
             </div>
             <div class="post-card-date">12/14 • 9:00am</div>
-            <p class="post-card-caption">Learning is a lifelong process, enjoy a blend while you do it!</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="Learning is a lifelong process, enjoy a blend while you do it!">Learning is a lifelong process, enjoy a blend while you do it!</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-3">
@@ -1277,7 +1485,10 @@ Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-reel">reel</span>
             </div>
             <div class="post-card-date">12/21 • 9:00am</div>
-            <p class="post-card-caption">The sky is the limit. Smoothie Bar will always take you higher!</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="The sky is the limit. Smoothie Bar will always take you higher!">The sky is the limit. Smoothie Bar will always take you higher!</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div>
@@ -1341,18 +1552,21 @@ Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-reel">reel</span>
             </div>
             <div class="post-card-date">12/14 • 9:00am</div>
-            <p class="post-card-caption">Learning is a lifelong process, enjoy a blend while you do it!</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="Learning is a lifelong process, enjoy a blend while you do it!">Learning is a lifelong process, enjoy a blend while you do it!</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-1">
         <div class="carousel" data-card="1">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
-                <img src="images/Pier_Photoshoot_2_0_33b696fd34af.jpg" alt="Pier Photoshoot #2 - Image 1" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_2_0_33b696fd34af.jpg" alt="Pier Photoshoot #2 - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="1">
-                <img src="images/Pier_Photoshoot_2_1_09ac29be2604.jpg" alt="Pier Photoshoot #2 - Image 2" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_2_1_09ac29be2604.jpg" alt="Pier Photoshoot #2 - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="2">
-                <img src="images/Pier_Photoshoot_2_2_8bf3a101c724.jpg" alt="Pier Photoshoot #2 - Image 3" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_2_2_8bf3a101c724.jpg" alt="Pier Photoshoot #2 - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div>
                 </div>
                 <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
@@ -1368,20 +1582,23 @@ Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/17 • 10:00am</div>
-            <p class="post-card-caption">We don't pass judgement, just the vape. 💯</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="We don't pass judgement, just the vape. 💯">We don't pass judgement, just the vape. 💯</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
     </div><div class="post-card" id="post-2">
         <div class="carousel" data-card="2">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
-                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_0_f5ed44ae0b20.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 1" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_0_f5ed44ae0b20.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="1">
-                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_1_eb1eaf725a3e.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 2" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_1_eb1eaf725a3e.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="2">
-                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_2_d6d809595e79.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 3" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_2_d6d809595e79.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="3">
-                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_3_b4a12b43963e.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 4" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Sour_Lemon_x_Pin_3_b4a12b43963e.png" alt="Will It Blend: Sour Lemon x Pineapple Jack - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div>
                 </div>
                 <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
@@ -1397,7 +1614,40 @@ Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/19 • 11:00am</div>
-            <p class="post-card-caption">Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in a way that feels intentional...because it is.</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in an intentional way.
+
+THE BACKSTORY:
+
+Sour Lemon OG traces back to California’s love for sharp, sativa-leaning citrus strains. It became known for its clean lemon-zest bite and uplifting aromatic profile. Pineapple Jack, a descendant of Jack Herer lineages, brought a tropical twist to the citrus category of pineapple sweetness, energetic aroma, and a signature sunny character. Both strains represent California’s citrus wave era, where growers experimented with high-terpene, fruit-forward genetics.
+
+FLAVOR PROFILE:
+
+Sour Lemon OG brings zesty lemon peel, tangy acidity, and a crisp herbal edge. Pineapple Jack adds pineapple sweetness, bright tropical aromatics, and that signature Jack-style “electric” freshness. Together, you get a layered citrus experience: the sharpness of lemon lifted by a sweeter tropical top note. 
+
+WILL IT BLEND?:
+This combo works because the strains complement rather than compete. Sour Lemon OG brings the tart backbone, while Pineapple Jack has a sweet, aromatic finish. The contrast between tangy lemon and juicy pineapple creates a dynamic profile with each pull.
+CULTURE CHECK: 
+ LA has a long history with citrus-heavy strains; what’s your favorite lemon or tropical strain that actually surprised you?
+Hashtags:
+#WillItBlend #SourLemonOG #PineappleJack #SmoothieBar #DualTank #CannabisEducation #FlavorSpotlight #StrainPairing #CitrusStrains #LACannabis">Sour Lemon OG × Pineapple Jack is one of those blends where the brightness, the tartness, and the tropical layers all intersect in an intentional way.
+
+THE BACKSTORY:
+
+Sour Lemon OG traces back to California’s love for sharp, sativa-leaning citrus strains. It became known for its clean lemon-zest bite and uplifting aromatic profile. Pineapple Jack, a descendant of Jack Herer lineages, brought a tropical twist to the citrus category of pineapple sweetness, energetic aroma, and a signature sunny character. Both strains represent California’s citrus wave era, where growers experimented with high-terpene, fruit-forward genetics.
+
+FLAVOR PROFILE:
+
+Sour Lemon OG brings zesty lemon peel, tangy acidity, and a crisp herbal edge. Pineapple Jack adds pineapple sweetness, bright tropical aromatics, and that signature Jack-style “electric” freshness. Together, you get a layered citrus experience: the sharpness of lemon lifted by a sweeter tropical top note. 
+
+WILL IT BLEND?:
+This combo works because the strains complement rather than compete. Sour Lemon OG brings the tart backbone, while Pineapple Jack has a sweet, aromatic finish. The contrast between tangy lemon and juicy pineapple creates a dynamic profile with each pull.
+CULTURE CHECK: 
+ LA has a long history with citrus-heavy strains; what’s your favorite lemon or tropical strain that actually surprised you?
+Hashtags:
+#WillItBlend #SourLemonOG #PineappleJack #SmoothieBar #DualTank #CannabisEducation #FlavorSpotlight #StrainPairing #CitrusStrains #LACannabis</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#WillItBlend #SmoothieBar #DualTank #CannabisBlends #LAcannabis #StrainPairing #FlavorSpotlight</div>
         </div>
     </div>
@@ -1443,34 +1693,98 @@ Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-reel">reel</span>
             </div>
             <div class="post-card-date">12/21 • 9:00am</div>
-            <p class="post-card-caption">The sky is the limit. Smoothie Bar will always take you higher!</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="The sky is the limit. Smoothie Bar will always take you higher!">The sky is the limit. Smoothie Bar will always take you higher!</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#smoothiebar #blend2 #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-4">
-        <div class="no-media">No media uploaded</div>
+        <div class="carousel" data-card="4">
+                <div class="carousel-container">
+                    <div class="carousel-slide" data-index="0">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_0_f04f93179179.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="1">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_1_7753a96532ba.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="2">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_2_353a7b1a4111.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="3">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_3_d9c2da759f04.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="4">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_4_a989ae3daf98.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 5" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="5">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_5_d28aaae7d68a.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 6" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="6">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_6_861886edd988.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 7" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div><div class="carousel-slide" data-index="7">
+                <img src="images/SmoothiEdu_Vaporizer_Safety_Bu_7_4c7bc8d2c4f9.png" alt="SmoothiEdu:
+Vaporizer Safety & Build Quality - Image 8" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+            </div>
+                </div>
+                <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
+                <button class="carousel-btn carousel-next" onclick="nextSlide(this)">›</button>
+                <div class="carousel-indicators">
+                    <span class="carousel-dot active" data-index="0" onclick="goToSlide(this, 0)"></span><span class="carousel-dot" data-index="1" onclick="goToSlide(this, 1)"></span><span class="carousel-dot" data-index="2" onclick="goToSlide(this, 2)"></span><span class="carousel-dot" data-index="3" onclick="goToSlide(this, 3)"></span><span class="carousel-dot" data-index="4" onclick="goToSlide(this, 4)"></span><span class="carousel-dot" data-index="5" onclick="goToSlide(this, 5)"></span><span class="carousel-dot" data-index="6" onclick="goToSlide(this, 6)"></span><span class="carousel-dot" data-index="7" onclick="goToSlide(this, 7)"></span>
+                    <span class="carousel-counter">1 / 8</span>
+                </div>
+            </div>
         <div class="post-card-body">
             <div class="post-card-header">
                 <span class="post-card-title">SmoothiEdu:
-Genetics & Flavor</span>
+Vaporizer Safety & Build Quality</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/23 • 1:00pm</div>
-            <p class="post-card-caption">Flavor runs in the family. 🍓🍋
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="The quality of a vape is about how it’s made just as much as how well it hits. Every component, such as the wick, coil, tank, and gaskets, interacts differently with heat and cannabis compounds. Educating yourself on what’s inside your vape will help you vape safely, so you can savor the flavor. 
+Vaporizer Materials Intro 
+A vaporizer device might seem simple at first, especially with the convenience of all-in-one technology, but vaporizers are made from several different materials. The best vaporizer technology differentiates itself, in part, by the quality and usage of these materials, so let’s go through the basics. 
 
-What you taste starts with genetics. Let’s break down how lineage influences your experience. 🌱</p>
+Glass: Glass is often used in vaporizer tanks. Some feature a non-reactive containment which helps preserve flavor and prevent chemical leaching. Although they do have a high tolerance to heat they can be extremely fragile, and breaks can be dangerous and messy
+Ceramic: Ceramic is often seen in wicks and coils. Due to its ability to distribute and retain heat evenly , it can offer smooth vapor while protecting terpene profiles. Ceramic strikes a balance between flavor preservation, smoothness, and durability. These characteristics make it a popular choice for high-end cartridges focused on taste and experience. Smoothie Bar coils are made from high-quality, treated ceramic.
+Stainless Steel: Stainless steel is a durable material that is resistant to corrosion. It is a common material used for coil housing, posts, and structural parts. However, metal can heat unevenly, potentially detracting from the experience, and some alloys have the tendency to corrode more when overheated, corrosion can lead to leeching and other inconsistencies in the product quality.
+Plastics: Plastics are used in tanks, gaskets and mouthpieces. High-grade, food-safe plastics preserve and withstand heat quite well. Cheaper plastics on the other hand, are prone to degradation which can affect both taste and safety.
+Safety Regulations:
+All vape cartridges in the United States must include overcharge or overcurrent protection. It functions as a safety mechanism that prevents excessive voltage. This helps to lessen the chances of damaging the battery or coil, and also helps to reduce the risk of incidents such as overheating or device failure. Smoothie Bar cartridges are an example of a product which includes this mandatory feature, as we are dedicated to ensuring your sessions are safe and reliable.
+Concluding Thoughts
+At Smoothie Bar, we consider consumer safety a top priority. We carefully select cartridge materials to balance durability, and flavor integrity designed with safety in mind. We test the materials that go into our vapes through rigorous trials to ensure their performance. We manufacture a high quality product with the finest materials design to ensure  you get the cleanest, most consistent experience possible.
+Have you noticed differences in durability or flavor based on the materials used in your cartridges? Tell us your experience! 
+#Smoothiebar #CannabisEducation #CartridgeSafety #MaterialMatters #smoothiEDU #WhatsYourBlend">The quality of a vape is about how it’s made just as much as how well it hits. Every component, such as the wick, coil, tank, and gaskets, interacts differently with heat and cannabis compounds. Educating yourself on what’s inside your vape will help you vape safely, so you can savor the flavor. 
+Vaporizer Materials Intro 
+A vaporizer device might seem simple at first, especially with the convenience of all-in-one technology, but vaporizers are made from several different materials. The best vaporizer technology differentiates itself, in part, by the quality and usage of these materials, so let’s go through the basics. 
+
+Glass: Glass is often used in vaporizer tanks. Some feature a non-reactive containment which helps preserve flavor and prevent chemical leaching. Although they do have a high tolerance to heat they can be extremely fragile, and breaks can be dangerous and messy
+Ceramic: Ceramic is often seen in wicks and coils. Due to its ability to distribute and retain heat evenly , it can offer smooth vapor while protecting terpene profiles. Ceramic strikes a balance between flavor preservation, smoothness, and durability. These characteristics make it a popular choice for high-end cartridges focused on taste and experience. Smoothie Bar coils are made from high-quality, treated ceramic.
+Stainless Steel: Stainless steel is a durable material that is resistant to corrosion. It is a common material used for coil housing, posts, and structural parts. However, metal can heat unevenly, potentially detracting from the experience, and some alloys have the tendency to corrode more when overheated, corrosion can lead to leeching and other inconsistencies in the product quality.
+Plastics: Plastics are used in tanks, gaskets and mouthpieces. High-grade, food-safe plastics preserve and withstand heat quite well. Cheaper plastics on the other hand, are prone to degradation which can affect both taste and safety.
+Safety Regulations:
+All vape cartridges in the United States must include overcharge or overcurrent protection. It functions as a safety mechanism that prevents excessive voltage. This helps to lessen the chances of damaging the battery or coil, and also helps to reduce the risk of incidents such as overheating or device failure. Smoothie Bar cartridges are an example of a product which includes this mandatory feature, as we are dedicated to ensuring your sessions are safe and reliable.
+Concluding Thoughts
+At Smoothie Bar, we consider consumer safety a top priority. We carefully select cartridge materials to balance durability, and flavor integrity designed with safety in mind. We test the materials that go into our vapes through rigorous trials to ensure their performance. We manufacture a high quality product with the finest materials design to ensure  you get the cleanest, most consistent experience possible.
+Have you noticed differences in durability or flavor based on the materials used in your cartridges? Tell us your experience! 
+#Smoothiebar #CannabisEducation #CartridgeSafety #MaterialMatters #smoothiEDU #WhatsYourBlend</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-5">
         <div class="carousel" data-card="5">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
-                <img src="images/Will_It_Blend_Cherry_Limeade_x_0_51016133d5a4.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 1" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Cherry_Limeade_x_0_51016133d5a4.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="1">
-                <img src="images/Will_It_Blend_Cherry_Limeade_x_1_3e19840870ce.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 2" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Cherry_Limeade_x_1_3e19840870ce.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="2">
-                <img src="images/Will_It_Blend_Cherry_Limeade_x_2_7d42841a5573.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 3" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Cherry_Limeade_x_2_7d42841a5573.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="3">
-                <img src="images/Will_It_Blend_Cherry_Limeade_x_3_1704cef8f28d.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 4" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Will_It_Blend_Cherry_Limeade_x_3_1704cef8f28d.png" alt="Will It Blend: Cherry Limeade x Zeven Up - Image 4" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div>
                 </div>
                 <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
@@ -1486,18 +1800,45 @@ What you taste starts with genetics. Let’s break down how lineage influences y
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/26 • 12:00pm</div>
-            <p class="post-card-caption">Cherry fizz meets soda clarity. Built to feel bubbly, refreshing, and layered.</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="Cherry fizz meets soda clarity. This one’s exactly what it sounds like: a soda-shop mashup that’s citrus-bright and cherry-juicy at the same time. Built to feel bubbly, refreshing, and layered.
+
+THE BACKSTORY:
+Cherry Limeade came up in craft circles for that obvious tart-cherry top note balanced with lime tension. Zeven Up is engineered to pop, with its serene lemon-lime aromatics that finish with a snap.
+
+FLAVOR PROFILE:
+The cherry undertone gives the blend a body and sweetness, while Zeven Up supplies carbonation-like clarity that keeps the profile lively. Imagine a chilled cherry-lime soda where the cherry sits center stage and the citrus keeps it from feeling sticky.
+
+WILL IT BLEND?
+Cherry Limeade provides the juicy backbone while Zeven Up brings the crisp, soda-pop lift. The contrast is cooperative, not combative; rich cherry meets a clean soda pop, finished with lively sparkle.
+
+CULTURE CHECK:
+If this blend were a drink, what would it be? A cherry-lime spritzer? A street-cart refresher? Drop your pick below!">Cherry fizz meets soda clarity. This one’s exactly what it sounds like: a soda-shop mashup that’s citrus-bright and cherry-juicy at the same time. Built to feel bubbly, refreshing, and layered.
+
+THE BACKSTORY:
+Cherry Limeade came up in craft circles for that obvious tart-cherry top note balanced with lime tension. Zeven Up is engineered to pop, with its serene lemon-lime aromatics that finish with a snap.
+
+FLAVOR PROFILE:
+The cherry undertone gives the blend a body and sweetness, while Zeven Up supplies carbonation-like clarity that keeps the profile lively. Imagine a chilled cherry-lime soda where the cherry sits center stage and the citrus keeps it from feeling sticky.
+
+WILL IT BLEND?
+Cherry Limeade provides the juicy backbone while Zeven Up brings the crisp, soda-pop lift. The contrast is cooperative, not combative; rich cherry meets a clean soda pop, finished with lively sparkle.
+
+CULTURE CHECK:
+If this blend were a drink, what would it be? A cherry-lime spritzer? A street-cart refresher? Drop your pick below!</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#WillItBlend</div>
         </div>
     </div><div class="post-card" id="post-6">
         <div class="carousel" data-card="6">
                 <div class="carousel-container">
                     <div class="carousel-slide" data-index="0">
-                <img src="images/Pier_Photoshoot_3_0_d119271222f8.png" alt="Pier Photoshoot #3 - Image 1" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_3_0_d119271222f8.png" alt="Pier Photoshoot #3 - Image 1" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="1">
-                <img src="images/Pier_Photoshoot_3_1_32a66a0d5c00.png" alt="Pier Photoshoot #3 - Image 2" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_3_1_32a66a0d5c00.png" alt="Pier Photoshoot #3 - Image 2" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div><div class="carousel-slide" data-index="2">
-                <img src="images/Pier_Photoshoot_3_2_745ad8345d6e.png" alt="Pier Photoshoot #3 - Image 3" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
+                <img src="images/Pier_Photoshoot_3_2_745ad8345d6e.png" alt="Pier Photoshoot #3 - Image 3" onerror="this.parentElement.innerHTML='<div class=\'no-media\'>Image not available</div>'">
             </div>
                 </div>
                 <button class="carousel-btn carousel-prev" onclick="prevSlide(this)">‹</button>
@@ -1513,7 +1854,10 @@ What you taste starts with genetics. Let’s break down how lineage influences y
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/27 • 11:00am</div>
-            <p class="post-card-caption">The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊">The sight of ocean waves, the sound of seagulls, and the taste of Smoothie Bar Blend. That's our idea of paradise! 👌 🌊🎡🌊</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#blend #smoothiebar #blend2 #whatsyourblend #santamonicapier</div>
         </div>
     </div>
@@ -1533,11 +1877,42 @@ What you taste starts with genetics. Let’s break down how lineage influences y
         <div class="no-media">No media uploaded</div>
         <div class="post-card-body">
             <div class="post-card-header">
-                <span class="post-card-title">SmoothiEdu – The Chemistry of the Cure</span>
+                <span class="post-card-title">SmoothiEdu – Proper Wicking While Vaping</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/28 • 5:00pm</div>
-            <p class="post-card-caption">Moisture content, time, and temperature; what’s really happening on a chemical level?</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="Wicking: The Flow Factor
+The ideal vapor experience starts long before the first pull. Some of the most common issues we see with vaporizers are due to poor wicking, including clogging, harsh hits, or uneven vapor. In this SmoothiEDU breakdown, we’re going to discuss how wicking, alongside oil formulation, terpenes, and heat work together to produce a smooth experience.
+
+From Tank to Coil:
+The term “wicking” refers to the process that draws oil from the tank into the coil. When flow is properly balanced, the coil stays evenly saturated, delivering smooth vapor and clean flavor. However, if that balance is disrupted, coils can overheat, terpenes may degrade, and overall performance can suffer. Some brands utilize diluents in order to help oil flow more consistently, but this is not a consistent or health-conscious way of maintaining a properly wicked coil.Specifically, overused or poorly matched diluents can affect flavor and vapor consistency, making balance especially important. An important factor is also keeping the device upright and fully charged whenever possible. Maximizing the exposure of the oil to the tank will maximize your vaping experience. When fully charged, the vaporizer delivers the optimal level of power to the coil, making sure the wicking continues consistently while hit, and the coil stays charged with oil.
+
+How Heat Affects Wicking:
+. Since oil behaves differently as temperature rises, as the device warms, viscosity drops and flow increases. Hardware that is well designed. enables wicking to keep pace with heat, which helps to prevent dry hits and clogging from start to finish. Smoothe Bar’s oil formulation is tested specifically for variables like viscosity to make sure each hit is working hand-in-hand with the ceramic coil.
+
+Concluding Thoughts:
+All in all, proper wicking depends on the balance between oil formulation, heat, and hardware design. When these elements align, vapor stays smooth, flavor holds true, and performance remains consistent. At Smoothie Bar, we design with intent so every pull feels just right.
+
+What is the deciding factor that makes a vape feel “just right” to you?
+
+#Smoothiebar #smoothiEDU #CannabisEducation #VapeScience #WhatsYourBlend">Wicking: The Flow Factor
+The ideal vapor experience starts long before the first pull. Some of the most common issues we see with vaporizers are due to poor wicking, including clogging, harsh hits, or uneven vapor. In this SmoothiEDU breakdown, we’re going to discuss how wicking, alongside oil formulation, terpenes, and heat work together to produce a smooth experience.
+
+From Tank to Coil:
+The term “wicking” refers to the process that draws oil from the tank into the coil. When flow is properly balanced, the coil stays evenly saturated, delivering smooth vapor and clean flavor. However, if that balance is disrupted, coils can overheat, terpenes may degrade, and overall performance can suffer. Some brands utilize diluents in order to help oil flow more consistently, but this is not a consistent or health-conscious way of maintaining a properly wicked coil.Specifically, overused or poorly matched diluents can affect flavor and vapor consistency, making balance especially important. An important factor is also keeping the device upright and fully charged whenever possible. Maximizing the exposure of the oil to the tank will maximize your vaping experience. When fully charged, the vaporizer delivers the optimal level of power to the coil, making sure the wicking continues consistently while hit, and the coil stays charged with oil.
+
+How Heat Affects Wicking:
+. Since oil behaves differently as temperature rises, as the device warms, viscosity drops and flow increases. Hardware that is well designed. enables wicking to keep pace with heat, which helps to prevent dry hits and clogging from start to finish. Smoothe Bar’s oil formulation is tested specifically for variables like viscosity to make sure each hit is working hand-in-hand with the ceramic coil.
+
+Concluding Thoughts:
+All in all, proper wicking depends on the balance between oil formulation, heat, and hardware design. When these elements align, vapor stays smooth, flavor holds true, and performance remains consistent. At Smoothie Bar, we design with intent so every pull feels just right.
+
+What is the deciding factor that makes a vape feel “just right” to you?
+
+#Smoothiebar #smoothiEDU #CannabisEducation #VapeScience #WhatsYourBlend</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#Smoothiebar #blend2 #CannabisEducation #whatsyourblend</div>
         </div>
     </div><div class="post-card" id="post-8">
@@ -1549,7 +1924,36 @@ Lava Cake x Sour Diesel</span>
                 <span class="type-badge type-post">post</span>
             </div>
             <div class="post-card-date">12/30 • 10:00am</div>
-            <p class="post-card-caption">Sweet, earthy cocoa meets citrus sharpness. A crossover that pushes the limits of contrast.</p>
+            <div class="caption-wrapper">
+                <p class="post-card-caption truncated" data-full-text="LAVA CAKE × SOUR DIESEL: 
+This blend features a bold fusion where sweetness and citrus intertwine, creating a layered flavor profile that is unmistakable. Sour Diesel; a notoriously influential strain known for its pungent aroma delivers an uplifting, energetic effect and is famous for driving creative inspiration. On the other hand, Lava Cake is a product of modern cannabis genetics. It delivers a subtle sweetness with an aroma of vanilla, mint, and chocolate. These two strains are representative of the polarity and evolution of cannabis culture by combining modern cannabis genetics with a cultural significance that few strains are able to boast.
+
+THE BACKSTORY:
+Lava Cake has gained recognition for its dessert like sweetness and smooth, mellow effects. At the same time, Sour Diesel shines through with its distinct sharpness, zesty profile and cerebral effects. If you’ve ever done consumer research on cannabis products, then probably heard the name Sour Diesel. It is a strain that carries a legacy; its nose curling aroma has defined an era in Cannabis culture and is a known favorite of many musical artists. . 
+
+FLAVOR PROFILE:
+This is a heavenly blend that combines the undertones of cocoa and vanilla cream with a sour zest. This duo may sound like a bold contrast of flavors, and it certainly is. With an intentionally provocative, yet dynamic flavor that coats your palate, this is a blend that will push your taste buds to their limit. An experience akin to indulging in a thick slice of rich chocolate cake, with a hint of lemon zest…be prepared for a flavor sensation that will have you begging for more!.
+
+WILL IT BLEND?
+As we’ve already explained, these two strains are quite polar in their nature. Together, however, they form a symbiotic relationship that delivers the perfect mix of sweet and sour. While Lava Cake provides the decadent foundation, Sour Diesel brings the citrus gassy undertones. The outcome of combining these two strains is a complementary blend where sweet cake and sour gas work together in perfect harmony.
+
+CULTURE CHECK:
+Maybe the blend is starting to hit, but all that talk about cake made me hungry! What are your go-to munchies after a sesh? Let us know your pick below!">LAVA CAKE × SOUR DIESEL: 
+This blend features a bold fusion where sweetness and citrus intertwine, creating a layered flavor profile that is unmistakable. Sour Diesel; a notoriously influential strain known for its pungent aroma delivers an uplifting, energetic effect and is famous for driving creative inspiration. On the other hand, Lava Cake is a product of modern cannabis genetics. It delivers a subtle sweetness with an aroma of vanilla, mint, and chocolate. These two strains are representative of the polarity and evolution of cannabis culture by combining modern cannabis genetics with a cultural significance that few strains are able to boast.
+
+THE BACKSTORY:
+Lava Cake has gained recognition for its dessert like sweetness and smooth, mellow effects. At the same time, Sour Diesel shines through with its distinct sharpness, zesty profile and cerebral effects. If you’ve ever done consumer research on cannabis products, then probably heard the name Sour Diesel. It is a strain that carries a legacy; its nose curling aroma has defined an era in Cannabis culture and is a known favorite of many musical artists. . 
+
+FLAVOR PROFILE:
+This is a heavenly blend that combines the undertones of cocoa and vanilla cream with a sour zest. This duo may sound like a bold contrast of flavors, and it certainly is. With an intentionally provocative, yet dynamic flavor that coats your palate, this is a blend that will push your taste buds to their limit. An experience akin to indulging in a thick slice of rich chocolate cake, with a hint of lemon zest…be prepared for a flavor sensation that will have you begging for more!.
+
+WILL IT BLEND?
+As we’ve already explained, these two strains are quite polar in their nature. Together, however, they form a symbiotic relationship that delivers the perfect mix of sweet and sour. While Lava Cake provides the decadent foundation, Sour Diesel brings the citrus gassy undertones. The outcome of combining these two strains is a complementary blend where sweet cake and sour gas work together in perfect harmony.
+
+CULTURE CHECK:
+Maybe the blend is starting to hit, but all that talk about cake made me hungry! What are your go-to munchies after a sesh? Let us know your pick below!</p>
+                <button class="caption-more" onclick="toggleCaption(this)" style="display:none;">more</button>
+            </div>
             <div class="post-card-hashtags">#WillItBlend</div>
         </div>
     </div>
@@ -1582,267 +1986,410 @@ Lava Cake x Sour Diesel</span>
                 <div class="section-header">
                     <div class="section-number">04</div>
                     <h2 class="section-title"><span class="collapse-icon"></span> Stories Schedule</h2>
-                    <p class="section-desc">Ephemeral content planned for the period.</p>
+                    <p class="section-desc">Ephemeral content planned for the period - organized by week.</p>
                 </div>
             </summary>
             <div class="section-content">
-            <div class="table-controls">
-                <div class="search-box">
-                    <input type="text" id="stories-search" placeholder="Search stories..." onkeyup="filterTable('stories-table', this.value)">
-                </div>
-                <span class="sort-info">Click column headers to sort</span>
+                <div class="week-posts-section">
+            <div class="week-posts-header">
+                <span class="week-posts-label">Week 2</span>
+                <span class="week-posts-range">Dec 7-13</span>
+                <span class="week-posts-count">1 stories</span>
             </div>
-            <div class="table-wrapper">
-                <table id="stories-table">
-                    <thead>
-                        <tr>
-                            <th class="sortable" onclick="sortTable('stories-table', 0)">Title</th>
-                            <th class="sortable" onclick="sortTable('stories-table', 1)">Date</th>
-                            <th class="sortable" onclick="sortTable('stories-table', 2)">Time</th>
-                            <th>Interactive Elements</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Educational</strong></td>
-                            <td data-sort="2025-12-13">12/13</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Users will know their safety is priority</td>
-                            <td>Safety/tutorial</td>
-                        </tr><tr>
-                            <td><strong>Behind Scenes</strong></td>
-                            <td data-sort="2025-12-14">12/14</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Users appreciate transparency</td>
-                            <td>How it’s made</td>
-                        </tr><tr>
-                            <td><strong>Render Spotlight</strong></td>
-                            <td data-sort="2025-12-15">12/15</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Consistency, show off product</td>
-                            <td>Easy post for caption</td>
-                        </tr><tr>
-                            <td><strong>Product Demo</strong></td>
-                            <td data-sort="2025-12-16">12/16</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Device in action</td>
-                            <td>Shows device in use up close</td>
-                        </tr><tr>
-                            <td><strong>Poll</strong></td>
-                            <td data-sort="2025-12-17">12/17</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>User votes, gather data</td>
-                            <td>Where do you prefer to sesh?</td>
-                        </tr><tr>
-                            <td><strong>Fun Facts</strong></td>
-                            <td data-sort="2025-12-18">12/18</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Unique info, likely to stick</td>
-                            <td>unique combos</td>
-                        </tr><tr>
-                            <td><strong>Q&A</strong></td>
-                            <td data-sort="2025-12-19">12/19</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Connect to community by offering knowledge</td>
-                            <td>Show person on pc, then respond to questions</td>
-                        </tr><tr>
-                            <td><strong>Render Spotlight</strong></td>
-                            <td data-sort="2025-12-20">12/20</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Expose to product</td>
-                            <td>Easy images for caption</td>
-                        </tr><tr>
-                            <td><strong>Lifestyle</strong></td>
-                            <td data-sort="2025-12-21">12/21</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Give off SB vibe/tone</td>
-                            <td>Day in the life, pier shot</td>
-                        </tr><tr>
-                            <td><strong>Educational</strong></td>
-                            <td data-sort="2025-12-22">12/22</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Users will appreciate facts about product safety</td>
-                            <td>Reassures product is safe, easy caption</td>
-                        </tr><tr>
-                            <td><strong>Poll</strong></td>
-                            <td data-sort="2025-12-23">12/23</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>User Holiday plans, make user think about it on Xmas.</td>
-                            <td>Which Blend are you bringing for Xmas?</td>
-                        </tr><tr>
-                            <td><strong>Xmas Lifestyle</strong></td>
-                            <td data-sort="2025-12-24">12/24</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Holiday vibe, easy caption</td>
-                            <td>Twas the night before Xmas</td>
-                        </tr><tr>
-                            <td><strong>Xmas Post</strong></td>
-                            <td data-sort="2025-12-25">12/25</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Xmas engagement</td>
-                            <td>Green bouquet render</td>
-                        </tr><tr>
-                            <td><strong>Behind Scenes</strong></td>
-                            <td data-sort="2025-12-26">12/26</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Users can see effort going to product and transparency</td>
-                            <td>Interesting shot of process</td>
-                        </tr><tr>
-                            <td><strong>Q&A</strong></td>
-                            <td data-sort="2025-12-27">12/27</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Users will submit question</td>
-                            <td>Simple render for Q&A</td>
-                        </tr><tr>
-                            <td><strong>Poll</strong></td>
-                            <td data-sort="2025-12-28">12/28</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Users share interests and relate to activity with product</td>
-                            <td>Which passion of yours calls for a sesh?</td>
-                        </tr><tr>
-                            <td><strong>Educational</strong></td>
-                            <td data-sort="2025-12-29">12/29</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>Users will easily understand with visual aid</td>
-                            <td>Fact about dual tank to customer</td>
-                        </tr><tr>
-                            <td><strong>Poll</strong></td>
-                            <td data-sort="2025-12-30">12/30</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>WIB branding, user considers past purchases</td>
-                            <td>Favorite blend product of the year</td>
-                        </tr><tr>
-                            <td><strong>New Year Lifestyle</strong></td>
-                            <td data-sort="2025-12-31">12/31</td>
-                            <td data-sort="08:00">8:00am</td>
-                            <td>User will relate; holidays offer chance to connect</td>
-                            <td>Be extraordinary, surpass your limits. Happy New Year!</td>
-                        </tr>
-                    </tbody>
+            <div class="week-posts-carousel-wrapper">
+                <button class="week-posts-nav prev" onclick="scrollWeekCarousel(this, -1)">‹</button>
+                <div class="week-posts-carousel"><div class="post-card" id="story-0">
+        <img class="post-card-media" src="images/Educational_0_ef9a5023ff7c.jpg" alt="Educational" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Educational</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/13 • 8:00am</div>
+            <p class="post-card-caption">Users will know their safety is priority</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Safety/tutorial</div>
+        </div>
+    </div></div>
+                <button class="week-posts-nav next" onclick="scrollWeekCarousel(this, 1)">›</button>
+            </div>
+            <div class="table-wrapper" style="margin: 0; border-radius: 0 0 16px 16px; box-shadow: none;">
+                <table>
+                    <thead><tr>
+                        <th>Title</th><th>Date</th><th>Time</th><th>Interactive</th><th>Notes</th>
+                    </tr></thead>
+                    <tbody><tr>
+                <td><strong>Educational</strong></td>
+                <td>Sat 13</td>
+                <td>8:00am</td>
+                <td>Users will know their safety is priority</td>
+                <td>Safety/tutorial</td>
+            </tr></tbody>
                 </table>
             </div>
-            
-            <div class="type-section-header" style="margin-top: 48px;">
-                <div class="type-section-title">Story Assets</div>
+        </div><div class="week-posts-section">
+            <div class="week-posts-header">
+                <span class="week-posts-label">Week 3</span>
+                <span class="week-posts-range">Dec 14-20</span>
+                <span class="week-posts-count">7 stories</span>
             </div>
-            <div class="stories-strip">
-                <div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/zc7nfaj.jpg" alt="Educational" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Educational</div>
-                    <div class="story-date">12/13</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/Mip0bAs.jpg" alt="Behind Scenes" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Behind Scenes</div>
-                    <div class="story-date">12/14</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/G79t3TM.jpg" alt="Render Spotlight" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Render Spotlight</div>
-                    <div class="story-date">12/15</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/cQSxnNp.jpg" alt="Product Demo" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Product Demo</div>
-                    <div class="story-date">12/16</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/jJFpv8G.jpg" alt="Poll" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Poll</div>
-                    <div class="story-date">12/17</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/0CjNkQg.jpg" alt="Fun Facts" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Fun Facts</div>
-                    <div class="story-date">12/18</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/dlzQBVD.jpg" alt="Q&A" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Q&A</div>
-                    <div class="story-date">12/19</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/bL2NYCm.jpg" alt="Render Spotlight" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Render Spotlight</div>
-                    <div class="story-date">12/20</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/RccTdVI.jpg" alt="Lifestyle" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Lifestyle</div>
-                    <div class="story-date">12/21</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/ODqvMKX.jpg" alt="Educational" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Educational</div>
-                    <div class="story-date">12/22</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/q826o0U.jpg" alt="Poll" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Poll</div>
-                    <div class="story-date">12/23</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/MxnCdUd.jpg" alt="Xmas Lifestyle" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Xmas Lifestyle</div>
-                    <div class="story-date">12/24</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/RJO8aUf.jpg" alt="Xmas Post" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Xmas Post</div>
-                    <div class="story-date">12/25</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/UTQEItS.jpg" alt="Behind Scenes" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Behind Scenes</div>
-                    <div class="story-date">12/26</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/Nh6M0lX.jpg" alt="Q&A" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Q&A</div>
-                    <div class="story-date">12/27</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/Bj49GCg.jpg" alt="Poll" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Poll</div>
-                    <div class="story-date">12/28</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/PZlADYO.jpg" alt="Educational" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Educational</div>
-                    <div class="story-date">12/29</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/uHWe3PV.jpg" alt="Poll" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">Poll</div>
-                    <div class="story-date">12/30</div>
-                </div><div class="story-item">
-                    <div class="story-thumb-wrapper">
-                        <img class="story-thumb" src="https://i.imgur.com/Qn7Tb5V.jpg" alt="New Year Lifestyle" onerror="this.style.background='#f5f5f5'">
-                    </div>
-                    <div class="story-title">New Year Lifestyle</div>
-                    <div class="story-date">12/31</div>
-                </div>
+            <div class="week-posts-carousel-wrapper">
+                <button class="week-posts-nav prev" onclick="scrollWeekCarousel(this, -1)">‹</button>
+                <div class="week-posts-carousel"><div class="post-card" id="story-1">
+        <img class="post-card-media" src="images/Behind_Scenes_0_7d70f2a7a24f.jpg" alt="Behind Scenes" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Behind Scenes</span>
+                <span class="type-badge type-story">story</span>
             </div>
+            <div class="post-card-date">12/14 • 8:00am</div>
+            <p class="post-card-caption">Users appreciate transparency</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">How it’s made</div>
+        </div>
+    </div><div class="post-card" id="story-2">
+        <img class="post-card-media" src="images/Render_Spotlight_0_4f48b686dc74.jpg" alt="Render Spotlight" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Render Spotlight</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/15 • 8:00am</div>
+            <p class="post-card-caption">Consistency, show off product</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Easy post for caption</div>
+        </div>
+    </div><div class="post-card" id="story-3">
+        <img class="post-card-media" src="images/Product_Demo_0_ed523591d684.jpg" alt="Product Demo" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Product Demo</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/16 • 8:00am</div>
+            <p class="post-card-caption">Device in action</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Shows device in use up close</div>
+        </div>
+    </div><div class="post-card" id="story-4">
+        <img class="post-card-media" src="images/Poll_0_c6f5b2a5575c.jpg" alt="Poll" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Poll</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/17 • 8:00am</div>
+            <p class="post-card-caption">User votes, gather data</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Where do you prefer to sesh?</div>
+        </div>
+    </div><div class="post-card" id="story-5">
+        <img class="post-card-media" src="images/Fun_Facts_0_b14ad9b09c0a.jpg" alt="Fun Facts" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Fun Facts</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/18 • 8:00am</div>
+            <p class="post-card-caption">Unique info, likely to stick</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">unique combos</div>
+        </div>
+    </div><div class="post-card" id="story-6">
+        <img class="post-card-media" src="images/QA_0_314260058d9e.jpg" alt="Q&A" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Q&A</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/19 • 8:00am</div>
+            <p class="post-card-caption">Connect to community by offering knowledge</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Show person on pc, then respond to questions</div>
+        </div>
+    </div><div class="post-card" id="story-7">
+        <img class="post-card-media" src="images/Render_Spotlight_0_d2bbf277ba3e.jpg" alt="Render Spotlight" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Render Spotlight</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/20 • 8:00am</div>
+            <p class="post-card-caption">Expose to product</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Easy images for caption</div>
+        </div>
+    </div></div>
+                <button class="week-posts-nav next" onclick="scrollWeekCarousel(this, 1)">›</button>
+            </div>
+            <div class="table-wrapper" style="margin: 0; border-radius: 0 0 16px 16px; box-shadow: none;">
+                <table>
+                    <thead><tr>
+                        <th>Title</th><th>Date</th><th>Time</th><th>Interactive</th><th>Notes</th>
+                    </tr></thead>
+                    <tbody><tr>
+                <td><strong>Behind Scenes</strong></td>
+                <td>Sun 14</td>
+                <td>8:00am</td>
+                <td>Users appreciate transparency</td>
+                <td>How it’s made</td>
+            </tr><tr>
+                <td><strong>Render Spotlight</strong></td>
+                <td>Mon 15</td>
+                <td>8:00am</td>
+                <td>Consistency, show off product</td>
+                <td>Easy post for caption</td>
+            </tr><tr>
+                <td><strong>Product Demo</strong></td>
+                <td>Tue 16</td>
+                <td>8:00am</td>
+                <td>Device in action</td>
+                <td>Shows device in use up close</td>
+            </tr><tr>
+                <td><strong>Poll</strong></td>
+                <td>Wed 17</td>
+                <td>8:00am</td>
+                <td>User votes, gather data</td>
+                <td>Where do you prefer to sesh?</td>
+            </tr><tr>
+                <td><strong>Fun Facts</strong></td>
+                <td>Thu 18</td>
+                <td>8:00am</td>
+                <td>Unique info, likely to stick</td>
+                <td>unique combos</td>
+            </tr><tr>
+                <td><strong>Q&A</strong></td>
+                <td>Fri 19</td>
+                <td>8:00am</td>
+                <td>Connect to community by offering knowledge</td>
+                <td>Show person on pc, then respond to questions</td>
+            </tr><tr>
+                <td><strong>Render Spotlight</strong></td>
+                <td>Sat 20</td>
+                <td>8:00am</td>
+                <td>Expose to product</td>
+                <td>Easy images for caption</td>
+            </tr></tbody>
+                </table>
+            </div>
+        </div><div class="week-posts-section">
+            <div class="week-posts-header">
+                <span class="week-posts-label">Week 4</span>
+                <span class="week-posts-range">Dec 21-27</span>
+                <span class="week-posts-count">7 stories</span>
+            </div>
+            <div class="week-posts-carousel-wrapper">
+                <button class="week-posts-nav prev" onclick="scrollWeekCarousel(this, -1)">‹</button>
+                <div class="week-posts-carousel"><div class="post-card" id="story-8">
+        <img class="post-card-media" src="images/Lifestyle_0_7ecf2031cac2.jpg" alt="Lifestyle" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Lifestyle</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/21 • 8:00am</div>
+            <p class="post-card-caption">Give off SB vibe/tone</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Day in the life, pier shot</div>
+        </div>
+    </div><div class="post-card" id="story-9">
+        <img class="post-card-media" src="images/Educational_0_b750e168d378.jpg" alt="Educational" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Educational</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/22 • 8:00am</div>
+            <p class="post-card-caption">Users will appreciate facts about product safety</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Reassures product is safe, easy caption</div>
+        </div>
+    </div><div class="post-card" id="story-10">
+        <img class="post-card-media" src="images/Poll_0_11968d64cbee.jpg" alt="Poll" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Poll</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/23 • 8:00am</div>
+            <p class="post-card-caption">User Holiday plans, make user think about it on Xmas.</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Which Blend are you bringing for Xmas?</div>
+        </div>
+    </div><div class="post-card" id="story-11">
+        <img class="post-card-media" src="images/Xmas_Lifestyle_0_68af4ca6dd7d.jpg" alt="Xmas Lifestyle" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Xmas Lifestyle</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/24 • 8:00am</div>
+            <p class="post-card-caption">Holiday vibe, easy caption</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Twas the night before Xmas</div>
+        </div>
+    </div><div class="post-card" id="story-12">
+        <img class="post-card-media" src="images/Xmas_Post_0_9c9040595111.jpg" alt="Xmas Post" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Xmas Post</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/25 • 8:00am</div>
+            <p class="post-card-caption">Xmas engagement</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Green bouquet render</div>
+        </div>
+    </div><div class="post-card" id="story-13">
+        <img class="post-card-media" src="images/Behind_Scenes_0_17a5da15f983.jpg" alt="Behind Scenes" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Behind Scenes</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/26 • 8:00am</div>
+            <p class="post-card-caption">Users can see effort going to product and transparency</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Interesting shot of process</div>
+        </div>
+    </div><div class="post-card" id="story-14">
+        <img class="post-card-media" src="images/QA_0_10ad134c452a.jpg" alt="Q&A" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Q&A</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/27 • 8:00am</div>
+            <p class="post-card-caption">Users will submit question</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Simple render for Q&A</div>
+        </div>
+    </div></div>
+                <button class="week-posts-nav next" onclick="scrollWeekCarousel(this, 1)">›</button>
+            </div>
+            <div class="table-wrapper" style="margin: 0; border-radius: 0 0 16px 16px; box-shadow: none;">
+                <table>
+                    <thead><tr>
+                        <th>Title</th><th>Date</th><th>Time</th><th>Interactive</th><th>Notes</th>
+                    </tr></thead>
+                    <tbody><tr>
+                <td><strong>Lifestyle</strong></td>
+                <td>Sun 21</td>
+                <td>8:00am</td>
+                <td>Give off SB vibe/tone</td>
+                <td>Day in the life, pier shot</td>
+            </tr><tr>
+                <td><strong>Educational</strong></td>
+                <td>Mon 22</td>
+                <td>8:00am</td>
+                <td>Users will appreciate facts about product safety</td>
+                <td>Reassures product is safe, easy caption</td>
+            </tr><tr>
+                <td><strong>Poll</strong></td>
+                <td>Tue 23</td>
+                <td>8:00am</td>
+                <td>User Holiday plans, make user think about it on Xmas.</td>
+                <td>Which Blend are you bringing for Xmas?</td>
+            </tr><tr>
+                <td><strong>Xmas Lifestyle</strong></td>
+                <td>Wed 24</td>
+                <td>8:00am</td>
+                <td>Holiday vibe, easy caption</td>
+                <td>Twas the night before Xmas</td>
+            </tr><tr>
+                <td><strong>Xmas Post</strong></td>
+                <td>Thu 25</td>
+                <td>8:00am</td>
+                <td>Xmas engagement</td>
+                <td>Green bouquet render</td>
+            </tr><tr>
+                <td><strong>Behind Scenes</strong></td>
+                <td>Fri 26</td>
+                <td>8:00am</td>
+                <td>Users can see effort going to product and transparency</td>
+                <td>Interesting shot of process</td>
+            </tr><tr>
+                <td><strong>Q&A</strong></td>
+                <td>Sat 27</td>
+                <td>8:00am</td>
+                <td>Users will submit question</td>
+                <td>Simple render for Q&A</td>
+            </tr></tbody>
+                </table>
+            </div>
+        </div><div class="week-posts-section">
+            <div class="week-posts-header">
+                <span class="week-posts-label">Week 5</span>
+                <span class="week-posts-range">Dec 28-31</span>
+                <span class="week-posts-count">4 stories</span>
+            </div>
+            <div class="week-posts-carousel-wrapper">
+                <button class="week-posts-nav prev" onclick="scrollWeekCarousel(this, -1)">‹</button>
+                <div class="week-posts-carousel"><div class="post-card" id="story-15">
+        <img class="post-card-media" src="images/Poll_0_96d020e126c0.jpg" alt="Poll" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Poll</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/28 • 8:00am</div>
+            <p class="post-card-caption">Users share interests and relate to activity with product</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Which passion of yours calls for a sesh?</div>
+        </div>
+    </div><div class="post-card" id="story-16">
+        <img class="post-card-media" src="images/Educational_0_2affff7d5e99.jpg" alt="Educational" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Educational</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/29 • 8:00am</div>
+            <p class="post-card-caption">Users will easily understand with visual aid</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Fact about dual tank to customer</div>
+        </div>
+    </div><div class="post-card" id="story-17">
+        <img class="post-card-media" src="images/Poll_0_195692caba1a.jpg" alt="Poll" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">Poll</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/30 • 8:00am</div>
+            <p class="post-card-caption">WIB branding, user considers past purchases</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Favorite blend product of the year</div>
+        </div>
+    </div><div class="post-card" id="story-18">
+        <img class="post-card-media" src="images/New_Year_Lifestyle_0_5e305338a12b.jpg" alt="New Year Lifestyle" style="aspect-ratio: 9/16; object-fit: contain; background: #1A1A1A;" onerror="this.outerHTML='<div class=\'no-media\'>Image not available</div>'">
+        <div class="post-card-body">
+            <div class="post-card-header">
+                <span class="post-card-title">New Year Lifestyle</span>
+                <span class="type-badge type-story">story</span>
+            </div>
+            <div class="post-card-date">12/31 • 8:00am</div>
+            <p class="post-card-caption">User will relate; holidays offer chance to connect</p>
+            <div class="post-card-hashtags" style="color: var(--text-muted);">Be extraordinary, surpass your limits. Happy New Year!</div>
+        </div>
+    </div></div>
+                <button class="week-posts-nav next" onclick="scrollWeekCarousel(this, 1)">›</button>
+            </div>
+            <div class="table-wrapper" style="margin: 0; border-radius: 0 0 16px 16px; box-shadow: none;">
+                <table>
+                    <thead><tr>
+                        <th>Title</th><th>Date</th><th>Time</th><th>Interactive</th><th>Notes</th>
+                    </tr></thead>
+                    <tbody><tr>
+                <td><strong>Poll</strong></td>
+                <td>Sun 28</td>
+                <td>8:00am</td>
+                <td>Users share interests and relate to activity with product</td>
+                <td>Which passion of yours calls for a sesh?</td>
+            </tr><tr>
+                <td><strong>Educational</strong></td>
+                <td>Mon 29</td>
+                <td>8:00am</td>
+                <td>Users will easily understand with visual aid</td>
+                <td>Fact about dual tank to customer</td>
+            </tr><tr>
+                <td><strong>Poll</strong></td>
+                <td>Tue 30</td>
+                <td>8:00am</td>
+                <td>WIB branding, user considers past purchases</td>
+                <td>Favorite blend product of the year</td>
+            </tr><tr>
+                <td><strong>New Year Lifestyle</strong></td>
+                <td>Wed 31</td>
+                <td>8:00am</td>
+                <td>User will relate; holidays offer chance to connect</td>
+                <td>Be extraordinary, surpass your limits. Happy New Year!</td>
+            </tr></tbody>
+                </table>
+            </div>
+        </div>
             </div>
         </details>
 
@@ -2264,6 +2811,40 @@ Lava Cake x Sour Diesel</span>
                     if (fallback) fallback.style.display = 'flex';
                     video.style.display = 'none';
                 });
+            });
+        });
+        
+        // Caption expand/collapse (Instagram-style "more" button)
+        function toggleCaption(btn) {
+            const wrapper = btn.closest('.caption-wrapper');
+            const caption = wrapper.querySelector('.post-card-caption');
+            const isExpanded = caption.classList.contains('expanded');
+            
+            if (isExpanded) {
+                caption.classList.remove('expanded');
+                caption.classList.add('truncated');
+                btn.textContent = 'more';
+            } else {
+                caption.classList.remove('truncated');
+                caption.classList.add('expanded');
+                btn.textContent = 'less';
+            }
+        }
+        
+        // Initialize "more" buttons - only show if caption is truncated
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.caption-wrapper').forEach(wrapper => {
+                const caption = wrapper.querySelector('.post-card-caption');
+                const btn = wrapper.querySelector('.caption-more');
+                if (!caption || !btn) return;
+                
+                // Check if text is actually truncated (scrollHeight > clientHeight)
+                // Need a small delay for layout calculation
+                setTimeout(() => {
+                    if (caption.scrollHeight > caption.clientHeight + 2) {
+                        btn.style.display = 'inline';
+                    }
+                }, 100);
             });
         });
     </script>
